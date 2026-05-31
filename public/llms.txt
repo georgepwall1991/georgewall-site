@@ -1,0 +1,20 @@
+# George Wall
+
+> London-based full-stack developer in financial services. I build .NET Roslyn analyzers, source generators, developer tooling, and iOS apps that catch bugs at compile time — moving failures from a 3am production incident to a red squiggle in your editor.
+
+George Wall (georgewall.uk) is the personal portfolio of a full-stack developer working across .NET/C#, TypeScript/React, and Swift/SwiftUI. The through-line is "compile-time safety": tools that turn runtime surprises into compile-time certainty.
+
+## Open-source projects
+
+- [LinqContraband](https://www.nuget.org/packages/LinqContraband): Roslyn analyzer that catches EF Core performance killers (N+1 queries, client-side evaluation) at compile time.
+- [DependencyInjection.Lifetime.Analyzers](https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers/): Catches captive dependencies, leaked scopes, and DI lifetime mismatches at compile time, with zero runtime overhead.
+- [CancelCop](https://www.nuget.org/packages/CancelCop.Analyzer/): Analyzer for CancellationToken propagation across handlers, EF Core, HTTP, and Minimal APIs, with code fixes that wire the token for you.
+- [AutoMapper Analyzer](https://github.com/georgepwall1991/automapper-analyser): Flags missing and misconfigured AutoMapper maps at build time, before they become runtime exceptions.
+- [CPMigrate](https://georgepwall1991.github.io/CPMigrate/): CLI that migrates .NET solutions to NuGet Central Package Management with dependency-health analysis and safe rollback.
+- [NotifyGen](https://github.com/georgepwall1991/NotifyGen): C# source generator that eliminates INotifyPropertyChanged boilerplate via a [Notify] attribute.
+
+## Links
+
+- [Website](https://www.georgewall.uk)
+- [GitHub](https://github.com/georgepwall1991)
+- [Contact](mailto:georgewall91@gmail.com)

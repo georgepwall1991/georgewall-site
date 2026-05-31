@@ -9,22 +9,26 @@ import { snapshotFallback } from '../data/github';
 interface Props {
   title?: string;
   description?: string;
+  /** Extra JSON-LD nodes merged into the page @graph (e.g. SoftwareApplication). */
+  schema?: Record<string, unknown>[];
 }
 
 const {
   title = 'George Wall — Full-stack developer. I catch bugs before they ship.',
-  description = 'George Wall is a London-based full-stack developer in financial services, building .NET Roslyn analyzers, developer tooling, and iOS apps that catch bugs at compile-time.',
+  description = 'London-based full-stack developer in financial services. I build .NET Roslyn analyzers, developer tooling, and iOS apps that catch bugs at compile-time.',
+  schema = [],
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://georgewall.uk').href;
-const ogImage = new URL('/og.png', Astro.site ?? 'https://georgewall.uk').href;
+const SITE_URL = 'https://www.georgewall.uk';
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).href;
+const ogImage = new URL('/og.png', Astro.site ?? SITE_URL).href;
 const { user } = snapshotFallback;
 
 const personSchema = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': `${SITE_URL}/#person`,
   name: 'George Wall',
-  url: 'https://georgewall.uk',
+  url: SITE_URL,
   image: user.avatar_url,
   jobTitle: 'Full-stack developer',
   description: user.bio,
@@ -41,6 +45,11 @@ const personSchema = {
     'Developer tooling',
   ],
 };
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [personSchema, ...schema],
+};
 ---
 
 <!doctype html>
@@ -49,7 +58,12 @@ const personSchema = {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
+
+    <!-- Resource hints: the portrait image and the live archive both hit GitHub. -->
+    <link rel="preconnect" href="https://avatars.githubusercontent.com" crossorigin />
+    <link rel="dns-prefetch" href="https://api.github.com" />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -66,12 +80,14 @@ const personSchema = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="George Wall — full-stack developer portfolio" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="George Wall — full-stack developer portfolio" />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -91,7 +107,7 @@ const personSchema = {
       })();
     </script>
 
-    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>

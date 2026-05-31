@@ -6,7 +6,7 @@
 export const SITE = {
   name: 'George Wall',
   domain: 'georgewall.uk',
-  url: 'https://georgewall.uk',
+  url: 'https://www.georgewall.uk',
   role: 'Full-stack developer',
   location: 'London',
   email: 'georgewall91@gmail.com',
