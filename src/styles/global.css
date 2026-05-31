@@ -300,8 +300,13 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Must out-specify `.js .reveal { opacity: 0 }` (0,2,0) or reduced-motion
+     users with JS stay hidden until the observer fires — so include the
+     `.js`-qualified selectors here too. */
   .reveal,
-  .reveal-clip {
+  .reveal-clip,
+  .js .reveal,
+  .js .reveal-clip {
     opacity: 1;
     transform: none;
     clip-path: none;
