@@ -37,9 +37,26 @@ const contentsItems = featuredEntries.map((e) => ({
 const stars = totalStars(portfolio);
 const repoCount = snapshot.user.public_repos;
 const avatar = snapshot.user.avatar_url;
+
+// Per-project structured data — each featured repo as a SoftwareApplication,
+// linked back to the Person node so search/AI engines see authorship.
+const SITE_URL = 'https://www.georgewall.uk';
+const softwareSchema = featuredEntries
+  .filter((e) => e.repo)
+  .map((e) => ({
+    '@type': 'SoftwareApplication',
+    '@id': `${SITE_URL}/#${e.anchor}`,
+    name: e.title,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Cross-platform',
+    description: e.blurb,
+    author: { '@id': `${SITE_URL}/#person` },
+    url: e.repo!.homepage ?? e.repo!.html_url,
+    codeRepository: e.repo!.html_url,
+  }));
 ---
 
-<Base>
+<Base schema={softwareSchema}>
   <SiteHeader />
   <main>
     <Hero repoCount={repoCount} totalStars={stars} />
