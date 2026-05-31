@@ -179,7 +179,37 @@ const now = new Date();
     margin-left: 0.3rem;
   }
   .archive__forks input {
-    accent-color: var(--accent);
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.05em;
+    height: 1.05em;
+    margin: 0;
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-content: center;
+    transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+  .archive__forks input::before {
+    content: '';
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 1px;
+    background: #fff;
+    transform: scale(0);
+    transition: transform 0.15s var(--ease);
+  }
+  .archive__forks input:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .archive__forks input:checked::before {
+    transform: scale(1);
+  }
+  .archive__forks:hover input {
+    border-color: var(--ink);
   }
 
   .arc-row {
