@@ -16,3 +16,14 @@ export const SITE = {
   issueYear: 'MMXXVI',
   issueNo: '01',
 } as const;
+
+/**
+ * Public profiles, emitted as schema.org `sameAs` to disambiguate the person
+ * entity for search engines and AI. Add verified URLs only — a 404 here is a
+ * worse signal than an omission. To add LinkedIn/X, drop the full URL in below.
+ */
+export const SOCIALS: string[] = [
+  'https://github.com/georgepwall1991',
+  'https://www.nuget.org/profiles/GeorgeWall1991',
+  // 'https://www.linkedin.com/in/<your-handle>',  // ← add when you have the URL
+];

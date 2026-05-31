@@ -13,8 +13,13 @@ George Wall (georgewall.uk) is the personal portfolio of a full-stack developer 
 - [CPMigrate](https://georgepwall1991.github.io/CPMigrate/): CLI that migrates .NET solutions to NuGet Central Package Management with dependency-health analysis and safe rollback.
 - [NotifyGen](https://github.com/georgepwall1991/NotifyGen): C# source generator that eliminates INotifyPropertyChanged boilerplate via a [Notify] attribute.
 
+## Writing
+
+- [Catching N+1 queries at compile time](https://www.georgewall.uk/writing/catching-n-plus-1-at-compile-time): Why N+1 and client-side evaluation survive code review and tests, and how a Roslyn analyzer moves the catch to a red squiggle in the editor.
+
 ## Links
 
 - [Website](https://www.georgewall.uk)
 - [GitHub](https://github.com/georgepwall1991)
+- [NuGet](https://www.nuget.org/profiles/GeorgeWall1991)
 - [Contact](mailto:georgewall91@gmail.com)

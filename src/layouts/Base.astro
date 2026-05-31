@@ -5,6 +5,7 @@ import '@fontsource-variable/archivo';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { snapshotFallback } from '../data/github';
+import { SOCIALS } from '../data/site';
 
 interface Props {
   title?: string;
@@ -33,7 +34,7 @@ const personSchema = {
   jobTitle: 'Full-stack developer',
   description: user.bio,
   address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' },
-  sameAs: ['https://github.com/georgepwall1991'],
+  sameAs: SOCIALS,
   knowsAbout: [
     '.NET',
     'C#',

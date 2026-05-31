@@ -1,0 +1,348 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import { SITE } from '../../data/site';
+
+const title = 'Catching N+1 queries at compile time — George Wall';
+const description =
+  'Why N+1 and client-side evaluation survive code review and tests, and how a Roslyn analyzer moves the catch from a 3am incident to a red squiggle in your editor.';
+
+const published = '2026-06-01';
+const SITE_URL = SITE.url;
+const canonical = `${SITE_URL}/writing/catching-n-plus-1-at-compile-time`;
+
+const articleSchema = {
+  '@type': 'TechArticle',
+  '@id': `${canonical}#article`,
+  headline: 'Catching N+1 queries at compile time',
+  description,
+  inLanguage: 'en',
+  datePublished: published,
+  dateModified: published,
+  author: { '@id': `${SITE_URL}/#person` },
+  publisher: { '@id': `${SITE_URL}/#person` },
+  mainEntityOfPage: canonical,
+  url: canonical,
+  keywords: [
+    'N+1 query',
+    'Entity Framework Core',
+    'client-side evaluation',
+    'Roslyn analyzer',
+    'compile-time safety',
+    '.NET performance',
+  ],
+  about: {
+    '@type': 'SoftwareApplication',
+    name: 'LinqContraband',
+    applicationCategory: 'DeveloperApplication',
+    url: 'https://www.nuget.org/packages/LinqContraband',
+  },
+};
+---
+
+<Base title={title} description={description} schema={[articleSchema]}>
+  <SiteHeader />
+  <main class="article">
+    <article class="wrap article__wrap">
+      <nav class="article__crumbs" aria-label="Breadcrumb">
+        <a class="link" href="/">George Wall</a>
+        <span aria-hidden="true">/</span>
+        <span>Writing</span>
+      </nav>
+
+      <header class="article__head">
+        <p class="kicker">Compile-time safety · EF Core</p>
+        <h1 class="display article__title">Catching N+1 queries at compile time.</h1>
+        <p class="article__standfirst">
+          The most expensive database bug in .NET isn't a missing index. It's the loop you
+          didn't know you wrote — and it passes every test you have.
+        </p>
+        <p class="article__byline label">
+          George Wall · London ·
+          <time datetime={published}>1 June 2026</time>
+        </p>
+      </header>
+
+      <div class="article__prose">
+        <p class="article__lead">
+          An N+1 query is the bug that hides in plain sight. You write what looks like one
+          query, the ORM quietly issues another for every row it returns, and a method that
+          ran in 8&nbsp;milliseconds against ten seed rows takes nine seconds against a
+          production table. Nothing threw. Nothing failed. The page just got slow, and the
+          reason is three call-stacks away from where it hurts.
+        </p>
+
+        <p>
+          The reason it survives is structural. Unit tests run against an in-memory provider
+          or a handful of fixtures, so the cost — one extra round-trip per row — never adds
+          up to anything you'd notice. Code review reads the C#, not the SQL the C# will
+          generate. And the people best placed to catch it are reading a pull request, not
+          a query plan. So it ships, and the first honest signal arrives weeks later as a
+          latency graph with a step change in it.
+        </p>
+
+        <h2>The two shapes it takes</h2>
+
+        <p>
+          In Entity Framework Core, the family has two members. The first is the classic
+          N+1: a lazy navigation accessed inside a loop.
+        </p>
+
+        <figure class="article__code">
+          <pre><code>{`foreach (var order in db.Orders.ToList())      // 1 query
+{
+    // one more query, every single iteration
+    Console.WriteLine(order.Customer.Name);   // N queries
+}`}</code></pre>
+          <figcaption>One query becomes N+1. The loop is invisible in the SQL log until row counts climb.</figcaption>
+        </figure>
+
+        <p>
+          The second is sneakier, because it looks like good, declarative LINQ. The trap is
+          <em>where</em> the query stops being a query:
+        </p>
+
+        <figure class="article__code">
+          <pre><code>{`var recent = db.Orders
+    .ToList()                                  // ← materialises the WHOLE table
+    .Where(o => o.Total > 1_000)               // now filtering in memory
+    .OrderByDescending(o => o.Date);`}</code></pre>
+          <figcaption>Client-side evaluation: <code>.ToList()</code> pulls every row into memory before the predicate runs.</figcaption>
+        </figure>
+
+        <p>
+          That single misplaced <code>.ToList()</code> turns a <code>WHERE</code> the
+          database could answer from an index into a full table read plus an in-process
+          filter. Move it after the <code>Where</code> and <code>OrderBy</code> and the
+          predicate is translated to SQL — the database does the work it's built for, and
+          returns the handful of rows you actually wanted.
+        </p>
+
+        <h2>Why "just be careful" doesn't scale</h2>
+
+        <p>
+          The standard advice — use <code>Include</code> for the navigation, push the
+          predicate before materialisation, watch your <code>ToList</code> calls — is all
+          correct and all useless at 2pm on a Friday when someone is three layers deep in a
+          refactor. Discipline is not a control. It depends on the most fallible part of the
+          system being uniformly attentive, forever. The whole history of software quality
+          is the slow realisation that the cheapest place to catch a class of bug is the
+          earliest, and the earliest place is the compiler.
+        </p>
+
+        <blockquote class="article__quote">
+          <p>
+            Good software fails loudly, early, and somewhere cheap to fix. The goal is to
+            move the failure as close to the keyboard as it'll go.
+          </p>
+        </blockquote>
+
+        <h2>Moving the catch to the red squiggle</h2>
+
+        <p>
+          This is exactly what a Roslyn analyzer is for. It reads your code as a syntax tree
+          while you type, with full semantic knowledge of the types involved, and it can
+          recognise the shapes above — a navigation property dereferenced inside a loop, a
+          <code>.ToList()</code> sitting upstream of a <code>.Where()</code> on an
+          <code>IQueryable</code> — and surface them as a warning under the offending line.
+          No runtime cost, no extra test run, no waiting for production to tell you. The bug
+          becomes a wavy underline before the code even compiles.
+        </p>
+
+        <p>
+          That's the premise behind
+          <a
+            class="link link--on"
+            href="https://www.nuget.org/packages/LinqContraband"
+            target="_blank"
+            rel="noopener">LinqContraband</a>, an analyzer I built to read LINQ the way the
+          database will. It refuses to let client-side evaluation and N+1 patterns reach
+          production by flagging them at compile time, with code fixes that rewrite the query
+          into its translatable form. The expensive mistake gets caught in the incident
+          channel that matters least — your editor — instead of the one that matters most.
+        </p>
+
+        <h2>The general principle</h2>
+
+        <p>
+          N+1 is just one instance of a broader pattern: bugs that are invisible in the
+          source, invisible under test, and obvious only under production load. Captive
+          dependencies in your DI container, an un-propagated <code>CancellationToken</code>,
+          a forgotten AutoMapper configuration — they all share that profile, and they all
+          yield to the same move. Encode the rule once, in an analyzer, and let the compiler
+          enforce it on every keystroke for everyone, forever. That's the unglamorous
+          infrastructure of software quality, and it's most of what I build.
+        </p>
+
+        <p class="article__back">
+          <a class="link" href="/#work">← Back to selected work</a>
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <footer class="article__foot">
+    <div class="wrap article__foot-inner">
+      <p class="colophon-note">
+        © {new Date().getFullYear()} · {SITE.domain} · Written by {SITE.name}, {SITE.location}.
+      </p>
+      <a class="link" href="/">Home ↑</a>
+    </div>
+  </footer>
+</Base>
+
+<style>
+  .article {
+    padding-top: clamp(2rem, 6vw, 4rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .article__wrap {
+    max-width: 720px;
+  }
+
+  .article__crumbs {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .article__head {
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: clamp(1.6rem, 4vw, 2.6rem);
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+  .article__title {
+    font-size: clamp(2.4rem, 7vw, 4.6rem);
+    margin: 1rem 0 1.4rem;
+    max-width: 16ch;
+  }
+  .article__standfirst {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 40, 'WONK' 1, 'wght' 460;
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    line-height: 1.34;
+    color: var(--ink-soft);
+    max-width: 38ch;
+    margin-bottom: 1.6rem;
+  }
+  .article__byline {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .article__prose {
+    font-size: clamp(1.05rem, 1.2vw, 1.18rem);
+    line-height: 1.66;
+    color: var(--ink-soft);
+  }
+  .article__prose p + p {
+    margin-top: 1.3rem;
+  }
+  .article__prose h2 {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'WONK' 1, 'wght' 560;
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 2.6rem 0 1rem;
+    letter-spacing: -0.01em;
+  }
+  .article__prose code {
+    font-family: var(--font-mono);
+    font-size: 0.86em;
+    background: var(--paper-sunk);
+    padding: 0.1em 0.36em;
+    border-radius: 4px;
+  }
+  .article__lead {
+    color: var(--ink);
+  }
+  .article__lead::first-letter {
+    initial-letter: 3 2;
+    -webkit-initial-letter: 3 2;
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--accent);
+    margin-right: 0.6rem;
+    font-variation-settings: 'opsz' 144, 'WONK' 1;
+  }
+
+  .article__code {
+    margin: 1.8rem 0;
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--paper-raised);
+  }
+  .article__code pre {
+    margin: 0;
+    padding: 1.2rem 1.3rem;
+    overflow-x: auto;
+  }
+  .article__code code {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    line-height: 1.6;
+    background: none;
+    padding: 0;
+    color: var(--ink);
+    white-space: pre;
+  }
+  .article__code figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--ink-faint);
+    padding: 0.8rem 1.3rem;
+    border-top: 1px solid var(--rule);
+    background: var(--paper-sunk);
+  }
+  .article__code figcaption code {
+    background: none;
+    padding: 0;
+    font-size: 0.95em;
+  }
+
+  .article__quote {
+    margin: 2.2rem 0;
+    padding-left: 1.4rem;
+    border-left: 3px solid var(--accent);
+  }
+  .article__quote p {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 48, 'WONK' 1, 'wght' 480;
+    font-style: italic;
+    font-size: clamp(1.3rem, 2.4vw, 1.85rem);
+    line-height: 1.32;
+    color: var(--ink);
+  }
+
+  .article__back {
+    margin-top: 2.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .article__foot {
+    border-top: 1.5px solid var(--ink);
+    padding: clamp(1.6rem, 4vw, 2.4rem) 0;
+  }
+  .article__foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .colophon-note {
+    color: var(--ink-faint);
+  }
+</style>
