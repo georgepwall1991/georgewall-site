@@ -144,6 +144,7 @@ a {
   font-variation-settings: 'wght' 580, 'opsz' 144, 'SOFT' 0, 'WONK' 1;
   line-height: 0.92;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .kicker {
