@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Contents from '../components/Contents.astro';
+import FeaturedWork from '../components/FeaturedWork.astro';
+import SecondaryGrid from '../components/SecondaryGrid.astro';
+import Archive from '../components/Archive.astro';
+import About from '../components/About.astro';
+import Colophon from '../components/Colophon.astro';
+import { getSnapshot, portfolioRepos, totalStars, type Repo } from '../data/github';
+import { FEATURED, SECONDARY } from '../data/featured';
+
+// Build-time data: live GitHub if reachable, committed snapshot otherwise.
+const snapshot = await getSnapshot();
+const portfolio = portfolioRepos(snapshot.repos);
+const repoByName = new Map<string, Repo>(snapshot.repos.map((r) => [r.name, r]));
+
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+const featuredEntries = FEATURED.map((f) => ({
+  ...f,
+  repo: repoByName.get(f.name),
+  anchor: `work-${slug(f.name)}`,
+}));
+const secondaryEntries = SECONDARY.map((f) => ({ ...f, repo: repoByName.get(f.name) }));
+const contentsItems = featuredEntries.map((e) => ({
+  title: e.title,
+  kicker: e.kicker,
+  anchor: e.anchor,
+}));
+
+const stars = totalStars(portfolio);
+const repoCount = snapshot.user.public_repos;
+const avatar = snapshot.user.avatar_url;
+---
+
+<Base>
+  <SiteHeader />
+  <main>
+    <Hero repoCount={repoCount} totalStars={stars} />
+    <Contents items={contentsItems} />
+    <FeaturedWork entries={featuredEntries} />
+    <SecondaryGrid entries={secondaryEntries} />
+    <Archive repos={portfolio} allRepos={snapshot.repos} generatedAt={snapshot.generatedAt} />
+    <About avatar={avatar} />
+  </main>
+  <Colophon />
+</Base>
+
+<script>
+  // Scroll-reveal. Respects reduced-motion and degrades to "everything visible".
+  const els = document.querySelectorAll<HTMLElement>('.reveal, .reveal-clip');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!('IntersectionObserver' in window) || reduce) {
+    els.forEach((e) => e.classList.add('is-in'));
+  } else {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+    );
+    els.forEach((e) => io.observe(e));
+  }
+</script>

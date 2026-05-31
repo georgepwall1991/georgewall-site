@@ -1,0 +1,92 @@
+---
+// Light/dark toggle. Theme is resolved pre-paint in Base.astro; this just flips
+// and persists the choice.
+---
+
+<button class="theme-toggle" type="button" aria-label="Toggle colour theme" title="Toggle theme">
+  <span class="theme-toggle__track">
+    <span class="theme-toggle__thumb"></span>
+  </span>
+  <span class="theme-toggle__label" data-label-light="Light" data-label-dark="Dark">Light</span>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55em;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2em;
+  }
+
+  .theme-toggle__track {
+    position: relative;
+    width: 2.5em;
+    height: 1.25em;
+    border: 1.5px solid var(--rule-strong);
+    border-radius: 999px;
+    transition: border-color 0.3s ease;
+  }
+
+  .theme-toggle__thumb {
+    position: absolute;
+    top: 50%;
+    left: 0.18em;
+    width: 0.78em;
+    height: 0.78em;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: translateY(-50%);
+    transition: transform 0.35s var(--ease), background 0.3s ease;
+  }
+
+  :global(:root[data-theme='dark']) .theme-toggle__thumb {
+    transform: translate(1.2em, -50%);
+  }
+
+  .theme-toggle:hover .theme-toggle__track {
+    border-color: var(--accent);
+  }
+
+  .theme-toggle__label {
+    min-width: 2.6em;
+    text-align: left;
+  }
+
+  @media (max-width: 620px) {
+    .theme-toggle__label {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.theme-toggle');
+  const label = btn?.querySelector<HTMLElement>('.theme-toggle__label');
+
+  function syncLabel() {
+    if (!label) return;
+    const theme = document.documentElement.dataset.theme ?? 'light';
+    label.textContent = theme === 'dark' ? label.dataset.labelDark! : label.dataset.labelLight!;
+  }
+
+  btn?.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    try {
+      localStorage.setItem('atlas-theme', next);
+    } catch (_) {
+      /* private mode — ignore */
+    }
+    syncLabel();
+  });
+
+  syncLabel();
+</script>

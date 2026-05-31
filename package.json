@@ -1,0 +1,27 @@
+{
+  "name": "georgewall-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "George Wall — editorial portfolio. Static, frontend-only, deploys free to Vercel.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "test": "node --test \"test/*.test.mjs\"",
+    "og": "node scripts/make-og.mjs",
+    "snapshot": "node scripts/refresh-snapshot.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "@fontsource-variable/archivo": "^5.1.0",
+    "@fontsource-variable/fraunces": "^5.1.0",
+    "@fontsource-variable/jetbrains-mono": "^5.1.0",
+    "astro": "^5.2.5"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.1"
+  }
+}

@@ -1,0 +1,128 @@
+---
+import { SITE } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="colophon" id="contact">
+  <div class="wrap">
+    <div class="colophon__cta reveal">
+      <p class="kicker">Get in touch</p>
+      <h2 class="display colophon__title">
+        Let's build something<br />that doesn't break.
+      </h2>
+      <div class="colophon__actions">
+        <a class="btn" href={`mailto:${SITE.email}`}>
+          {SITE.email}<span class="arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost" href={SITE.github} target="_blank" rel="noopener">
+          GitHub<span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="colophon__foot">
+      <div class="colophon__col">
+        <p class="label">Colophon</p>
+        <p class="colophon__note">
+          Set in <span class="serif">Fraunces</span>, Archivo &amp; JetBrains&nbsp;Mono.
+          Built with Astro; repository data read live from the GitHub API. Static, frontend-only,
+          hosted on Vercel.
+        </p>
+      </div>
+      <div class="colophon__col">
+        <p class="label">Index</p>
+        <ul class="colophon__links">
+          <li><a class="link" href="#work">Work</a></li>
+          <li><a class="link" href="#archive">Archive</a></li>
+          <li><a class="link" href="#about">About</a></li>
+          <li><a class="link" href="#top">Back to top ↑</a></li>
+        </ul>
+      </div>
+      <div class="colophon__col colophon__col--end">
+        <p class="label">No.&nbsp;{SITE.issueNo} · {SITE.location}</p>
+        <p class="colophon__sign">George&nbsp;Wall<span class="colophon__reg">®</span></p>
+        <p class="colophon__copy">© {year} · georgewall.uk</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .colophon {
+    margin-top: var(--section-gap);
+    border-top: 1.5px solid var(--ink);
+    padding-top: clamp(3.5rem, 8vw, 6rem);
+    padding-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .colophon__cta {
+    text-align: center;
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .colophon__title {
+    font-size: clamp(2.6rem, 8vw, 7rem);
+    margin: 1rem 0 2.4rem;
+  }
+  .colophon__actions {
+    display: flex;
+    gap: 0.9rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .colophon__foot {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+  .colophon__col .label {
+    margin-bottom: 0.9rem;
+  }
+  .colophon__note {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 38ch;
+  }
+  .colophon__links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .colophon__col--end {
+    text-align: right;
+  }
+  .colophon__sign {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'WONK' 1, 'wght' 560;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    line-height: 1;
+    margin: 0.4rem 0;
+  }
+  .colophon__reg {
+    font-family: var(--font-mono);
+    font-size: 0.4em;
+    color: var(--accent);
+    vertical-align: super;
+  }
+  .colophon__copy {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 760px) {
+    .colophon__foot {
+      grid-template-columns: 1fr;
+      gap: 2.2rem;
+    }
+    .colophon__col--end {
+      text-align: left;
+    }
+  }
+</style>

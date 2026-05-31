@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="George Wall">
+  <rect width="32" height="32" rx="6" fill="#17140F"/>
+  <text x="16" y="21.5" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-style="italic"
+        font-weight="600" text-anchor="middle" fill="#F3EFE4">G</text>
+  <path d="M7 26 q2.5 -3 5 0 t5 0 t5 0 t3 0" fill="none" stroke="#ED2E0E" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,303 @@
+---
+import type { Repo } from '../data/github';
+import { categoryOf, categoriesIn } from '../lib/categorize';
+import { languageColor, formatCount, relativeTime, formatMonthYear } from '../lib/format';
+
+interface Props {
+  /** Portfolio repos (no forks/meta), pre-sorted. Server-rendered as the no-JS baseline. */
+  repos: Repo[];
+  /** Everything, including forks — embedded for the client to re-filter live. */
+  allRepos: Repo[];
+  generatedAt: string;
+}
+const { repos, allRepos, generatedAt } = Astro.props;
+const cats = categoriesIn(repos);
+const now = new Date();
+---
+
+<section class="archive" id="archive">
+  <div class="wrap">
+    <header class="archive__head reveal">
+      <div>
+        <p class="kicker">The archive</p>
+        <h2 class="display archive__title">Everything, live from GitHub.</h2>
+      </div>
+      <p class="archive__note">
+        This list reads straight from the public GitHub API in your browser — no server,
+        no token. <span class="archive__status" data-status>Snapshot · {formatMonthYear(generatedAt)}</span>
+      </p>
+    </header>
+
+    <div class="archive__controls reveal" role="group" aria-label="Filter and sort repositories">
+      <div class="archive__filters" data-filters>
+        <button class="chip is-active" data-filter="All" type="button">All</button>
+        {cats.map((c) => <button class="chip" data-filter={c} type="button">{c}</button>)}
+      </div>
+      <div class="archive__sorts">
+        <button class="chip chip--sort is-active" data-sort="stars" type="button">★ Stars</button>
+        <button class="chip chip--sort" data-sort="recent" type="button">Recent</button>
+        <label class="archive__forks">
+          <input type="checkbox" data-forks />
+          <span>Show forks</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="archive__list" data-list>
+      {
+        repos.map((r) => (
+          <a
+            class="arc-row"
+            href={r.html_url}
+            target="_blank"
+            rel="noopener"
+            data-cat={categoryOf(r)}
+            data-stars={r.stars}
+            data-pushed={r.pushed_at}
+            data-fork="false"
+          >
+            <span class="arc-name">{r.name}</span>
+            <span class="arc-desc">{r.description ?? '—'}</span>
+            <span class="arc-lang">
+              {r.language && <span class="lang-dot" style={`--dot:${languageColor(r.language)}`} />}
+              {r.language ?? ''}
+            </span>
+            <span class="arc-stars">{r.stars > 0 ? `★ ${formatCount(r.stars)}` : ''}</span>
+            <span class="arc-updated">{relativeTime(r.pushed_at, now)}</span>
+            <span class="arc-go" aria-hidden="true">↗</span>
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="archive__empty" data-empty hidden>No repositories in this filter.</p>
+  </div>
+
+  <script
+    type="application/json"
+    data-archive-data
+    set:html={JSON.stringify(allRepos)}
+  />
+</section>
+
+<style is:global>
+  .archive {
+    padding-top: var(--section-gap);
+  }
+  .archive__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .archive__title {
+    font-size: clamp(2.2rem, 5.5vw, 4.4rem);
+    margin-top: 0.8rem;
+    max-width: 14ch;
+  }
+  .archive__note {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--ink-faint);
+    max-width: 34ch;
+  }
+  .archive__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--accent);
+  }
+  .archive__status::before {
+    content: '';
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .archive__status[data-live]::before {
+    animation: arc-blink 2s ease-in-out infinite;
+  }
+  @keyframes arc-blink {
+    50% {
+      opacity: 0.25;
+    }
+  }
+
+  .archive__controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    border-bottom: 1.5px solid var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .archive__filters,
+  .archive__sorts {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    padding: 0.4em 0.85em;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+  }
+  .chip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .chip.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .chip--sort.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .archive__forks {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+    cursor: pointer;
+    margin-left: 0.3rem;
+  }
+  .archive__forks input {
+    accent-color: var(--accent);
+  }
+
+  .arc-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, 0.8fr) minmax(0, 1.7fr) auto 4rem 7rem 1.2rem;
+    align-items: baseline;
+    gap: 1.2rem;
+    padding: 1.1rem 0.3rem;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    transition: padding-left 0.25s var(--ease), background 0.25s ease;
+  }
+  .arc-row:hover {
+    padding-left: 0.7rem;
+    background: var(--paper-raised);
+  }
+  .arc-name {
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .arc-row:hover .arc-name {
+    color: var(--accent);
+  }
+  .arc-forktag {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    padding: 0 0.3em;
+    margin-left: 0.4em;
+    vertical-align: 0.1em;
+  }
+  .arc-desc {
+    color: var(--ink-soft);
+    font-size: 0.92rem;
+    line-height: 1.4;
+    min-width: 0;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  .arc-lang {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .arc-stars {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--accent);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .arc-updated {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .arc-go {
+    color: var(--ink-faint);
+    text-align: right;
+    transition: transform 0.25s var(--ease), color 0.25s ease;
+  }
+  .arc-row:hover .arc-go {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  .archive__empty {
+    padding: 2rem 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 860px) {
+    .arc-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: 'name stars' 'desc desc' 'lang updated';
+      gap: 0.35rem 1rem;
+      padding-block: 1.2rem;
+    }
+    .arc-name {
+      grid-area: name;
+    }
+    .arc-stars {
+      grid-area: stars;
+      text-align: right;
+    }
+    .arc-desc {
+      grid-area: desc;
+    }
+    .arc-lang {
+      grid-area: lang;
+    }
+    .arc-updated {
+      grid-area: updated;
+      text-align: right;
+    }
+    .arc-go {
+      display: none;
+    }
+  }
+</style>
+
+<script src="../scripts/archive.ts"></script>

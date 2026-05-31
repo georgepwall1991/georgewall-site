@@ -1,0 +1,180 @@
+---
+import type { Repo } from '../data/github';
+import { languageColor, formatCount, relativeTime, pad2 } from '../lib/format';
+
+interface Props {
+  index: number;
+  kicker: string;
+  title: string;
+  blurb: string;
+  repo?: Repo;
+  /** Preferred non-GitHub link label, e.g. "NuGet" or "Live". */
+  cta?: string;
+  anchor: string;
+}
+const { index, kicker, title, blurb, repo, cta, anchor } = Astro.props;
+
+// Build the link chips: a homepage (NuGet/Live/App Store) first if present, then GitHub.
+const links: { href: string; label: string }[] = [];
+if (repo?.homepage) links.push({ href: repo.homepage, label: cta ?? 'Live' });
+if (repo) links.push({ href: repo.html_url, label: 'GitHub' });
+
+const primaryHref = links[0]?.href ?? repo?.html_url ?? '#';
+const topics = (repo?.topics ?? []).slice(0, 6);
+const now = new Date();
+---
+
+<article class="entry reveal" id={anchor}>
+  <div class="entry__index" aria-hidden="true">{pad2(index)}</div>
+
+  <div class="entry__body">
+    <p class="kicker entry__kicker">{kicker}</p>
+
+    <h3 class="entry__title">
+      <a href={primaryHref} target="_blank" rel="noopener" class="link link--on entry__title-link">
+        {title}
+      </a>
+    </h3>
+
+    <p class="entry__blurb">{blurb}</p>
+
+    {
+      repo && (
+        <div class="entry__meta">
+          {repo.language && (
+            <span class="entry__metaitem">
+              <span class="lang-dot" style={`--dot:${languageColor(repo.language)}`} />
+              {repo.language}
+            </span>
+          )}
+          {repo.stars > 0 && (
+            <span class="entry__metaitem">
+              <span class="entry__star">★</span> {formatCount(repo.stars)}
+            </span>
+          )}
+          <span class="entry__metaitem entry__updated">Updated {relativeTime(repo.pushed_at, now)}</span>
+        </div>
+      )
+    }
+
+    {
+      topics.length > 0 && (
+        <ul class="entry__tags" aria-label="Topics">
+          {topics.map((t) => (
+            <li class="tag">{t}</li>
+          ))}
+        </ul>
+      )
+    }
+
+    {
+      links.length > 0 && (
+        <div class="entry__links">
+          {links.map((l) => (
+            <a class="link entry__link" href={l.href} target="_blank" rel="noopener">
+              {l.label} <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .entry {
+    display: grid;
+    grid-template-columns: clamp(3.5rem, 8vw, 7rem) 1fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding: clamp(2.2rem, 5vw, 3.6rem) 0;
+    border-top: 1.5px solid var(--ink);
+  }
+
+  .entry__index {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--accent);
+    padding-top: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .entry__body {
+    min-width: 0;
+  }
+
+  .entry__kicker {
+    margin-bottom: 0.9rem;
+  }
+
+  .entry__title {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 540;
+    font-size: clamp(2.3rem, 6.5vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.1rem;
+  }
+  .entry__title-link {
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+
+  .entry__blurb {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 32, 'WONK' 0, 'wght' 400;
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    line-height: 1.42;
+    color: var(--ink-soft);
+    max-width: 46ch;
+    margin-bottom: 1.6rem;
+  }
+
+  .entry__meta {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-bottom: 1.2rem;
+  }
+  .entry__metaitem {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+  .entry__star {
+    color: var(--accent);
+  }
+  .entry__updated {
+    color: var(--ink-faint);
+  }
+
+  .entry__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin-bottom: 1.6rem;
+  }
+
+  .entry__links {
+    display: flex;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+  }
+
+  @media (max-width: 620px) {
+    .entry {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    .entry__index {
+      padding-top: 0;
+    }
+  }
+</style>

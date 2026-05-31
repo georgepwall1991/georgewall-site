@@ -1,0 +1,76 @@
+---
+import ProjectEntry from './ProjectEntry.astro';
+import type { Repo } from '../data/github';
+
+export interface Entry {
+  name: string;
+  kicker: string;
+  title: string;
+  blurb: string;
+  cta?: string;
+  repo?: Repo;
+  anchor: string;
+}
+
+interface Props {
+  entries: Entry[];
+}
+const { entries } = Astro.props;
+---
+
+<section class="work" id="work">
+  <div class="wrap">
+    <header class="work__head reveal">
+      <p class="kicker">Selected work</p>
+      <h2 class="display work__title">Things I built to stop other things breaking.</h2>
+      <p class="work__intro">
+        Most of my open source lives in one place: the moment just before a bug becomes
+        production's problem. Analyzers, source generators and CLIs that turn runtime
+        surprises into compile-time certainty.
+      </p>
+    </header>
+
+    <div class="work__list">
+      {
+        entries.map((e, i) => (
+          <ProjectEntry
+            index={i + 1}
+            kicker={e.kicker}
+            title={e.title}
+            blurb={e.blurb}
+            repo={e.repo}
+            cta={e.cta}
+            anchor={e.anchor}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-top: var(--section-gap);
+  }
+
+  .work__head {
+    max-width: 52rem;
+    margin-bottom: clamp(1rem, 3vw, 2.5rem);
+  }
+  .work__title {
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    margin: 1rem 0 1.4rem;
+    max-width: 16ch;
+  }
+  .work__intro {
+    font-size: clamp(1.02rem, 1.4vw, 1.22rem);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 50ch;
+  }
+
+  /* The first entry's top rule meets the section intro cleanly. */
+  .work__list :global(.entry:last-child) {
+    border-bottom: 1.5px solid var(--ink);
+  }
+</style>

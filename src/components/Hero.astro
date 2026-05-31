@@ -1,0 +1,216 @@
+---
+import DiagnosticHero from './DiagnosticHero.astro';
+import { SITE } from '../data/site';
+import { formatCount } from '../lib/format';
+
+interface Props {
+  repoCount: number;
+  totalStars: number;
+}
+const { repoCount, totalStars } = Astro.props;
+---
+
+<section class="hero" id="lede">
+  <div class="wrap">
+    <div class="hero__meta">
+      <span class="label">№&nbsp;{SITE.issueNo}</span>
+      <span class="hero__meta-rule" aria-hidden="true"></span>
+      <span class="label">{SITE.location}</span>
+      <span class="hero__meta-rule" aria-hidden="true"></span>
+      <span class="label">{SITE.issueYear}</span>
+      <span class="hero__meta-spacer"></span>
+      <span class="label hero__meta-end">Open source &amp; selected works</span>
+    </div>
+
+    <div class="hero__grid">
+      <div class="hero__main">
+        <p class="kicker hero__kicker">{SITE.role} · Financial services</p>
+
+        <h1 class="display hero__title">
+          <span class="hero__line">Catching <span class="hero__flag">bugs</span></span>
+          <span class="hero__line hero__line--indent">before they ship.</span>
+        </h1>
+
+        <p class="hero__standfirst">
+          I'm George — a developer in financial services who builds the unglamorous
+          things that keep software honest: <strong>Roslyn analyzers</strong>,
+          <strong>developer tooling</strong>, and <strong>iOS apps</strong>. The kind of work
+          that moves a failure from a 3am production incident to a red squiggle in your editor.
+        </p>
+
+        <div class="hero__actions">
+          <a href="#work" class="btn">
+            Selected work
+            <span class="arrow" aria-hidden="true">↓</span>
+          </a>
+          <a href={SITE.github} target="_blank" rel="noopener" class="btn btn--ghost">
+            GitHub
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+
+        <dl class="hero__stats">
+          <div>
+            <dt class="label">Public repos</dt>
+            <dd>{repoCount}</dd>
+          </div>
+          <div>
+            <dt class="label">GitHub stars</dt>
+            <dd>{formatCount(totalStars)}<span class="hero__star">★</span></dd>
+          </div>
+          <div>
+            <dt class="label">Building since</dt>
+            <dd>2021</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="hero__aside">
+        <DiagnosticHero />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(2.5rem, 7vw, 5rem);
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+
+  .hero__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid var(--rule);
+    flex-wrap: wrap;
+  }
+  .hero__meta-rule {
+    width: 1px;
+    height: 0.9rem;
+    background: var(--rule-strong);
+  }
+  .hero__meta-spacer {
+    flex: 1;
+  }
+  .hero__meta-end {
+    color: var(--ink-soft);
+  }
+
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .hero__kicker {
+    margin-bottom: 1.4rem;
+  }
+
+  .hero__title {
+    font-size: clamp(3.2rem, 11vw, 9.5rem);
+    margin-bottom: 1.8rem;
+  }
+  .hero__line {
+    display: block;
+  }
+  .hero__line--indent {
+    padding-left: 0.06em;
+    color: var(--ink);
+  }
+
+  .hero__flag {
+    position: relative;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 560;
+    white-space: nowrap;
+  }
+  .hero__flag::after {
+    content: '';
+    position: absolute;
+    left: -0.02em;
+    right: -0.02em;
+    bottom: 0.04em;
+    height: 0.16em;
+    background-color: var(--accent);
+    -webkit-mask: var(--wave) repeat-x left bottom / 0.5em 0.16em;
+    mask: var(--wave) repeat-x left bottom / 0.5em 0.16em;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    animation: hero-flag 0.9s var(--ease) 0.7s forwards;
+  }
+
+  .hero__standfirst {
+    max-width: 34ch;
+    font-size: clamp(1.05rem, 1.4vw, 1.28rem);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+  }
+  .hero__standfirst strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.6rem;
+  }
+
+  .hero__stats {
+    display: flex;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    flex-wrap: wrap;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+  .hero__stats dt {
+    margin-bottom: 0.4rem;
+  }
+  .hero__stats dd {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 80, 'WONK' 0, 'wght' 540;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1;
+  }
+  .hero__star {
+    color: var(--accent);
+    font-size: 0.6em;
+    vertical-align: 0.3em;
+    margin-left: 0.1em;
+  }
+
+  .hero__aside {
+    /* lifts the editor card slightly off the baseline for editorial tension */
+    transform: translateY(-0.5rem);
+  }
+
+  @keyframes hero-flag {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__flag::after {
+      animation: none;
+      transform: scaleX(1);
+    }
+  }
+
+  @media (max-width: 940px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .hero__aside {
+      transform: none;
+      max-width: 32rem;
+    }
+  }
+</style>

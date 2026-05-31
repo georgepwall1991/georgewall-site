@@ -1,0 +1,145 @@
+---
+import { pad2 } from '../lib/format';
+
+interface Item {
+  title: string;
+  kicker: string;
+  anchor: string;
+}
+interface Props {
+  items: Item[];
+}
+const { items } = Astro.props;
+---
+
+<section class="contents" aria-label="In this issue">
+  <div class="wrap contents__inner">
+    <div class="contents__head">
+      <p class="kicker">In this issue</p>
+      <p class="contents__sub serif">A short index of recent work, and where to find the rest.</p>
+    </div>
+
+    <ol class="contents__list">
+      {
+        items.map((item, i) => (
+          <li class="contents__row">
+            <a class="contents__link" href={`#${item.anchor}`}>
+              <span class="contents__no">{pad2(i + 1)}</span>
+              <span class="contents__title link">{item.title}</span>
+              <span class="contents__kicker">{item.kicker}</span>
+              <span class="contents__arrow" aria-hidden="true">↘</span>
+            </a>
+          </li>
+        ))
+      }
+      <li class="contents__row contents__row--dept">
+        <a class="contents__link" href="#archive">
+          <span class="contents__no">+</span>
+          <span class="contents__title link">The full archive</span>
+          <span class="contents__kicker">Every public repository, live from GitHub</span>
+          <span class="contents__arrow" aria-hidden="true">↘</span>
+        </a>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<style>
+  .contents {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    border-top: 1.5px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+  }
+  .contents__inner {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+  .contents__head {
+    position: sticky;
+    top: 6rem;
+  }
+  .contents__sub {
+    margin-top: 0.8rem;
+    font-size: clamp(1.1rem, 1.6vw, 1.45rem);
+    line-height: 1.35;
+    color: var(--ink-soft);
+    max-width: 22ch;
+    font-style: italic;
+    font-variation-settings: 'opsz' 40, 'WONK' 0;
+  }
+
+  .contents__list {
+    list-style: none;
+  }
+  .contents__row {
+    border-top: 1px solid var(--rule);
+  }
+  .contents__row:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+  .contents__row--dept .contents__no {
+    color: var(--accent);
+  }
+
+  .contents__link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    grid-template-areas: 'no title arrow' 'no kicker arrow';
+    column-gap: 1rem;
+    row-gap: 0.2rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--ink);
+    padding: 1.1rem 0.4rem 1.1rem 0;
+    transition: padding-left 0.3s var(--ease);
+  }
+  .contents__link:hover {
+    padding-left: 0.6rem;
+  }
+
+  .contents__no {
+    grid-area: no;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    padding-top: 0.3rem;
+  }
+  .contents__title {
+    grid-area: title;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'WONK' 1, 'wght' 500;
+    font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+    line-height: 1.05;
+  }
+  .contents__kicker {
+    grid-area: kicker;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .contents__arrow {
+    grid-area: arrow;
+    align-self: center;
+    color: var(--accent);
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translate(-6px, 6px);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .contents__link:hover .contents__arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 760px) {
+    .contents__inner {
+      grid-template-columns: 1fr;
+    }
+    .contents__head {
+      position: static;
+    }
+  }
+</style>
