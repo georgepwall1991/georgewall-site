@@ -12,7 +12,7 @@
   --paper-sunk: #ece6d6;
   --ink: #18140d;
   --ink-soft: #4d463a;
-  --ink-faint: #8c8472;
+  --ink-faint: #6f6857; /* AA-compliant on bone paper (~4.9:1); was #8c8472 (3.3:1) */
   --rule: #dbd4c3;
   --rule-strong: #c7bfa9;
   --accent: #e12d0b;
@@ -41,7 +41,7 @@
   --paper-sunk: #100d07;
   --ink: #f2ecdc;
   --ink-soft: #b6ad98;
-  --ink-faint: #756c58;
+  --ink-faint: #877d63; /* AA-compliant on dark paper (~4.6:1); was #756c58 (3.6:1) */
   --rule: #2e2818;
   --rule-strong: #3e3622;
   --accent: #ff5128;
@@ -144,6 +144,7 @@ a {
   font-variation-settings: 'wght' 580, 'opsz' 144, 'SOFT' 0, 'WONK' 1;
   line-height: 0.92;
   letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .kicker {
@@ -300,8 +301,13 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Must out-specify `.js .reveal { opacity: 0 }` (0,2,0) or reduced-motion
+     users with JS stay hidden until the observer fires — so include the
+     `.js`-qualified selectors here too. */
   .reveal,
-  .reveal-clip {
+  .reveal-clip,
+  .js .reveal,
+  .js .reveal-clip {
     opacity: 1;
     transform: none;
     clip-path: none;

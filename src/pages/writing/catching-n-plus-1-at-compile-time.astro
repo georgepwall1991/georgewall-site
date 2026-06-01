@@ -54,8 +54,8 @@ const articleSchema = {
         <p class="kicker">Compile-time safety · EF Core</p>
         <h1 class="display article__title">Catching N+1 queries at compile time.</h1>
         <p class="article__standfirst">
-          The most expensive database bug in .NET isn't a missing index. It's the loop you
-          didn't know you wrote — and it passes every test you have.
+          The most expensive database bug in .NET isn’t a missing index. It’s the loop you
+          didn’t know you wrote — and it passes every test you have.
         </p>
         <p class="article__byline label">
           George Wall · London ·
@@ -75,7 +75,7 @@ const articleSchema = {
         <p>
           The reason it survives is structural. Unit tests run against an in-memory provider
           or a handful of fixtures, so the cost — one extra round-trip per row — never adds
-          up to anything you'd notice. Code review reads the C#, not the SQL the C# will
+          up to anything you’d notice. Code review reads the C#, not the SQL the C# will
           generate. And the people best placed to catch it are reading a pull request, not
           a query plan. So it ships, and the first honest signal arrives weeks later as a
           latency graph with a step change in it.
@@ -114,11 +114,11 @@ const articleSchema = {
           That single misplaced <code>.ToList()</code> turns a <code>WHERE</code> the
           database could answer from an index into a full table read plus an in-process
           filter. Move it after the <code>Where</code> and <code>OrderBy</code> and the
-          predicate is translated to SQL — the database does the work it's built for, and
+          predicate is translated to SQL — the database does the work it’s built for, and
           returns the handful of rows you actually wanted.
         </p>
 
-        <h2>Why "just be careful" doesn't scale</h2>
+        <h2>Why “just be careful” doesn’t scale</h2>
 
         <p>
           The standard advice — use <code>Include</code> for the navigation, push the
@@ -133,7 +133,7 @@ const articleSchema = {
         <blockquote class="article__quote">
           <p>
             Good software fails loudly, early, and somewhere cheap to fix. The goal is to
-            move the failure as close to the keyboard as it'll go.
+            move the failure as close to the keyboard as it’ll go.
           </p>
         </blockquote>
 
@@ -150,7 +150,7 @@ const articleSchema = {
         </p>
 
         <p>
-          That's the premise behind
+          That’s the premise behind
           <a
             class="link link--on"
             href="https://www.nuget.org/packages/LinqContraband"
@@ -170,8 +170,8 @@ const articleSchema = {
           dependencies in your DI container, an un-propagated <code>CancellationToken</code>,
           a forgotten AutoMapper configuration — they all share that profile, and they all
           yield to the same move. Encode the rule once, in an analyzer, and let the compiler
-          enforce it on every keystroke for everyone, forever. That's the unglamorous
-          infrastructure of software quality, and it's most of what I build.
+          enforce it on every keystroke for everyone, forever. That’s the unglamorous
+          infrastructure of software quality, and it’s most of what I build.
         </p>
 
         <p class="article__back">

@@ -113,10 +113,17 @@ const now = new Date();
     line-height: 0.98;
     letter-spacing: -0.02em;
     margin-bottom: 1.1rem;
+    /* Long compound titles (e.g. "LinqContraband") must break rather than
+       force horizontal scroll on narrow phones. overflow-wrap has to sit on
+       the block to govern the line box; on the inline <a> alone it is ignored. */
+    overflow-wrap: break-word;
   }
   .entry__title-link {
     color: var(--ink);
     overflow-wrap: anywhere;
+    /* Override .link's white-space:nowrap so multi-word titles
+       ("AutoMapper Analyzer") wrap on narrow phones instead of overflowing. */
+    white-space: normal;
   }
 
   .entry__blurb {
