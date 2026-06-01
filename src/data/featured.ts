@@ -50,7 +50,7 @@ export const FEATURED: Featured[] = [
     kicker: 'Compile-time safety · mapping',
     title: 'AutoMapper Analyzer',
     blurb:
-      "AutoMapper's convenience hides its sharpest edge: the mapping you forgot. This flags missing and misconfigured maps at build, turning a whole class of runtime exceptions into a wavy underline.",
+      "AutoMapper’s convenience hides its sharpest edge: the mapping you forgot. This flags missing and misconfigured maps at build, turning a whole class of runtime exceptions into a wavy underline.",
   },
   {
     name: 'CPMigrate',
