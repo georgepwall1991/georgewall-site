@@ -4,6 +4,7 @@ import '@fontsource-variable/fraunces';
 import '@fontsource-variable/archivo';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
 import { snapshotFallback } from '../data/github';
 import { SOCIALS } from '../data/site';
 
@@ -113,5 +114,6 @@ const jsonLd = {
   <body>
     <div class="grain" aria-hidden="true"></div>
     <slot />
+    <Analytics />
   </body>
 </html>
