@@ -5,6 +5,7 @@ import '@fontsource-variable/archivo';
 import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 import { snapshotFallback } from '../data/github';
 import { SOCIALS } from '../data/site';
 
@@ -115,5 +116,6 @@ const jsonLd = {
     <div class="grain" aria-hidden="true"></div>
     <slot />
     <Analytics />
+    <SpeedInsights />
   </body>
 </html>
