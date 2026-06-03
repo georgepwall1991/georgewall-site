@@ -5,11 +5,13 @@ import Hero from '../components/Hero.astro';
 import Contents from '../components/Contents.astro';
 import FeaturedWork from '../components/FeaturedWork.astro';
 import SecondaryGrid from '../components/SecondaryGrid.astro';
+import PrivateApps from '../components/PrivateApps.astro';
 import Archive from '../components/Archive.astro';
 import About from '../components/About.astro';
 import Colophon from '../components/Colophon.astro';
 import { getSnapshot, portfolioRepos, totalStars, type Repo } from '../data/github';
 import { FEATURED, SECONDARY } from '../data/featured';
+import { PRIVATE_APPS } from '../data/apps';
 
 // Build-time data: live GitHub if reachable, committed snapshot otherwise.
 const snapshot = await getSnapshot();
@@ -54,15 +56,27 @@ const softwareSchema = featuredEntries
     url: e.repo!.homepage ?? e.repo!.html_url,
     codeRepository: e.repo!.html_url,
   }));
+const appSchema = PRIVATE_APPS.map((app) => ({
+  '@type': 'MobileApplication',
+  '@id': `${SITE_URL}/#app-${slug(app.name)}`,
+  name: app.title,
+  applicationCategory: 'GameApplication',
+  operatingSystem: 'iOS',
+  description: app.blurb,
+  author: { '@id': `${SITE_URL}/#person` },
+  ...(app.url ? { url: app.url, downloadUrl: app.url } : {}),
+  screenshot: app.screenshots.map((shot) => new URL(shot.src, SITE_URL).href),
+}));
 ---
 
-<Base schema={softwareSchema}>
+<Base schema={[...softwareSchema, ...appSchema]}>
   <SiteHeader />
   <main>
     <Hero repoCount={repoCount} totalStars={stars} />
     <Contents items={contentsItems} />
     <FeaturedWork entries={featuredEntries} />
     <SecondaryGrid entries={secondaryEntries} />
+    <PrivateApps apps={PRIVATE_APPS} />
     <Archive repos={portfolio} allRepos={snapshot.repos} generatedAt={snapshot.generatedAt} />
     <About avatar={avatar} />
   </main>

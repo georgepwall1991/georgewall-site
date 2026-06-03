@@ -3,7 +3,7 @@
   "user": {
     "login": "georgepwall1991",
     "name": "George Wall",
-    "bio": "34, Full-stack developer in financial services building .NET analyzers, developer tooling, iOS apps, and production-safety systems.",
+    "bio": "34, full-stack developer in financial services building .NET analysers, developer tooling, iOS apps, and systems that catch problems early.",
     "location": "London",
     "avatar_url": "https://avatars.githubusercontent.com/u/84231788?v=4",
     "html_url": "https://github.com/georgepwall1991",
@@ -26,7 +26,7 @@
     },
     {
       "name": "LinqContraband",
-      "description": "Stop smuggling bad queries into production. A Roslyn Analyzer that catches EF Core performance killers (client-side eval, N+1) at compile time.",
+      "description": "Stop smuggling bad queries into production. A Roslyn analyser that catches EF Core performance problems (client-side eval, N+1) at compile time.",
       "language": "C#",
       "stars": 9,
       "forks": 0,
@@ -50,7 +50,7 @@
     },
     {
       "name": "ConfigContraband",
-      "description": "Stop smuggling broken appsettings into production. Roslyn analyzers for .NET Options and configuration correctness.",
+      "description": "Stop smuggling broken appsettings into production. Roslyn analysers for .NET Options and configuration correctness.",
       "language": "C#",
       "stars": 1,
       "forks": 0,
@@ -86,7 +86,7 @@
     },
     {
       "name": "DependencyInjection.Lifetime.Analyzers",
-      "description": "Prevent memory leaks and runtime crashes in .NET Dependency Injection. A zero-overhead Roslyn analyzer that catches captive dependencies, undisposed scopes, and lifetime mismatches at compile-time.",
+      "description": "Prevent memory leaks and runtime crashes in .NET Dependency Injection. A zero-overhead Roslyn analyser that catches captive dependencies, undisposed scopes, and lifetime mismatches at compile time.",
       "language": "C#",
       "stars": 9,
       "forks": 0,
@@ -120,7 +120,7 @@
     },
     {
       "name": "automapper-analyser",
-      "description": "A Roslyn Analyzer for AutoMapper that detects mapping configuration errors and missing maps at compile-time, preventing runtime exceptions.",
+      "description": "A Roslyn analyser for AutoMapper that detects configuration errors and missing maps at compile time, before they turn into runtime surprises.",
       "language": "C#",
       "stars": 4,
       "forks": 0,
@@ -159,7 +159,7 @@
     },
     {
       "name": "CPMigrate",
-      "description": "Migrate .NET solutions to NuGet Central Package Management, analyze dependency health, and update packages safely with rollback.",
+      "description": "Migrate .NET solutions to NuGet Central Package Management, check dependency health, and update packages safely with rollback.",
       "language": "C#",
       "stars": 1,
       "forks": 0,
@@ -264,7 +264,7 @@
     },
     {
       "name": "CancelCop.Analyzer",
-      "description": "A surgical Roslyn analyzer focused on CancellationToken propagation and honoring across public APIs, handlers, EF Core, HTTP calls, and Minimal APIs, with comprehensive code fixes.",
+      "description": "A focused Roslyn analyser for CancellationToken propagation across public APIs, handlers, EF Core, HTTP calls, and Minimal APIs, with code fixes that wire the token for you.",
       "language": "C#",
       "stars": 4,
       "forks": 0,
@@ -342,7 +342,7 @@
     },
     {
       "name": "CQRSPrototype",
-      "description": "A robust .NET solution demonstrating Clean Architecture and CQRS (Command Query Responsibility Segregation) principles. This project serves as a reference implementation for building scalable, maintainable, and testable enterprise applications using modern .NET technologies.",
+      "description": "A .NET clean-architecture CQRS reference: MediatR, DDD, and the patterns that keep enterprise code testable.",
       "language": "C#",
       "stars": 2,
       "forks": 0,

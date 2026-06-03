@@ -8,6 +8,7 @@
  * Results are cached in localStorage for 6h to be a polite API citizen.
  */
 import type { Repo } from '../data/types';
+import { repoDescription } from '../data/repoCopy';
 import { categoryOf } from '../lib/categorize';
 import { languageColor, formatCount, relativeTime } from '../lib/format';
 
@@ -59,7 +60,7 @@ if (section && listEl && dataEl) {
     return `<a class="arc-row" href="${r.html_url}" target="_blank" rel="noopener"
       data-cat="${categoryOf(r)}" data-fork="${r.fork}">
       <span class="arc-name">${esc(r.name)}${forkTag}</span>
-      <span class="arc-desc">${esc(r.description ?? '—')}</span>
+      <span class="arc-desc">${esc(repoDescription(r))}</span>
       <span class="arc-lang">${dot}${esc(r.language ?? '')}</span>
       <span class="arc-stars">${stars}</span>
       <span class="arc-updated">${relativeTime(r.pushed_at, now)}</span>

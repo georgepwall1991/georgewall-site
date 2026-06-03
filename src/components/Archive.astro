@@ -1,5 +1,6 @@
 ---
 import type { Repo } from '../data/github';
+import { repoDescription } from '../data/repoCopy';
 import { categoryOf, categoriesIn } from '../lib/categorize';
 import { languageColor, formatCount, relativeTime, formatMonthYear } from '../lib/format';
 
@@ -20,11 +21,11 @@ const now = new Date();
     <header class="archive__head reveal">
       <div>
         <p class="kicker">The archive</p>
-        <h2 class="display archive__title">Everything, live from GitHub.</h2>
+        <h2 class="display archive__title">The rest, straight from GitHub.</h2>
       </div>
       <p class="archive__note">
-        This list reads straight from the public GitHub API in your browser — no server,
-        no token. <span class="archive__status" data-status>Snapshot · {formatMonthYear(generatedAt)}</span>
+        This list reads the public GitHub API in your browser. No server, no token.
+        <span class="archive__status" data-status>Snapshot · {formatMonthYear(generatedAt)}</span>
       </p>
     </header>
 
@@ -57,7 +58,7 @@ const now = new Date();
             data-fork="false"
           >
             <span class="arc-name">{r.name}</span>
-            <span class="arc-desc">{r.description ?? '—'}</span>
+            <span class="arc-desc">{repoDescription(r)}</span>
             <span class="arc-lang">
               {r.language && <span class="lang-dot" style={`--dot:${languageColor(r.language)}`} />}
               {r.language ?? ''}

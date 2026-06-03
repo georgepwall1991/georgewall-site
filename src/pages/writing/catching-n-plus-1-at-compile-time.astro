@@ -5,7 +5,7 @@ import { SITE } from '../../data/site';
 
 const title = 'Catching N+1 queries at compile time — George Wall';
 const description =
-  'Why N+1 and client-side evaluation survive code review and tests, and how a Roslyn analyzer moves the catch from a 3am incident to a red squiggle in your editor.';
+  'Why N+1 and client-side evaluation survive code review and tests, and how a Roslyn analyser moves the catch from production pain to a red squiggle in your editor.';
 
 const published = '2026-06-01';
 const SITE_URL = SITE.url;
@@ -27,7 +27,7 @@ const articleSchema = {
     'N+1 query',
     'Entity Framework Core',
     'client-side evaluation',
-    'Roslyn analyzer',
+    'Roslyn analyser',
     'compile-time safety',
     '.NET performance',
   ],
@@ -54,8 +54,8 @@ const articleSchema = {
         <p class="kicker">Compile-time safety · EF Core</p>
         <h1 class="display article__title">Catching N+1 queries at compile time.</h1>
         <p class="article__standfirst">
-          The most expensive database bug in .NET isn’t a missing index. It’s the loop you
-          didn’t know you wrote — and it passes every test you have.
+          The most expensive database bug in .NET is not always a missing index. Sometimes
+          it is the loop you did not know you wrote, passing every test you have.
         </p>
         <p class="article__byline label">
           George Wall · London ·
@@ -68,7 +68,7 @@ const articleSchema = {
           An N+1 query is the bug that hides in plain sight. You write what looks like one
           query, the ORM quietly issues another for every row it returns, and a method that
           ran in 8&nbsp;milliseconds against ten seed rows takes nine seconds against a
-          production table. Nothing threw. Nothing failed. The page just got slow, and the
+          production table. Nothing threw. Nothing failed. The page just became slow, and the
           reason is three call-stacks away from where it hurts.
         </p>
 
@@ -77,7 +77,7 @@ const articleSchema = {
           or a handful of fixtures, so the cost — one extra round-trip per row — never adds
           up to anything you’d notice. Code review reads the C#, not the SQL the C# will
           generate. And the people best placed to catch it are reading a pull request, not
-          a query plan. So it ships, and the first honest signal arrives weeks later as a
+          a query plan. So it ships. The first honest signal arrives weeks later as a
           latency graph with a step change in it.
         </p>
 
@@ -123,7 +123,7 @@ const articleSchema = {
         <p>
           The standard advice — use <code>Include</code> for the navigation, push the
           predicate before materialisation, watch your <code>ToList</code> calls — is all
-          correct and all useless at 2pm on a Friday when someone is three layers deep in a
+          correct and mostly useless at 2pm on a Friday when someone is three layers deep in a
           refactor. Discipline is not a control. It depends on the most fallible part of the
           system being uniformly attentive, forever. The whole history of software quality
           is the slow realisation that the cheapest place to catch a class of bug is the
@@ -140,7 +140,7 @@ const articleSchema = {
         <h2>Moving the catch to the red squiggle</h2>
 
         <p>
-          This is exactly what a Roslyn analyzer is for. It reads your code as a syntax tree
+          This is exactly what a Roslyn analyser is for. It reads your code as a syntax tree
           while you type, with full semantic knowledge of the types involved, and it can
           recognise the shapes above — a navigation property dereferenced inside a loop, a
           <code>.ToList()</code> sitting upstream of a <code>.Where()</code> on an
@@ -155,11 +155,11 @@ const articleSchema = {
             class="link link--on"
             href="https://www.nuget.org/packages/LinqContraband"
             target="_blank"
-            rel="noopener">LinqContraband</a>, an analyzer I built to read LINQ the way the
+            rel="noopener">LinqContraband</a>, an analyser I built to read LINQ the way the
           database will. It refuses to let client-side evaluation and N+1 patterns reach
           production by flagging them at compile time, with code fixes that rewrite the query
-          into its translatable form. The expensive mistake gets caught in the incident
-          channel that matters least — your editor — instead of the one that matters most.
+          into its translatable form. The expensive mistake gets caught in the place that
+          matters least — your editor — instead of the place that matters most.
         </p>
 
         <h2>The general principle</h2>
@@ -169,7 +169,7 @@ const articleSchema = {
           source, invisible under test, and obvious only under production load. Captive
           dependencies in your DI container, an un-propagated <code>CancellationToken</code>,
           a forgotten AutoMapper configuration — they all share that profile, and they all
-          yield to the same move. Encode the rule once, in an analyzer, and let the compiler
+          yield to the same move. Encode the rule once, in an analyser, and let the compiler
           enforce it on every keystroke for everyone, forever. That’s the unglamorous
           infrastructure of software quality, and it’s most of what I build.
         </p>
