@@ -5,8 +5,13 @@ export interface PrivateApp {
   status: string;
   blurb: string;
   stack: string[];
+  siteUrl?: string;
   url?: string;
   cta?: string;
+  links?: {
+    label: string;
+    url: string;
+  }[];
   screenshots: {
     src: string;
     alt: string;
@@ -22,8 +27,27 @@ export const PRIVATE_APPS: PrivateApp[] = [
     blurb:
       'My match-3 habit turned into a released iPhone game: hand-built boards, big cascades, no ad sludge, and a starlit garden that gives earned stars somewhere to go.',
     stack: ['SpriteKit', 'SwiftUI', 'Game Center', 'StoreKit 2'],
+    siteUrl: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/',
     url: 'https://apps.apple.com/us/app/gemgame-match-3-puzzle/id6761720994',
     cta: 'App Store',
+    links: [
+      {
+        label: 'Game info',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/',
+      },
+      {
+        label: 'FAQ / rules',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/faq/',
+      },
+      {
+        label: 'Support',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/support/',
+      },
+      {
+        label: 'Terms',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/terms/',
+      },
+    ],
     screenshots: [
       {
         src: '/apps/gemgame-gameplay.webp',
@@ -43,8 +67,27 @@ export const PRIVATE_APPS: PrivateApp[] = [
     blurb:
       'A small space strategy game about expanding too far, holding the frontier, and resetting a bit wiser. Fleets, research, offline progress, Game Center, the whole App Store checklist.',
     stack: ['Swift', 'Game Center', 'StoreKit', 'iOS 17+'],
+    siteUrl: 'https://georgepwall1991.github.io/fleet-commander-site/',
     url: 'https://apps.apple.com/us/app/fleet-commander/id6760207805',
     cta: 'App Store',
+    links: [
+      {
+        label: 'Game info',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/',
+      },
+      {
+        label: 'Support',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/support/',
+      },
+      {
+        label: 'Privacy',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/privacy/',
+      },
+      {
+        label: 'Terms',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/terms/',
+      },
+    ],
     screenshots: [
       {
         src: '/apps/fleet-commander-icon.webp',

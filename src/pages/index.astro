@@ -64,7 +64,8 @@ const appSchema = PRIVATE_APPS.map((app) => ({
   operatingSystem: 'iOS',
   description: app.blurb,
   author: { '@id': `${SITE_URL}/#person` },
-  ...(app.url ? { url: app.url, downloadUrl: app.url } : {}),
+  ...(app.siteUrl ? { url: app.siteUrl } : app.url ? { url: app.url } : {}),
+  ...(app.url ? { downloadUrl: app.url, sameAs: app.url } : {}),
   screenshot: app.screenshots.map((shot) => new URL(shot.src, SITE_URL).href),
 }));
 ---

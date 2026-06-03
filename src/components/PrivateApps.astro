@@ -6,6 +6,11 @@ interface Props {
 }
 
 const { apps } = Astro.props;
+
+const appLinks = (app: PrivateApp) => [
+  ...(app.url ? [{ label: app.cta ?? 'App Store', url: app.url }] : []),
+  ...(app.links ?? []),
+];
 ---
 
 <section class="apps" id="apps" aria-labelledby="apps-title">
@@ -44,13 +49,13 @@ const { apps } = Astro.props;
                   <li>{item}</li>
                 ))}
               </ul>
-              {
-                app.url && (
-                  <a class="app__cta link link--on" href={app.url} target="_blank" rel="noopener">
-                    {app.cta ?? 'Open'} <span aria-hidden="true">↗</span>
+              <div class="app__links" aria-label={`${app.title} links`}>
+                {appLinks(app).map((link) => (
+                  <a class="app__cta link link--on" href={link.url} target="_blank" rel="noopener">
+                    {link.label} <span aria-hidden="true">↗</span>
                   </a>
-                )
-              }
+                ))}
+              </div>
             </div>
           </article>
         ))
@@ -233,13 +238,19 @@ const { apps } = Astro.props;
     background: color-mix(in srgb, var(--paper-raised) 72%, transparent);
   }
 
+  .app__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.2rem;
+    margin-top: 0.3rem;
+  }
+
   .app__cta {
     width: fit-content;
     font-family: var(--font-mono);
     font-size: 0.82rem;
     letter-spacing: 0.04em;
     text-decoration: none;
-    margin-top: 0.3rem;
   }
 
   @media (max-width: 980px) {
