@@ -36,12 +36,16 @@ export const PRIVATE_APPS: PrivateApp[] = [
         url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/',
       },
       {
-        label: 'FAQ / rules',
+        label: 'FAQ',
         url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/faq/',
       },
       {
         label: 'Support',
         url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/support/',
+      },
+      {
+        label: 'Privacy',
+        url: 'https://georgepwall1991.github.io/fleet-commander-site/gemgame/privacy/',
       },
       {
         label: 'Terms',
