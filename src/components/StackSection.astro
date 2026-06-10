@@ -1,43 +1,84 @@
 ---
 // The full-stack proof, shown rather than claimed: three editor panes, one per
 // layer — React/TS at the front, a C# engine in the middle, Kafka plumbing
-// underneath. Snippets are hand-tokenised (set:html) against the site palette.
-const PANES = [
+// underneath. Snippets are hand-tokenised (set:html) against the site palette,
+// and each pane is "signed off" by the relevant toolchain — including George's
+// own analysers, which is the whole joke.
+interface Line {
+  html: string;
+  /** Current-line highlight, like the editor caret line. */
+  hl?: boolean;
+}
+
+interface Pane {
+  path: string;
+  file: string;
+  badge: string;
+  layer: string;
+  code: Line[];
+  verdict: string;
+  caption: string;
+}
+
+const PANES: Pane[] = [
   {
+    path: 'src/features/schemes/',
     file: 'SchemeGrid.tsx',
     badge: 'TSX',
     layer: 'The front',
     code: [
-      `<span class="tk-k">const</span> { data: schemes } = <span class="tk-f">useGetSchemesQuery</span>();`,
-      ``,
-      `<span class="tk-k">return</span> &lt;<span class="tk-t">AgGridReact</span> rowData={schemes}`,
-      `  columnDefs={columns} animateRows /&gt;;`,
+      {
+        html: `<span class="tk-k">const</span> { data: schemes = [] } = <span class="tk-f">useSchemesQuery</span>();`,
+      },
+      { html: `` },
+      { html: `<span class="tk-k">return</span> (` },
+      {
+        html: `  &lt;<span class="tk-t">AgGridReact</span> rowData={schemes}`,
+        hl: true,
+      },
+      { html: `    columnDefs={columns} animateRows /&gt;` },
+      { html: `);` },
     ],
+    verdict: 'tsc --strict · 0 errors',
     caption:
       'Data-dense React + TypeScript — RTK Query, AG-Grid, Recharts. Frontends built from scratch for institutional users who read numbers for a living.',
   },
   {
+    path: 'src/Engine/',
     file: 'LiabilityEngine.cs',
     badge: 'C#',
     layer: 'The middle',
     code: [
-      `<span class="tk-k">var</span> curve = <span class="tk-t">DiscountCurve</span>.<span class="tk-f">From</span>(market);`,
-      ``,
-      `<span class="tk-k">var</span> pv = scheme.CashFlows`,
-      `    .<span class="tk-f">Sum</span>(cf =&gt; cf.Amount * curve.<span class="tk-f">Df</span>(cf.Date));`,
+      {
+        html: `<span class="tk-k">var</span> curve = <span class="tk-t">DiscountCurve</span>.<span class="tk-f">From</span>(market, asOf);`,
+      },
+      { html: `` },
+      {
+        html: `<span class="tk-k">var</span> presentValue = scheme.CashFlows.<span class="tk-f">Sum</span>(cf =&gt;`,
+      },
+      {
+        html: `    cf.Amount * curve.<span class="tk-f">DiscountFactor</span>(cf.Date));`,
+        hl: true,
+      },
     ],
+    verdict: 'LinqContraband ✓ · 0 diagnostics',
     caption:
       'C# calculation engines — liability metrics, discount curves and funding ratios. Right answers, every time, with an audit trail.',
   },
   {
+    path: 'src/Messaging/',
     file: 'OutboxRelay.cs',
     badge: 'C#',
     layer: 'The plumbing',
     code: [
-      `<span class="tk-k">await</span> outbox.<span class="tk-f">Enqueue</span>(evt, tx);`,
-      `<span class="tk-c">// SQL + Kafka commit together — no lost events</span>`,
-      `<span class="tk-k">await</span> tx.<span class="tk-f">CommitAsync</span>(ct);`,
+      {
+        html: `<span class="tk-k">await</span> outbox.<span class="tk-f">Enqueue</span>(tradeRebooked, tx, ct);`,
+        hl: true,
+      },
+      { html: `<span class="tk-k">await</span> tx.<span class="tk-f">CommitAsync</span>(ct);` },
+      { html: `<span class="tk-c">// relayed to Kafka after commit</span>` },
     ],
+    verdict: 'CancelCop ✓ · token propagated',
     caption:
       'Event-driven .NET on Kafka — transactional outbox, idempotency keys, schema registry. The plumbing that is not allowed to lose money.',
   },
@@ -71,24 +112,36 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
           </>
         ))
       }
+      <span class="stack__pulse" aria-hidden="true"></span>
     </div>
 
     <div class="stack__grid">
       {
         PANES.map((pane, i) => (
-          <figure class="pane reveal" style={`--reveal-delay:${i * 110}ms`}>
+          <figure class={`pane reveal${i === 1 ? ' pane--lift' : ''}`} style={`--reveal-delay:${i * 110}ms`}>
             <div class="pane__bar">
               <span class="pane__dots" aria-hidden="true">
                 <i />
                 <i />
                 <i />
               </span>
-              <span class="pane__file">{pane.file}</span>
+              <span class="pane__file">
+                <span class="pane__path">{pane.path}</span>{pane.file}
+              </span>
               <span class="pane__badge">{pane.badge}</span>
             </div>
-            <pre class="pane__code"><code>{pane.code.map((line) => (
-              <span class="ln" set:html={line || '&nbsp;'} />
+            <pre class="pane__code"><code>{pane.code.map((line, li) => (
+              <span
+                class={`ln${line.hl ? ' ln--hl' : ''}`}
+                style={`--i:${li}`}
+              ><span class="ln__code" set:html={line.html || '&nbsp;'} />{li === pane.code.length - 1 && (
+                <span class="caret" aria-hidden="true" />
+              )}</span>
             ))}</code></pre>
+            <div class="pane__verdict">
+              <span class="pane__verdict-dot" aria-hidden="true"></span>
+              {pane.verdict}
+            </div>
             <figcaption class="pane__cap">
               <span class="pane__layer">{pane.layer}</span>
               {pane.caption}
@@ -121,11 +174,12 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
   }
 
   .stack__rail {
+    position: relative;
     display: flex;
     align-items: center;
     gap: clamp(0.6rem, 1.6vw, 1.2rem);
     flex-wrap: wrap;
-    margin: clamp(1.6rem, 4vw, 2.6rem) 0 clamp(1.4rem, 3vw, 2.2rem);
+    margin: clamp(1.6rem, 4vw, 2.6rem) 0 clamp(1.6rem, 3.4vw, 2.6rem);
     padding-block: 0.9rem;
     border-top: 1.5px solid var(--ink);
     border-bottom: 1px solid var(--rule);
@@ -142,11 +196,40 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
     color: var(--accent);
   }
 
+  /* A request travelling the stack: a dot runs the rail's bottom rule. */
+  .stack__pulse {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0.45rem;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+    animation: rail-run 5.5s var(--ease) infinite;
+  }
+
+  @keyframes rail-run {
+    0% {
+      left: 0%;
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    88% {
+      opacity: 1;
+    }
+    100% {
+      left: calc(100% - 0.45rem);
+      opacity: 0;
+    }
+  }
+
   .stack__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: clamp(1rem, 2.5vw, 1.6rem);
-    align-items: stretch;
+    align-items: start;
   }
 
   .pane {
@@ -165,6 +248,11 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
     box-shadow: 9px 11px 0 var(--accent);
   }
 
+  /* The middle pane sits a beat higher — editorial rhythm, not a grid. */
+  .pane--lift {
+    margin-top: -1.1rem;
+  }
+
   .pane__bar {
     display: flex;
     align-items: center;
@@ -176,6 +264,7 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
   .pane__dots {
     display: inline-flex;
     gap: 0.32rem;
+    flex: none;
   }
   .pane__dots i {
     width: 0.6rem;
@@ -190,10 +279,18 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
   .pane__file {
     font-family: var(--font-mono);
     font-size: 0.74rem;
-    color: var(--ink-soft);
+    color: var(--ink);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pane__path {
+    color: var(--ink-faint);
   }
   .pane__badge {
     margin-left: auto;
+    flex: none;
     font-family: var(--font-mono);
     font-size: 0.62rem;
     letter-spacing: 0.08em;
@@ -205,18 +302,85 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
 
   .pane__code {
     margin: 0;
-    padding: 1rem 1rem 1.1rem;
+    padding: 0.9rem 0 1rem;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    line-height: 1.8;
+    font-size: 0.76rem;
+    line-height: 1.85;
     color: var(--ink);
     overflow-x: auto;
     flex: 1;
+    counter-reset: ln;
   }
+
+  /* Gutter line numbers via counters; the highlighted line wears the editor's
+     current-line wash and an accent gutter bar. */
   .pane__code .ln {
     display: block;
     white-space: pre;
+    counter-increment: ln;
+    padding-right: 1rem;
+    position: relative;
   }
+  .pane__code .ln::before {
+    content: counter(ln);
+    display: inline-block;
+    width: 1.8rem;
+    padding-right: 0.6rem;
+    text-align: right;
+    color: var(--ink-faint);
+    opacity: 0.7;
+    font-size: 0.88em;
+    user-select: none;
+  }
+  .ln--hl {
+    background: var(--accent-wash);
+  }
+  .ln--hl::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2.5px;
+    background: var(--accent);
+  }
+
+  /* Lines type themselves in once the pane scrolls into view. */
+  :global(html.js) .pane__code .ln__code {
+    opacity: 0;
+  }
+  :global(html.js) .pane.is-in .ln__code {
+    animation: ln-in 0.4s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 90ms + 350ms);
+  }
+  .ln__code {
+    display: inline;
+  }
+  @keyframes ln-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Blinking block caret parked after the last line. */
+  .caret {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    margin-left: 0.15em;
+    vertical-align: text-bottom;
+    background: var(--accent);
+    animation: caret-blink 1.1s steps(1) infinite;
+  }
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
   .pane__code :global(.tk-k) {
     color: var(--ink-faint);
     font-style: italic;
@@ -229,6 +393,28 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
   }
   .pane__code :global(.tk-c) {
     color: var(--ink-faint);
+  }
+
+  /* The sign-off: the toolchain (and George's own analysers) approve. */
+  .pane__verdict {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.55rem 1rem;
+    border-top: 1px solid var(--rule);
+    background: var(--paper-sunk);
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .pane__verdict-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
   }
 
   .pane__cap {
@@ -248,9 +434,27 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
     margin-bottom: 0.4rem;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .stack__pulse,
+    .caret {
+      animation: none;
+    }
+    .caret {
+      opacity: 1;
+    }
+    :global(html.js) .pane__code .ln__code,
+    :global(html.js) .pane.is-in .ln__code {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
   @media (max-width: 940px) {
     .stack__grid {
       grid-template-columns: 1fr;
+    }
+    .pane--lift {
+      margin-top: 0;
     }
   }
 </style>
