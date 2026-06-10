@@ -178,10 +178,29 @@ const groups = [
     overflow: hidden;
     background: #050505;
     box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.24);
+    transition: transform 0.45s var(--ease);
   }
 
   .phone--2 {
     transform: translateY(1.6rem);
+  }
+
+  /* The handsets lean apart when the card is hovered. */
+  .app:hover .phone--1 {
+    transform: rotate(-2.5deg) translateY(-0.3rem);
+  }
+  .app:hover .phone--2 {
+    transform: translateY(1.3rem) rotate(2.5deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app:hover .phone--1,
+    .app:hover .phone--2 {
+      transform: none;
+    }
+    .app:hover .phone--2 {
+      transform: translateY(1.6rem);
+    }
   }
 
   .app__media--icon .phone {

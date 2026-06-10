@@ -164,6 +164,24 @@ const jsonLd = {
           requestAnimationFrame(trail);
         };
         requestAnimationFrame(trail);
+
+        // Magnetic pull: buttons and masthead links lean toward the cursor.
+        document.querySelectorAll<HTMLElement>('.btn, .masthead__nav a').forEach((el) => {
+          const strength = el.classList.contains('btn') ? 0.3 : 0.2;
+          el.addEventListener(
+            'pointermove',
+            (e) => {
+              const r = el.getBoundingClientRect();
+              el.style.setProperty('--mag-x', `${((e.clientX - (r.left + r.width / 2)) * strength).toFixed(1)}px`);
+              el.style.setProperty('--mag-y', `${((e.clientY - (r.top + r.height / 2)) * strength).toFixed(1)}px`);
+            },
+            { passive: true },
+          );
+          el.addEventListener('pointerleave', () => {
+            el.style.setProperty('--mag-x', '0px');
+            el.style.setProperty('--mag-y', '0px');
+          });
+        });
       }
     </script>
   </body>
