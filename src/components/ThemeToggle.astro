@@ -47,7 +47,8 @@
     transition: transform 0.35s var(--ease), background 0.3s ease;
   }
 
-  :global(:root[data-theme='dark']) .theme-toggle__thumb {
+  /* Dark (default) parks the thumb right; light slides it home. */
+  :global(:root:not([data-theme='light'])) .theme-toggle__thumb {
     transform: translate(1.2em, -50%);
   }
 

@@ -95,6 +95,13 @@ export const SECONDARY: Featured[] = [
     blurb:
       'A Tauri + TypeScript desktop overlay for live Age of Empires IV match data: web-built, native-weight.',
   },
+  {
+    name: 'DuplicatePhotoHandler',
+    kicker: 'Desktop · Rust + React',
+    title: 'Duplicate Photo Handler',
+    blurb:
+      'A Rust + Tauri + React desktop app that hashes thousands of photos a second to clean up duplicate libraries: systems-language core, web UI on top.',
+  },
 ];
 
 /** Names that get the headline treatment, in case the archive wants to flag them. */

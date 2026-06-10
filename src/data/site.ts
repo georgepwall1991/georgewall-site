@@ -7,7 +7,7 @@ export const SITE = {
   name: 'George Wall',
   domain: 'georgewall.uk',
   url: 'https://www.georgewall.uk',
-  role: 'Full-stack developer',
+  role: 'Full-stack engineer',
   location: 'London',
   email: 'georgewall91@gmail.com',
   github: 'https://github.com/georgepwall1991',

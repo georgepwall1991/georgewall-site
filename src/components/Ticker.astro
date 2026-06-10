@@ -1,16 +1,16 @@
 ---
-// Decorative editorial ticker between the lede and the contents. Pure CSS
-// marquee: the track holds the item list twice and slides by exactly half,
-// so the loop is seamless at any viewport width.
+// Decorative full-bleed marquee between the lede and the contents: the stack,
+// shouted in outlined display caps. Pure CSS — the track holds the list twice
+// and slides by exactly half, so the loop is seamless at any width.
 const ITEMS = [
-  'Roslyn analyzers',
-  'Source generators',
-  'Developer tooling',
-  '.NET & C#',
+  'Full-stack',
+  'React',
   'TypeScript',
-  'Swift & SwiftUI',
-  'Compile-time certainty',
-  'Catching bugs before they ship',
+  '.NET & C#',
+  'Kafka',
+  'Swift',
+  'Roslyn',
+  'Rust',
 ];
 ---
 
@@ -36,12 +36,13 @@ const ITEMS = [
     border-top: 1px solid var(--rule);
     overflow: hidden;
     user-select: none;
+    padding-block: clamp(0.7rem, 1.6vw, 1.2rem);
   }
 
   .ticker__track {
     display: flex;
     width: max-content;
-    animation: ticker-scroll 32s linear infinite;
+    animation: ticker-scroll 36s linear infinite;
   }
 
   .ticker:hover .ticker__track {
@@ -51,25 +52,35 @@ const ITEMS = [
   .ticker__group {
     display: flex;
     flex: none;
+    align-items: baseline;
   }
 
   .ticker__item {
     display: inline-flex;
     align-items: center;
-    gap: 1.6rem;
-    padding: 0.85rem 0 0.85rem 1.6rem;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.18em;
+    gap: clamp(1.4rem, 3vw, 2.6rem);
+    padding-left: clamp(1.4rem, 3vw, 2.6rem);
+    font-family: var(--font-sans);
+    font-variation-settings: 'wght' 800;
+    font-size: clamp(2.2rem, 5vw, 4.2rem);
+    line-height: 1.1;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    letter-spacing: -0.01em;
     white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 0.025em var(--ink-faint);
+    transition: -webkit-text-stroke-color 0.4s ease, color 0.4s ease;
+  }
+
+  /* Reach for it and the words fill with ink. */
+  .ticker:hover .ticker__item {
+    -webkit-text-stroke-color: var(--ink);
   }
 
   .ticker__mark {
     color: var(--accent);
-    font-size: 0.9em;
-    letter-spacing: 0;
+    -webkit-text-stroke: 0;
+    font-size: 0.5em;
   }
 
   @keyframes ticker-scroll {

@@ -22,24 +22,26 @@ const { repoCount, totalStars } = Astro.props;
       <span class="label hero__meta-end">Open source &amp; selected works</span>
     </div>
 
-    <p class="kicker hero__kicker intro" style="--intro-delay: 160ms">{SITE.role} · Financial services</p>
+    <p class="kicker hero__kicker intro" style="--intro-delay: 160ms">{SITE.role} · 10+ years in fintech</p>
 
     <h1 class="display hero__title">
       <span class="intro-mask">
         <span class="hero__line intro-line" style="--intro-delay: 260ms">Catching <span class="hero__flag">bugs</span></span>
       </span>
       <span class="intro-mask">
-        <span class="hero__line hero__line--indent intro-line" style="--intro-delay: 380ms">before they ship.</span>
+        <span class="hero__line hero__line--indent hero__line--slam intro-line" style="--intro-delay: 380ms"
+          >before they ship.</span
+        >
       </span>
     </h1>
 
     <div class="hero__grid">
       <div class="hero__main">
         <p class="hero__standfirst intro" style="--intro-delay: 540ms">
-          I’m George — a financial services developer building the unglamorous
-          bits that keep software honest: <strong>Roslyn analysers</strong>,
-          <strong>developer tooling</strong>, and <strong>iOS apps</strong>. The kind of work
-          that moves a failure from a late-night incident to a red squiggle in your editor.
+          I’m George — a full-stack engineer who builds the whole thing:
+          <strong>React/TypeScript frontends</strong>, <strong>.NET back ends</strong> and
+          <strong>iOS apps</strong> — plus the <strong>Roslyn analysers</strong> that move a
+          failure from a late-night incident to a red squiggle in your editor.
         </p>
 
         <div class="hero__actions intro" style="--intro-delay: 660ms">
@@ -63,8 +65,8 @@ const { repoCount, totalStars } = Astro.props;
             <dd>{formatCount(totalStars)}<span class="hero__star">★</span></dd>
           </div>
           <div>
-            <dt class="label">Building since</dt>
-            <dd>2021</dd>
+            <dt class="label">Years in fintech</dt>
+            <dd>10<span class="hero__star">+</span></dd>
           </div>
         </dl>
       </div>
@@ -126,6 +128,23 @@ const { repoCount, totalStars } = Astro.props;
   .hero__line--indent {
     /* The second line steps in — an editorial stagger across the full bleed. */
     padding-left: clamp(2.5rem, 8vw, 7rem);
+    color: var(--ink);
+  }
+
+  /* The slam: the payoff line switches voice — grotesque caps, outline only,
+     filling with ink when you reach for it. */
+  .hero__line--slam {
+    font-family: var(--font-sans);
+    font-variation-settings: 'wght' 820;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    font-size: 0.78em;
+    line-height: 1.06;
+    color: transparent;
+    -webkit-text-stroke: 0.022em var(--ink);
+    transition: color 0.45s var(--ease);
+  }
+  .hero__title:hover .hero__line--slam {
     color: var(--ink);
   }
 
