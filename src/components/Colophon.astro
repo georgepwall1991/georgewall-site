@@ -8,7 +8,7 @@ const year = new Date().getFullYear();
     <div class="colophon__cta reveal">
       <p class="kicker">Get in touch</p>
       <h2 class="display colophon__title">
-        Let’s build something<br />that behaves itself.
+        Let’s build something<br />that <span class="colophon__flag">behaves itself</span>.
       </h2>
       <div class="colophon__actions">
         <a class="btn" href={`mailto:${SITE.email}`}>
@@ -70,6 +70,42 @@ const year = new Date().getFullYear();
   .colophon__title {
     font-size: clamp(2.6rem, 8vw, 7rem);
     margin: 1rem 0 2.4rem;
+  }
+
+  /* The closing echo of the hero flag: the promise gets the squiggle,
+     drawn when the CTA scrolls into view. */
+  .colophon__flag {
+    position: relative;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 560;
+    white-space: nowrap;
+  }
+  .colophon__flag::after {
+    content: '';
+    position: absolute;
+    left: -0.02em;
+    right: -0.02em;
+    bottom: 0.04em;
+    height: 0.16em;
+    background-color: var(--accent);
+    -webkit-mask: var(--wave) repeat-x left bottom / 0.5em 0.16em;
+    mask: var(--wave) repeat-x left bottom / 0.5em 0.16em;
+    transform-origin: 0 50%;
+    transition: transform 0.9s var(--ease) 0.35s;
+  }
+  :global(html.js) .colophon__flag::after {
+    transform: scaleX(0);
+  }
+  :global(html.js) .colophon__cta.is-in .colophon__flag::after {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .colophon__flag::after,
+    :global(html.js) .colophon__cta.is-in .colophon__flag::after {
+      transform: scaleX(1);
+      transition: none;
+    }
   }
   .colophon__actions {
     display: flex;

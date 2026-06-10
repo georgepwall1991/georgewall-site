@@ -165,6 +165,25 @@ const jsonLd = {
         };
         requestAnimationFrame(trail);
 
+        // 3D tilt: [data-tilt] surfaces pivot gently toward the pointer.
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((el) => {
+          el.addEventListener(
+            'pointermove',
+            (e) => {
+              const r = el.getBoundingClientRect();
+              const px = (e.clientX - r.left) / r.width - 0.5;
+              const py = (e.clientY - r.top) / r.height - 0.5;
+              el.style.setProperty('--ry', `${(px * 6).toFixed(2)}deg`);
+              el.style.setProperty('--rx', `${(-py * 6).toFixed(2)}deg`);
+            },
+            { passive: true },
+          );
+          el.addEventListener('pointerleave', () => {
+            el.style.setProperty('--rx', '0deg');
+            el.style.setProperty('--ry', '0deg');
+          });
+        });
+
         // Magnetic pull: buttons and masthead links lean toward the cursor.
         document.querySelectorAll<HTMLElement>('.btn, .masthead__nav a').forEach((el) => {
           const strength = el.classList.contains('btn') ? 0.3 : 0.2;

@@ -6,7 +6,7 @@
 ---
 
 <figure class="diag" aria-label="A code editor showing the LinqContraband analyser catching a performance bug">
-  <div class="diag__card">
+  <div class="diag__card" data-tilt>
     <div class="diag__bar">
       <span class="diag__dots" aria-hidden="true"><i></i><i></i><i></i></span>
       <span class="diag__file">OrdersReport.cs</span>
@@ -45,11 +45,15 @@
     border-radius: 10px;
     box-shadow: 10px 12px 0 var(--ink);
     overflow: hidden;
-    transition: box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+    /* Tilt vars fed by Base's pointer script ([data-tilt]). */
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))
+      translate(var(--tx, 0px), var(--ty, 0px));
+    transition: box-shadow 0.4s var(--ease), transform 0.3s var(--ease);
   }
 
   .diag__card:hover {
-    transform: translate(-2px, -2px);
+    --tx: -2px;
+    --ty: -2px;
     box-shadow: 14px 16px 0 var(--ink);
   }
 

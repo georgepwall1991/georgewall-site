@@ -16,6 +16,7 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
 ---
 
 <section class="hero" id="lede">
+  <div class="hero__glow" aria-hidden="true"></div>
   <svg
     class="hero__squiggle"
     viewBox="0 0 2720 160"
@@ -106,6 +107,24 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
   .hero > .wrap {
     position: relative;
     z-index: 1;
+  }
+
+  /* Cursor spotlight: a soft accent pool that follows the pointer. */
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+    background: radial-gradient(
+      560px circle at var(--gx, 50%) var(--gy, 40%),
+      var(--accent-wash) 0%,
+      transparent 70%
+    );
+  }
+  .hero:hover .hero__glow {
+    opacity: 1;
   }
 
   /* The motif at architectural scale: faint, tilted, drawing itself in. */
@@ -203,8 +222,18 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
     -webkit-text-stroke: 0.022em var(--ink);
     transition: color 0.45s var(--ease);
   }
-  .hero__title:hover .hero__line--slam {
+  .hero__title:hover .hero__line--slam:not(.slam--js) {
     color: var(--ink);
+  }
+
+  /* Per-letter illumination (JS splits the line on fine pointers): letters
+     near the cursor catch fire as it sweeps across. */
+  .hero__line--slam :global(.slam-ch) {
+    transition: color 0.3s var(--ease), -webkit-text-stroke-color 0.3s var(--ease);
+  }
+  .hero__line--slam :global(.slam-ch.is-lit) {
+    color: var(--accent);
+    -webkit-text-stroke-color: var(--accent);
   }
 
   .hero__flag {
@@ -304,6 +333,63 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
   // Count-up for the hero stats, timed to land with their intro reveal.
   // No-JS and reduced-motion keep the server-rendered final values.
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const hero = document.querySelector<HTMLElement>('.hero');
+
+  // Cursor spotlight: feed the glow gradient the pointer position.
+  if (hero && fine && !reduce) {
+    const glow = hero.querySelector<HTMLElement>('.hero__glow');
+    hero.addEventListener(
+      'pointermove',
+      (e) => {
+        if (!glow) return;
+        const r = hero.getBoundingClientRect();
+        glow.style.setProperty('--gx', `${e.clientX - r.left}px`);
+        glow.style.setProperty('--gy', `${e.clientY - r.top}px`);
+      },
+      { passive: true },
+    );
+  }
+
+  // Per-letter slam illumination: split the payoff line into characters and
+  // light the ones near the cursor. Screen readers get the intact text via an
+  // sr-only span; the visual letters are aria-hidden.
+  const slam = document.querySelector<HTMLElement>('.hero__line--slam');
+  if (slam && hero && fine && !reduce) {
+    const text = slam.textContent ?? '';
+    slam.classList.add('slam--js');
+    slam.textContent = '';
+    const sr = document.createElement('span');
+    sr.className = 'sr-only';
+    sr.textContent = text;
+    slam.appendChild(sr);
+    const chars: HTMLElement[] = [];
+    for (const ch of text) {
+      const s = document.createElement('span');
+      s.className = 'slam-ch';
+      s.setAttribute('aria-hidden', 'true');
+      s.textContent = ch;
+      slam.appendChild(s);
+      chars.push(s);
+    }
+    let raf = 0;
+    hero.addEventListener(
+      'pointermove',
+      (e) => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          for (const s of chars) {
+            const r = s.getBoundingClientRect();
+            const d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
+            s.classList.toggle('is-lit', d < 150);
+          }
+        });
+      },
+      { passive: true },
+    );
+    hero.addEventListener('pointerleave', () => chars.forEach((s) => s.classList.remove('is-lit')));
+  }
+
   if (!reduce) {
     document.querySelectorAll<HTMLElement>('.hero__stats .stat').forEach((el) => {
       const target = Number(el.dataset.count);
