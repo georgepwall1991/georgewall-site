@@ -9,29 +9,36 @@ const { avatar } = Astro.props;
 const disciplines = [
   {
     no: '01',
-    name: 'Compile-time safety',
-    desc: 'Roslyn analysers and source generators that catch the bug class before it runs.',
+    name: 'Backend & distributed',
+    desc: 'C# calculation engines and Kafka microservices — CQRS, event sourcing, transactional outbox.',
   },
   {
     no: '02',
-    name: 'Developer tooling',
-    desc: 'CLIs and migrations that make the safe path the easy path for .NET teams.',
+    name: 'Frontend',
+    desc: 'React + TypeScript at production scale: RTK Query, AG-Grid, Recharts — data UIs people trade off.',
   },
-  { no: '03', name: 'Product & iOS', desc: 'SwiftUI apps taken from idea to the App Store.' },
-  { no: '04', name: 'Web', desc: 'TypeScript, React and static-first sites like this one.' },
+  {
+    no: '03',
+    name: 'Compile-time safety',
+    desc: 'Roslyn analysers and source generators that catch the bug class before it runs.',
+  },
+  { no: '04', name: 'Product & iOS', desc: 'SwiftUI apps taken from idea to the App Store.' },
 ];
 
 const stack = [
   'C#',
   '.NET',
   'Roslyn',
+  'Kafka',
   'EF Core',
   'TypeScript',
   'React',
+  'RTK Query',
   'Swift',
   'SwiftUI',
-  'Astro',
+  'Rust',
   'Azure',
+  'Docker',
 ];
 ---
 
@@ -45,15 +52,17 @@ const stack = [
 
       <div class="about__prose reveal">
         <p class="about__lead">
-          I’m George, a 34-year-old full-stack developer working in financial services in
-          {SITE.location}. My day job lives where correctness really matters — and that’s
-          shaped everything I build on the side.
+          I’m George, a full-stack engineer with ten years in {SITE.location} fintech —
+          calculation engines that price pension liabilities, React/TypeScript frontends
+          built from scratch, and the engineering standards that keep big teams shipping.
+          Correctness really matters in that world, and it’s shaped everything I build.
         </p>
         <p>
-          I’m drawn to the unglamorous infrastructure of software quality: the analyser that
-          flags a captive dependency, the generator that deletes a thousand lines of
-          boilerplate, the CLI that moves a solution without making a mess. Tools that are
-          invisible when they work and worth their keep when they stop a late-night incident.
+          I work the whole stack by preference, not necessity: the Kafka consumer, the C#
+          engine it feeds, the React grid that makes the numbers legible. And I’m drawn to
+          the unglamorous infrastructure of quality — the analyser that flags a captive
+          dependency, the generator that deletes a thousand lines of boilerplate, the CLI
+          that moves a solution without making a mess.
         </p>
 
         <blockquote class="about__quote">
@@ -175,12 +184,12 @@ const stack = [
     object-fit: cover;
     border: 1.5px solid var(--ink);
     border-radius: 8px;
-    filter: grayscale(1) contrast(1.05);
-    mix-blend-mode: multiply;
-  }
-  :global(:root[data-theme='dark']) .about__portrait img {
-    mix-blend-mode: screen;
     filter: grayscale(1) contrast(1.1) brightness(1.1);
+    mix-blend-mode: screen;
+  }
+  :global(:root[data-theme='light']) .about__portrait img {
+    mix-blend-mode: multiply;
+    filter: grayscale(1) contrast(1.05);
   }
   .about__portrait-cap {
     margin-top: 0.7rem;

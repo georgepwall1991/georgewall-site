@@ -27,3 +27,8 @@ Thumbs.db
 .complexity-log.md
 .gstack/
 .gstack/
+
+# tooling artifacts (codex/playwright review runs)
+.playwright-mcp/
+review-home.png
+review-mobile.png

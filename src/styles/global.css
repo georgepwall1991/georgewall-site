@@ -6,18 +6,18 @@
 
 /* ----- Tokens ----- */
 :root {
-  /* Light "bone paper" — the default issue. */
-  --paper: #f4f0e6;
-  --paper-raised: #fbf8f0;
-  --paper-sunk: #ece6d6;
-  --ink: #18140d;
-  --ink-soft: #4d463a;
-  --ink-faint: #6f6857; /* AA-compliant on bone paper (~4.9:1); was #8c8472 (3.3:1) */
-  --rule: #dbd4c3;
-  --rule-strong: #c7bfa9;
-  --accent: #e12d0b;
-  --accent-deep: #b21f03;
-  --accent-wash: rgba(225, 45, 11, 0.1);
+  /* Dark "night print" — the default issue. Bone paper is the alt theme. */
+  --paper: #14110b;
+  --paper-raised: #1c1810;
+  --paper-sunk: #100d07;
+  --ink: #f2ecdc;
+  --ink-soft: #b6ad98;
+  --ink-faint: #877d63; /* AA-compliant on dark paper (~4.6:1) */
+  --rule: #2e2818;
+  --rule-strong: #3e3622;
+  --accent: #ff5128;
+  --accent-deep: #ff6f49;
+  --accent-wash: rgba(255, 81, 40, 0.12);
 
   --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, sans-serif;
@@ -32,22 +32,22 @@
   --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='8' viewBox='0 0 20 8'%3E%3Cpath d='M0 6 Q5 1 10 6 T20 6' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  color-scheme: light;
+  color-scheme: dark;
 }
 
-:root[data-theme='dark'] {
-  --paper: #14110b;
-  --paper-raised: #1c1810;
-  --paper-sunk: #100d07;
-  --ink: #f2ecdc;
-  --ink-soft: #b6ad98;
-  --ink-faint: #877d63; /* AA-compliant on dark paper (~4.6:1); was #756c58 (3.6:1) */
-  --rule: #2e2818;
-  --rule-strong: #3e3622;
-  --accent: #ff5128;
-  --accent-deep: #ff6f49;
-  --accent-wash: rgba(255, 81, 40, 0.12);
-  color-scheme: dark;
+:root[data-theme='light'] {
+  --paper: #f4f0e6;
+  --paper-raised: #fbf8f0;
+  --paper-sunk: #ece6d6;
+  --ink: #18140d;
+  --ink-soft: #4d463a;
+  --ink-faint: #6f6857; /* AA-compliant on bone paper (~4.9:1) */
+  --rule: #dbd4c3;
+  --rule-strong: #c7bfa9;
+  --accent: #e12d0b;
+  --accent-deep: #b21f03;
+  --accent-wash: rgba(225, 45, 11, 0.1);
+  color-scheme: light;
 }
 
 /* ----- Reset ----- */
@@ -110,14 +110,14 @@ a {
   inset: 0;
   z-index: 9000;
   pointer-events: none;
-  opacity: 0.04;
-  mix-blend-mode: multiply;
+  opacity: 0.05;
+  mix-blend-mode: screen;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-:root[data-theme='dark'] .grain {
-  mix-blend-mode: screen;
-  opacity: 0.05;
+:root[data-theme='light'] .grain {
+  mix-blend-mode: multiply;
+  opacity: 0.04;
 }
 
 /* ----- Layout ----- */
@@ -401,6 +401,79 @@ a {
     animation: none;
     clip-path: none;
   }
+}
+
+/* ----- Custom cursor (fine pointers, motion allowed) -----
+   .has-cursor is set by JS only when both conditions hold, so touch devices
+   and reduced-motion users keep the native cursor untouched. */
+.has-cursor,
+.has-cursor a,
+.has-cursor button,
+.has-cursor input,
+.has-cursor label,
+.has-cursor [role='button'] {
+  cursor: none;
+}
+
+.cursor {
+  display: none;
+}
+
+.has-cursor .cursor {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  pointer-events: none;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cursor__dot {
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--accent);
+}
+
+.cursor__ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1.5px solid var(--accent);
+  opacity: 0.55;
+  transition: width 0.25s var(--ease), height 0.25s var(--ease), margin 0.25s var(--ease),
+    opacity 0.25s ease, border-color 0.25s ease;
+}
+
+.cursor.is-hot .cursor__ring {
+  width: 52px;
+  height: 52px;
+  margin: -26px 0 0 -26px;
+  opacity: 0.9;
+}
+
+.cursor.is-down .cursor__ring {
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+}
+
+.cursor.is-gone {
+  opacity: 0;
+}
+
+/* ----- Outlined display type ----- */
+.outline-type {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
 }
 
 /* ----- Helpers ----- */

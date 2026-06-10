@@ -8,6 +8,7 @@ import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { snapshotFallback } from '../data/github';
 import { SOCIALS } from '../data/site';
+import StatusBar from '../components/StatusBar.astro';
 
 interface Props {
   title?: string;
@@ -17,8 +18,8 @@ interface Props {
 }
 
 const {
-  title = 'George Wall — Full-stack developer. Catching bugs before they ship.',
-  description = 'London-based full-stack developer in financial services. I build .NET Roslyn analysers, developer tooling, and iOS apps that catch bugs before they turn expensive.',
+  title = 'George Wall — Full-stack engineer. Catching bugs before they ship.',
+  description = 'London-based full-stack engineer with 10+ years in fintech. React/TypeScript frontends, .NET back ends, Roslyn analysers and iOS apps — bugs caught before they turn expensive.',
   schema = [],
 } = Astro.props;
 
@@ -33,7 +34,7 @@ const personSchema = {
   name: 'George Wall',
   url: SITE_URL,
   image: user.avatar_url,
-  jobTitle: 'Full-stack developer',
+  jobTitle: 'Full-stack engineer',
   description: user.bio,
   address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' },
   sameAs: SOCIALS,
@@ -42,7 +43,10 @@ const personSchema = {
     'C#',
     'Roslyn analysers',
     'Source generators',
+    'React',
     'TypeScript',
+    'Kafka',
+    'Event-driven architecture',
     'iOS',
     'SwiftUI',
     'Developer tooling',
@@ -71,8 +75,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="George Wall" />
-    <meta name="theme-color" content="#f4f0e6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#14110b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#14110b" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -100,12 +103,11 @@ const jsonLd = {
         // Mark JS as available so reveal-on-scroll hidden states apply only here.
         document.documentElement.classList.add('js');
         try {
+          // Dark is the house default; light is an explicit choice.
           const stored = localStorage.getItem('atlas-theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored ?? (prefersDark ? 'dark' : 'light');
-          document.documentElement.dataset.theme = theme;
+          document.documentElement.dataset.theme = stored ?? 'dark';
         } catch (_) {
-          document.documentElement.dataset.theme = 'light';
+          document.documentElement.dataset.theme = 'dark';
         }
       })();
     </script>
@@ -115,7 +117,54 @@ const jsonLd = {
   <body>
     <div class="grain" aria-hidden="true"></div>
     <slot />
+    <StatusBar />
+    <div class="cursor" aria-hidden="true">
+      <span class="cursor__dot"></span>
+      <span class="cursor__ring"></span>
+    </div>
     <Analytics />
     <SpeedInsights />
+    <script>
+      // Custom cursor: dot tracks the pointer, ring lerps behind it and grows
+      // over interactive targets. Fine pointers only; reduced-motion keeps the
+      // native cursor (the CSS gate in global.css does the hiding).
+      const cursor = document.querySelector<HTMLElement>('.cursor');
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (cursor && fine && !reduce) {
+        document.documentElement.classList.add('has-cursor');
+        const dot = cursor.querySelector<HTMLElement>('.cursor__dot')!;
+        const ring = cursor.querySelector<HTMLElement>('.cursor__ring')!;
+        let x = -100,
+          y = -100,
+          rx = -100,
+          ry = -100;
+
+        window.addEventListener(
+          'pointermove',
+          (e) => {
+            x = e.clientX;
+            y = e.clientY;
+            dot.style.transform = `translate(${x}px, ${y}px)`;
+            const hot = (e.target as Element | null)?.closest?.('a, button, [role="button"], input, label');
+            cursor.classList.toggle('is-hot', Boolean(hot));
+          },
+          { passive: true },
+        );
+        window.addEventListener('pointerdown', () => cursor.classList.add('is-down'));
+        window.addEventListener('pointerup', () => cursor.classList.remove('is-down'));
+        document.documentElement.addEventListener('pointerleave', () => cursor.classList.add('is-gone'));
+        document.documentElement.addEventListener('pointerenter', () => cursor.classList.remove('is-gone'));
+
+        const trail = () => {
+          rx += (x - rx) * 0.16;
+          ry += (y - ry) * 0.16;
+          ring.style.transform = `translate(${rx}px, ${ry}px)`;
+          requestAnimationFrame(trail);
+        };
+        requestAnimationFrame(trail);
+      }
+    </script>
   </body>
 </html>

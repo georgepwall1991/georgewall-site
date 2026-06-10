@@ -6,6 +6,7 @@ import Ticker from '../components/Ticker.astro';
 import Contents from '../components/Contents.astro';
 import FeaturedWork from '../components/FeaturedWork.astro';
 import SecondaryGrid from '../components/SecondaryGrid.astro';
+import StackSection from '../components/StackSection.astro';
 import PrivateApps from '../components/PrivateApps.astro';
 import Archive from '../components/Archive.astro';
 import About from '../components/About.astro';
@@ -79,6 +80,7 @@ const appSchema = PRIVATE_APPS.map((app) => ({
     <Contents items={contentsItems} />
     <FeaturedWork entries={featuredEntries} />
     <SecondaryGrid entries={secondaryEntries} />
+    <StackSection />
     <PrivateApps apps={PRIVATE_APPS} />
     <Archive repos={portfolio} allRepos={snapshot.repos} generatedAt={snapshot.generatedAt} />
     <About avatar={avatar} />

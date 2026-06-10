@@ -1,0 +1,122 @@
+---
+// The site wears its own toolchain: a VS Code-style status bar pinned to the
+// bottom. Decorative-but-true — the analyzers listed are real, the clock is
+// live, and "0 errors" is the whole brand.
+const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraband'];
+---
+
+<footer class="statusbar" aria-label="Status">
+  <div class="statusbar__cell statusbar__branch">
+    <span class="statusbar__glyph" aria-hidden="true">⎇</span> main
+  </div>
+  <div class="statusbar__cell statusbar__ok">
+    <span class="statusbar__dot" aria-hidden="true"></span> 0 errors · 0 warnings
+  </div>
+  <div class="statusbar__cell statusbar__armed" aria-hidden="true">
+    analyzers armed — {ANALYZERS.join(' · ')}
+  </div>
+  <div class="statusbar__spacer"></div>
+  <div class="statusbar__cell statusbar__loc">London · 51.5°N</div>
+  <div class="statusbar__cell statusbar__time" data-clock>--:--</div>
+</footer>
+
+<style>
+  .statusbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 95;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    height: var(--statusbar-h, 2rem);
+    padding-inline: clamp(0.8rem, 2vw, 1.4rem);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    background: color-mix(in srgb, var(--paper-sunk) 92%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  /* Reserve room so the page never hides under the bar. */
+  :global(body) {
+    padding-bottom: var(--statusbar-h, 2rem);
+  }
+  :global(:root) {
+    --statusbar-h: 2rem;
+  }
+
+  .statusbar__cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    flex: none;
+  }
+
+  .statusbar__glyph,
+  .statusbar__branch {
+    color: var(--ink);
+  }
+
+  .statusbar__dot {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: status-pulse 2.6s ease-in-out infinite;
+  }
+
+  .statusbar__armed {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ink-faint);
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+
+  .statusbar__spacer {
+    flex: 1;
+  }
+
+  .statusbar__time {
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @keyframes status-pulse {
+    50% {
+      opacity: 0.35;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .statusbar__dot {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .statusbar__armed,
+    .statusbar__loc {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // Live local clock — the one honest piece of chrome.
+  const clock = document.querySelector<HTMLElement>('[data-clock]');
+  if (clock) {
+    const tick = () => {
+      const now = new Date();
+      clock.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    };
+    tick();
+    setInterval(tick, 15_000);
+  }
+</script>
