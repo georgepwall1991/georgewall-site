@@ -228,6 +228,29 @@ const now = new Date();
     padding-left: 0.7rem;
     background: var(--paper-raised);
   }
+
+  /* Rows fade up as they enter the viewport (view timelines, progressive).
+     Animation-driven rather than .reveal so client-side re-filtering keeps
+     working — re-inserted rows already in view render at the range end. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .arc-row {
+        animation: arc-row-in linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 45%;
+      }
+    }
+  }
+  @keyframes arc-row-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
   .arc-name {
     font-family: var(--font-mono);
     font-size: 0.92rem;
