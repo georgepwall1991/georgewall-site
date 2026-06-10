@@ -1,0 +1,86 @@
+---
+// Decorative editorial ticker between the lede and the contents. Pure CSS
+// marquee: the track holds the item list twice and slides by exactly half,
+// so the loop is seamless at any viewport width.
+const ITEMS = [
+  'Roslyn analyzers',
+  'Source generators',
+  'Developer tooling',
+  '.NET & C#',
+  'TypeScript',
+  'Swift & SwiftUI',
+  'Compile-time certainty',
+  'Catching bugs before they ship',
+];
+---
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    {
+      [0, 1].map(() => (
+        <div class="ticker__group">
+          {ITEMS.map((item) => (
+            <span class="ticker__item">
+              {item}
+              <span class="ticker__mark">✳</span>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ticker {
+    border-top: 1px solid var(--rule);
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .ticker__track {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 32s linear infinite;
+  }
+
+  .ticker:hover .ticker__track {
+    animation-play-state: paused;
+  }
+
+  .ticker__group {
+    display: flex;
+    flex: none;
+  }
+
+  .ticker__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 0.85rem 0 0.85rem 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .ticker__mark {
+    color: var(--accent);
+    font-size: 0.9em;
+    letter-spacing: 0;
+  }
+
+  @keyframes ticker-scroll {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track {
+      animation: none;
+    }
+  }
+</style>

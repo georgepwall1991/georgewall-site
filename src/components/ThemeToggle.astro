@@ -87,13 +87,29 @@
 
   btn?.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
+    const apply = () => {
+      document.documentElement.dataset.theme = next;
+      syncLabel();
+    };
     try {
       localStorage.setItem('atlas-theme', next);
     } catch (_) {
       /* private mode — ignore */
     }
-    syncLabel();
+
+    // Circular wipe from the switch (View Transitions, progressive enhancement).
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce) {
+      apply();
+      return;
+    }
+    const root = document.documentElement;
+    const rect = btn!.getBoundingClientRect();
+    root.style.setProperty('--vt-x', `${rect.left + rect.width / 2}px`);
+    root.style.setProperty('--vt-y', `${rect.top + rect.height / 2}px`);
+    root.classList.add('theme-vt');
+    const vt = document.startViewTransition(apply);
+    vt.finished.finally(() => root.classList.remove('theme-vt'));
   });
 
   syncLabel();

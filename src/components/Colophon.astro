@@ -14,6 +14,9 @@ const year = new Date().getFullYear();
         <a class="btn" href={`mailto:${SITE.email}`}>
           {SITE.email}<span class="arrow" aria-hidden="true">↗</span>
         </a>
+        <button class="btn btn--ghost colophon__copy" type="button" data-email={SITE.email} hidden>
+          <span class="colophon__copy-label">Copy address</span>
+        </button>
         <a class="btn btn--ghost" href={SITE.github} target="_blank" rel="noopener">
           GitHub<span class="arrow" aria-hidden="true">↗</span>
         </a>
@@ -121,6 +124,12 @@ const year = new Date().getFullYear();
     color: var(--ink-faint);
   }
 
+  .colophon__copy[data-copied] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
   @media (max-width: 760px) {
     .colophon__foot {
       grid-template-columns: 1fr;
@@ -131,3 +140,30 @@ const year = new Date().getFullYear();
     }
   }
 </style>
+
+<script>
+  // Copy-to-clipboard for the email CTA. The button ships hidden and is only
+  // revealed when the Clipboard API exists, so no-JS/insecure contexts never
+  // see a dead control.
+  const copyBtn = document.querySelector<HTMLButtonElement>('.colophon__copy');
+  const copyLabel = copyBtn?.querySelector<HTMLElement>('.colophon__copy-label');
+
+  if (copyBtn && copyLabel && navigator.clipboard?.writeText) {
+    copyBtn.hidden = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(copyBtn.dataset.email!);
+        copyBtn.setAttribute('data-copied', '');
+        copyLabel.textContent = 'Copied ✓';
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          copyBtn.removeAttribute('data-copied');
+          copyLabel.textContent = 'Copy address';
+        }, 2000);
+      } catch (_) {
+        /* clipboard refused — leave the mailto link as the path */
+      }
+    });
+  }
+</script>
