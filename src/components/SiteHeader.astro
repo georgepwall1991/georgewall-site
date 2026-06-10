@@ -134,6 +134,13 @@ const NAV = [
     letter-spacing: 0.04em;
   }
 
+  /* Magnetic lean (values fed by Base's pointer script). */
+  .masthead__nav a {
+    display: inline-block;
+    transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+    transition: transform 0.3s var(--ease);
+  }
+
   /* Scrollspy: the section in view wears a resting squiggle. */
   .masthead__nav a[data-active]::after {
     transform: scaleX(1);

@@ -8,9 +8,22 @@ interface Props {
   totalStars: number;
 }
 const { repoCount, totalStars } = Astro.props;
+
+// The brand squiggle at architectural scale: one long wave path that draws
+// itself behind the headline on load.
+const waveTail = Array.from({ length: 32 }, (_, i) => `T${160 + i * 80} 80`).join(' ');
+const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
 ---
 
 <section class="hero" id="lede">
+  <svg
+    class="hero__squiggle"
+    viewBox="0 0 2720 160"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path d={wavePath} pathLength="1"></path>
+  </svg>
   <div class="wrap">
     <div class="hero__meta intro" style="--intro-delay: 60ms">
       <span class="label">№&nbsp;{SITE.issueNo}</span>
@@ -58,15 +71,19 @@ const { repoCount, totalStars } = Astro.props;
         <dl class="hero__stats intro" style="--intro-delay: 780ms">
           <div>
             <dt class="label">Public repos</dt>
-            <dd>{repoCount}</dd>
+            <dd><span class="stat" data-count={repoCount}>{repoCount}</span></dd>
           </div>
           <div>
             <dt class="label">GitHub stars</dt>
-            <dd>{formatCount(totalStars)}<span class="hero__star">★</span></dd>
+            <dd>
+              <span class="stat" data-count={totalStars}>{formatCount(totalStars)}</span><span
+                class="hero__star">★</span
+              >
+            </dd>
           </div>
           <div>
             <dt class="label">Years in fintech</dt>
-            <dd>10<span class="hero__star">+</span></dd>
+            <dd><span class="stat" data-count="10">10</span><span class="hero__star">+</span></dd>
           </div>
         </dl>
       </div>
@@ -80,8 +97,50 @@ const { repoCount, totalStars } = Astro.props;
 
 <style>
   .hero {
+    position: relative;
     padding-top: clamp(2.5rem, 7vw, 5rem);
     padding-bottom: clamp(3rem, 8vw, 6rem);
+    overflow: hidden;
+  }
+
+  .hero > .wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* The motif at architectural scale: faint, tilted, drawing itself in. */
+  .hero__squiggle {
+    position: absolute;
+    top: 44%;
+    left: -4%;
+    width: 110%;
+    height: clamp(6rem, 14vw, 12rem);
+    transform: rotate(-3.5deg);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .hero__squiggle path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 14;
+    stroke-linecap: round;
+    opacity: 0.09;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: squiggle-draw 2.6s var(--ease) 0.45s forwards;
+  }
+
+  @keyframes squiggle-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__squiggle path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
   }
 
   .hero__meta {
@@ -240,3 +299,25 @@ const { repoCount, totalStars } = Astro.props;
     }
   }
 </style>
+
+<script>
+  // Count-up for the hero stats, timed to land with their intro reveal.
+  // No-JS and reduced-motion keep the server-rendered final values.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) {
+    document.querySelectorAll<HTMLElement>('.hero__stats .stat').forEach((el) => {
+      const target = Number(el.dataset.count);
+      if (!Number.isFinite(target)) return;
+      const final = el.textContent ?? '';
+      const start = performance.now() + 750;
+      const duration = 1300;
+      const tick = (t: number) => {
+        const p = Math.min(Math.max((t - start) / duration, 0), 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = p >= 1 ? final : String(Math.round(target * eased));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+</script>

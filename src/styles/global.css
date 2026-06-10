@@ -66,6 +66,11 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+/* Anchor targets clear the sticky masthead instead of hiding under it. */
+[id] {
+  scroll-margin-top: calc(clamp(3.4rem, 7vw, 4.4rem) + 1.25rem);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -226,6 +231,8 @@ a {
 }
 
 /* ----- Button ----- */
+/* Buttons are magnetic on fine pointers: JS feeds --mag-x/--mag-y and the
+   transform pulls toward the cursor. Falls back to a plain hover lift. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -240,11 +247,13 @@ a {
   border: 1.5px solid var(--ink);
   border-radius: 999px;
   cursor: pointer;
-  transition: transform 0.25s var(--ease), background 0.25s ease, color 0.25s ease;
+  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+  transition: transform 0.3s var(--ease), background 0.25s ease, color 0.25s ease;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
+  /* JS magnetics set --mag-x/--mag-y inline and win over this fallback lift. */
+  --mag-y: -2px;
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;

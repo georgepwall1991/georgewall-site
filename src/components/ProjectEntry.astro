@@ -115,6 +115,27 @@ const now = new Date();
     opacity: 0.32;
   }
 
+  /* Scroll-driven parallax: the folio drifts against the scroll where the
+     browser supports view timelines; everyone else gets the static ghost. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .entry::before {
+        animation: ghost-drift linear both;
+        animation-timeline: view();
+        animation-range: entry 0% exit 100%;
+      }
+    }
+  }
+
+  @keyframes ghost-drift {
+    from {
+      translate: 0 5rem;
+    }
+    to {
+      translate: 0 -5rem;
+    }
+  }
+
   .entry__index {
     position: relative;
     z-index: 1;

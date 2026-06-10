@@ -1,24 +1,49 @@
 ---
 // The site wears its own toolchain: a VS Code-style status bar pinned to the
 // bottom. Decorative-but-true — the analyzers listed are real, the clock is
-// live, and "0 errors" is the whole brand.
+// live, the breadcrumb tracks the section you're reading, and "0 errors"
+// hides one diagnostic for the curious.
+import { SITE } from '../data/site';
 const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraband'];
+
+// Initial crumb comes from the route, so non-index pages (e.g. /writing/*)
+// read correctly even before — or without — the section observer.
+const segment = Astro.url.pathname.split('/').filter(Boolean)[0];
+const initialCrumb = segment ?? 'lede';
 ---
 
 <footer class="statusbar" aria-label="Status">
   <div class="statusbar__cell statusbar__branch">
     <span class="statusbar__glyph" aria-hidden="true">⎇</span> main
   </div>
-  <div class="statusbar__cell statusbar__ok">
+  <button class="statusbar__cell statusbar__ok" type="button" aria-describedby="gw-toast" title="Run diagnostics">
     <span class="statusbar__dot" aria-hidden="true"></span> 0 errors · 0 warnings
-  </div>
+  </button>
   <div class="statusbar__cell statusbar__armed" aria-hidden="true">
     analyzers armed — {ANALYZERS.join(' · ')}
   </div>
   <div class="statusbar__spacer"></div>
+  <div class="statusbar__cell statusbar__crumb" aria-hidden="true">
+    georgewall.uk <span class="statusbar__sep">›</span> <span data-crumb>{initialCrumb}</span>
+  </div>
   <div class="statusbar__cell statusbar__loc">London · 51.5°N</div>
   <div class="statusbar__cell statusbar__time" data-clock>--:--</div>
 </footer>
+
+<!-- The one diagnostic this site does report. -->
+<aside class="gw-toast" id="gw-toast" hidden>
+  <span class="gw-toast__dot" aria-hidden="true"></span>
+  <div class="gw-toast__body">
+    <p class="gw-toast__head"><span class="gw-toast__id">GW001</span> Hidden diagnostic</p>
+    <p class="gw-toast__msg">
+      This site builds with 0 errors. The visitor, however, still hasn’t said hello.
+    </p>
+    <p class="gw-toast__fix">
+      Quick fix: <a class="link link--on" href={`mailto:${SITE.email}`}>email George ⏎</a>
+    </p>
+  </div>
+  <button class="gw-toast__close" type="button" aria-label="Dismiss">✕</button>
+</aside>
 
 <style>
   .statusbar {
@@ -63,6 +88,22 @@ const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraba
     color: var(--ink);
   }
 
+  button.statusbar__ok {
+    background: none;
+    border: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    padding: 0.2em 0.3em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.25s ease, background 0.25s ease;
+  }
+  button.statusbar__ok:hover {
+    color: var(--ink);
+    background: var(--accent-wash);
+  }
+
   .statusbar__dot {
     width: 0.55em;
     height: 0.55em;
@@ -83,6 +124,17 @@ const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraba
     flex: 1;
   }
 
+  .statusbar__crumb {
+    color: var(--ink-faint);
+  }
+  .statusbar__crumb [data-crumb] {
+    color: var(--accent);
+    min-width: 4.5em;
+  }
+  .statusbar__sep {
+    color: var(--ink-faint);
+  }
+
   .statusbar__time {
     color: var(--ink);
     font-variant-numeric: tabular-nums;
@@ -94,29 +146,147 @@ const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraba
     }
   }
 
+  /* ----- GW001 toast ----- */
+  .gw-toast[hidden] {
+    display: none;
+  }
+  .gw-toast {
+    position: fixed;
+    right: clamp(0.8rem, 2vw, 1.4rem);
+    bottom: calc(var(--statusbar-h, 2rem) + 0.9rem);
+    z-index: 96;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    max-width: 23rem;
+    padding: 0.9rem 1rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--accent);
+    border-left-width: 4px;
+    border-radius: 8px;
+    box-shadow: 6px 7px 0 var(--ink);
+    animation: toast-in 0.45s var(--ease);
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  .gw-toast__dot {
+    flex: none;
+    width: 0.65rem;
+    height: 0.65rem;
+    margin-top: 0.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .gw-toast__head {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+  .gw-toast__id {
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 0.05em 0.35em;
+    margin-right: 0.4em;
+  }
+  .gw-toast__msg {
+    font-size: 0.86rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .gw-toast__fix {
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--accent-deep);
+  }
+
+  .gw-toast__close {
+    flex: none;
+    background: none;
+    border: 0;
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+    cursor: pointer;
+    padding: 0.1rem 0.2rem;
+    transition: color 0.2s ease;
+  }
+  .gw-toast__close:hover {
+    color: var(--accent);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .statusbar__dot {
+      animation: none;
+    }
+    .gw-toast {
       animation: none;
     }
   }
 
   @media (max-width: 860px) {
     .statusbar__armed,
-    .statusbar__loc {
+    .statusbar__loc,
+    .statusbar__crumb {
       display: none;
     }
   }
 </style>
 
 <script>
-  // Live local clock — the one honest piece of chrome.
+  // Live local clock — honest chrome.
   const clock = document.querySelector<HTMLElement>('[data-clock]');
   if (clock) {
     const tick = () => {
-      const now = new Date();
-      clock.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      clock.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     };
     tick();
     setInterval(tick, 15_000);
   }
+
+  // Breadcrumb follows the section being read.
+  const crumb = document.querySelector<HTMLElement>('[data-crumb]');
+  if (crumb && 'IntersectionObserver' in window) {
+    const sections = ['lede', 'work', 'stack', 'apps', 'archive', 'about', 'contact']
+      .map((id) => document.getElementById(id))
+      .filter((s): s is HTMLElement => Boolean(s));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) crumb.textContent = e.target.id;
+        }
+      },
+      { rootMargin: '-35% 0px -55% 0px' },
+    );
+    sections.forEach((s) => io.observe(s));
+  }
+
+  // GW001: clicking "0 errors" surfaces the one diagnostic this site ships.
+  const okBtn = document.querySelector<HTMLButtonElement>('.statusbar__ok');
+  const toast = document.getElementById('gw-toast');
+  const close = toast?.querySelector<HTMLButtonElement>('.gw-toast__close');
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  const setToast = (open: boolean) => {
+    if (!toast) return;
+    toast.hidden = !open;
+    clearTimeout(timer);
+    if (open) timer = setTimeout(() => setToast(false), 10_000);
+  };
+
+  okBtn?.addEventListener('click', () => setToast(Boolean(toast?.hidden)));
+  close?.addEventListener('click', () => setToast(false));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toast && !toast.hidden) setToast(false);
+  });
 </script>
