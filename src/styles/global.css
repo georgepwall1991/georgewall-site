@@ -315,6 +315,94 @@ a {
   }
 }
 
+/* ----- Load-in choreography (hero, masthead) -----
+   Hidden initial state is gated on html.js so no-JS visitors and crawlers
+   always see fully-rendered content, mirroring the .reveal system. */
+@keyframes intro-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-line {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.js .intro {
+  opacity: 0;
+  animation: intro-in 0.8s var(--ease) forwards;
+  animation-delay: var(--intro-delay, 0ms);
+}
+
+/* Masked line reveal: parent clips, child rises. The padding/negative-margin
+   pair keeps tight display line-heights (0.92) from clipping descenders. */
+.intro-mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.08em 0.14em;
+  margin-block: -0.08em -0.14em;
+}
+
+.js .intro-mask > .intro-line {
+  transform: translateY(110%);
+  animation: intro-line 0.9s var(--ease) forwards;
+  animation-delay: var(--intro-delay, 0ms);
+}
+
+.intro-line {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .intro,
+  .js .intro-mask > .intro-line {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ----- Theme-change wipe (View Transitions, progressive enhancement) -----
+   The toggle sets --vt-x/--vt-y to its own position and adds .theme-vt for
+   the duration; the new theme floods out from the switch in a circle. */
+.theme-vt * {
+  transition: none !important;
+}
+
+.theme-vt::view-transition-old(root),
+.theme-vt::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.theme-vt::view-transition-new(root) {
+  clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0%));
+  animation: vt-wipe 0.55s var(--ease) forwards;
+}
+
+@keyframes vt-wipe {
+  to {
+    clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 0%));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-vt::view-transition-new(root) {
+    animation: none;
+    clip-path: none;
+  }
+}
+
 /* ----- Helpers ----- */
 .sr-only {
   position: absolute;

@@ -24,7 +24,7 @@ const topics = (repo?.topics ?? []).slice(0, 6);
 const now = new Date();
 ---
 
-<article class="entry reveal" id={anchor}>
+<article class="entry reveal" id={anchor} data-index={pad2(index)}>
   <div class="entry__index" aria-hidden="true">{pad2(index)}</div>
 
   <div class="entry__body">
@@ -83,6 +83,7 @@ const now = new Date();
 
 <style>
   .entry {
+    position: relative;
     display: grid;
     grid-template-columns: clamp(3.5rem, 8vw, 7rem) 1fr;
     gap: clamp(1rem, 3vw, 2.5rem);
@@ -90,7 +91,33 @@ const now = new Date();
     border-top: 1.5px solid var(--ink);
   }
 
+  /* Ghost folio number: an oversized outlined figure behind each entry,
+     warming to the accent when the entry is hovered. */
+  .entry::before {
+    content: attr(data-index);
+    position: absolute;
+    top: clamp(0.6rem, 2vw, 1.4rem);
+    right: -0.04em;
+    z-index: 0;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 600;
+    font-size: clamp(7rem, 18vw, 16rem);
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--rule-strong);
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.5s var(--ease), -webkit-text-stroke-color 0.5s ease;
+  }
+  .entry:hover::before {
+    -webkit-text-stroke-color: var(--accent);
+    opacity: 0.32;
+  }
+
   .entry__index {
+    position: relative;
+    z-index: 1;
     font-family: var(--font-mono);
     font-size: clamp(1rem, 2vw, 1.3rem);
     color: var(--accent);
@@ -100,6 +127,8 @@ const now = new Date();
 
   .entry__body {
     min-width: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .entry__kicker {

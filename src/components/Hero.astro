@@ -12,7 +12,7 @@ const { repoCount, totalStars } = Astro.props;
 
 <section class="hero" id="lede">
   <div class="wrap">
-    <div class="hero__meta">
+    <div class="hero__meta intro" style="--intro-delay: 60ms">
       <span class="label">№&nbsp;{SITE.issueNo}</span>
       <span class="hero__meta-rule" aria-hidden="true"></span>
       <span class="label">{SITE.location}</span>
@@ -22,23 +22,27 @@ const { repoCount, totalStars } = Astro.props;
       <span class="label hero__meta-end">Open source &amp; selected works</span>
     </div>
 
+    <p class="kicker hero__kicker intro" style="--intro-delay: 160ms">{SITE.role} · Financial services</p>
+
+    <h1 class="display hero__title">
+      <span class="intro-mask">
+        <span class="hero__line intro-line" style="--intro-delay: 260ms">Catching <span class="hero__flag">bugs</span></span>
+      </span>
+      <span class="intro-mask">
+        <span class="hero__line hero__line--indent intro-line" style="--intro-delay: 380ms">before they ship.</span>
+      </span>
+    </h1>
+
     <div class="hero__grid">
       <div class="hero__main">
-        <p class="kicker hero__kicker">{SITE.role} · Financial services</p>
-
-        <h1 class="display hero__title">
-          <span class="hero__line">Catching <span class="hero__flag">bugs</span></span>
-          <span class="hero__line hero__line--indent">before they ship.</span>
-        </h1>
-
-        <p class="hero__standfirst">
+        <p class="hero__standfirst intro" style="--intro-delay: 540ms">
           I’m George — a financial services developer building the unglamorous
           bits that keep software honest: <strong>Roslyn analysers</strong>,
           <strong>developer tooling</strong>, and <strong>iOS apps</strong>. The kind of work
           that moves a failure from a late-night incident to a red squiggle in your editor.
         </p>
 
-        <div class="hero__actions">
+        <div class="hero__actions intro" style="--intro-delay: 660ms">
           <a href="#work" class="btn">
             Selected work
             <span class="arrow" aria-hidden="true">↓</span>
@@ -49,7 +53,7 @@ const { repoCount, totalStars } = Astro.props;
           </a>
         </div>
 
-        <dl class="hero__stats">
+        <dl class="hero__stats intro" style="--intro-delay: 780ms">
           <div>
             <dt class="label">Public repos</dt>
             <dd>{repoCount}</dd>
@@ -65,7 +69,7 @@ const { repoCount, totalStars } = Astro.props;
         </dl>
       </div>
 
-      <div class="hero__aside">
+      <div class="hero__aside intro" style="--intro-delay: 480ms">
         <DiagnosticHero />
       </div>
     </div>
@@ -98,27 +102,30 @@ const { repoCount, totalStars } = Astro.props;
     color: var(--ink-soft);
   }
 
+  /* The headline runs full-bleed across the page; standfirst + editor card
+     sit in a grid beneath it. */
   .hero__grid {
     display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
+    grid-template-columns: 1.05fr 0.95fr;
     gap: clamp(2rem, 5vw, 4.5rem);
-    align-items: center;
-    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    align-items: start;
+    margin-top: clamp(2.2rem, 5vw, 3.8rem);
   }
 
   .hero__kicker {
-    margin-bottom: 1.4rem;
+    margin: clamp(2.2rem, 5vw, 3.6rem) 0 1.4rem;
   }
 
   .hero__title {
-    font-size: clamp(3.2rem, 11vw, 9.5rem);
-    margin-bottom: 1.8rem;
+    font-size: clamp(3.2rem, 9.4vw, 8rem);
+    margin-bottom: 0;
   }
   .hero__line {
     display: block;
   }
   .hero__line--indent {
-    padding-left: 0.06em;
+    /* The second line steps in — an editorial stagger across the full bleed. */
+    padding-left: clamp(2.5rem, 8vw, 7rem);
     color: var(--ink);
   }
 
@@ -144,7 +151,7 @@ const { repoCount, totalStars } = Astro.props;
   }
 
   .hero__standfirst {
-    max-width: 34ch;
+    max-width: 44ch;
     font-size: clamp(1.05rem, 1.4vw, 1.28rem);
     line-height: 1.55;
     color: var(--ink-soft);
