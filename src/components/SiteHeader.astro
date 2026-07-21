@@ -1,14 +1,14 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
-import { SITE } from '../data/site';
+import ThemeToggle from "./ThemeToggle.astro";
+import { SITE } from "../data/site";
 
 // Root-relative anchors so the nav also works from /writing/* pages.
 const NAV = [
-  { href: '/work', label: 'Work', spy: 'work' },
-  { href: '/#apps', label: 'Apps', spy: 'apps' },
-  { href: '/writing', label: 'Writing', spy: 'writing' },
-  { href: '/work#archive', label: 'Archive', spy: 'archive' },
-  { href: '/#about', label: 'About', spy: 'about' },
+  { href: "/work", label: "Work", spy: "work" },
+  { href: "/#apps", label: "Apps", spy: "apps" },
+  { href: "/writing", label: "Writing", spy: "writing" },
+  { href: "/work#archive", label: "Archive", spy: "archive" },
+  { href: "/#about", label: "About", spy: "about" },
 ];
 ---
 
@@ -19,7 +19,11 @@ const NAV = [
       <span class="masthead__reg">®</span>
     </a>
 
-    <nav class="masthead__nav intro" style="--intro-delay: 120ms" aria-label="Primary">
+    <nav
+      class="masthead__nav intro"
+      style="--intro-delay: 120ms"
+      aria-label="Primary"
+    >
       {
         NAV.map((item) => (
           <a class="link" href={item.href} data-spy={item.spy}>
@@ -27,7 +31,12 @@ const NAV = [
           </a>
         ))
       }
-      <a class="link" href="https://github.com/georgepwall1991" target="_blank" rel="noopener">
+      <a
+        class="link"
+        href="https://github.com/georgepwall1991"
+        target="_blank"
+        rel="noopener"
+      >
         GitHub<span class="masthead__ext" aria-hidden="true">↗</span>
       </a>
     </nav>
@@ -59,14 +68,19 @@ const NAV = [
         NAV.map((item, i) => (
           <li class="menu__item">
             <a class="menu__link" href={item.href}>
-              <span class="menu__no">{String(i + 1).padStart(2, '0')}</span>
+              <span class="menu__no">{String(i + 1).padStart(2, "0")}</span>
               <span class="menu__label">{item.label}</span>
             </a>
           </li>
         ))
       }
       <li class="menu__item">
-        <a class="menu__link" href="https://github.com/georgepwall1991" target="_blank" rel="noopener">
+        <a
+          class="menu__link"
+          href="https://github.com/georgepwall1991"
+          target="_blank"
+          rel="noopener"
+        >
           <span class="menu__no">↗</span>
           <span class="menu__label">GitHub</span>
         </a>
@@ -79,7 +93,9 @@ const NAV = [
       </li>
     </ol>
   </nav>
-  <p class="menu__foot label">№&nbsp;{SITE.issueNo} · {SITE.location} · georgewall.uk</p>
+  <p class="menu__foot label">
+    №&nbsp;{SITE.issueNo} · {SITE.location} · georgewall.uk
+  </p>
 </div>
 
 <style>
@@ -91,7 +107,9 @@ const NAV = [
     backdrop-filter: blur(10px) saturate(1.1);
     -webkit-backdrop-filter: blur(10px) saturate(1.1);
     border-bottom: 1px solid transparent;
-    transition: border-color 0.4s ease, background 0.4s ease;
+    transition:
+      border-color 0.4s ease,
+      background 0.4s ease;
   }
 
   .masthead[data-scrolled] {
@@ -108,7 +126,10 @@ const NAV = [
 
   .masthead__name {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 40, 'WONK' 1, 'wght' 560;
+    font-variation-settings:
+      "opsz" 40,
+      "WONK" 1,
+      "wght" 560;
     font-size: clamp(1.05rem, 2.4vw, 1.35rem);
     letter-spacing: -0.01em;
     text-decoration: none;
@@ -137,11 +158,8 @@ const NAV = [
     letter-spacing: 0.04em;
   }
 
-  /* Magnetic lean (values fed by Base's pointer script). */
   .masthead__nav a {
     display: inline-block;
-    transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
-    transition: transform 0.3s var(--ease);
   }
 
   /* Scrollspy: the section in view wears a resting squiggle. */
@@ -195,13 +213,15 @@ const NAV = [
     width: 100%;
     background: var(--ink);
     border-radius: 2px;
-    transition: transform 0.35s var(--ease), background 0.3s ease;
+    transition:
+      transform 0.35s var(--ease),
+      background 0.3s ease;
   }
-  .masthead__burger[aria-expanded='true'] .masthead__burger-line:first-child {
+  .masthead__burger[aria-expanded="true"] .masthead__burger-line:first-child {
     transform: translateY(0.22rem) rotate(45deg);
     background: var(--accent);
   }
-  .masthead__burger[aria-expanded='true'] .masthead__burger-line:last-child {
+  .masthead__burger[aria-expanded="true"] .masthead__burger-line:last-child {
     transform: translateY(-0.22rem) rotate(-45deg);
     background: var(--accent);
   }
@@ -264,7 +284,10 @@ const NAV = [
 
   .menu__label {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 110, 'WONK' 1, 'wght' 540;
+    font-variation-settings:
+      "opsz" 110,
+      "WONK" 1,
+      "wght" 540;
     font-size: clamp(2.4rem, 10vw, 3.6rem);
     line-height: 1;
     letter-spacing: -0.02em;
@@ -305,8 +328,8 @@ const NAV = [
 </style>
 
 <script>
-  const masthead = document.querySelector<HTMLElement>('.masthead');
-  const progress = document.querySelector<HTMLElement>('.masthead__progress');
+  const masthead = document.querySelector<HTMLElement>(".masthead");
+  const progress = document.querySelector<HTMLElement>(".masthead__progress");
 
   // Scroll state + reading progress, throttled to one write per frame.
   let ticking = false;
@@ -316,20 +339,25 @@ const NAV = [
     requestAnimationFrame(() => {
       ticking = false;
       if (!masthead) return;
-      if (window.scrollY > 24) masthead.setAttribute('data-scrolled', '');
-      else masthead.removeAttribute('data-scrolled');
+      if (window.scrollY > 24) masthead.setAttribute("data-scrolled", "");
+      else masthead.removeAttribute("data-scrolled");
       if (progress) {
         const max = document.documentElement.scrollHeight - window.innerHeight;
-        progress.style.setProperty('--progress', String(max > 0 ? Math.min(window.scrollY / max, 1) : 0));
+        progress.style.setProperty(
+          "--progress",
+          String(max > 0 ? Math.min(window.scrollY / max, 1) : 0),
+        );
       }
     });
   };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
   onScroll();
 
   // Scrollspy: highlight the nav link of the section in view (index page only).
-  const spyLinks = document.querySelectorAll<HTMLAnchorElement>('.masthead__nav a[data-spy]');
+  const spyLinks = document.querySelectorAll<HTMLAnchorElement>(
+    ".masthead__nav a[data-spy]",
+  );
   const sections = [...spyLinks]
     .map((a) => document.getElementById(a.dataset.spy!))
     .filter((s): s is HTMLElement => Boolean(s));
@@ -337,8 +365,8 @@ const NAV = [
   if (sections.length > 0) {
     const setActive = (id: string | null) => {
       spyLinks.forEach((a) => {
-        if (a.dataset.spy === id) a.setAttribute('data-active', '');
-        else a.removeAttribute('data-active');
+        if (a.dataset.spy === id) a.setAttribute("data-active", "");
+        else a.removeAttribute("data-active");
       });
     };
     const spy = new IntersectionObserver(
@@ -347,41 +375,48 @@ const NAV = [
           if (entry.isIntersecting) setActive(entry.target.id);
         }
       },
-      { rootMargin: '-25% 0px -65% 0px' },
+      { rootMargin: "-25% 0px -65% 0px" },
     );
     sections.forEach((s) => spy.observe(s));
   }
 
   // Mobile menu.
-  const burger = document.querySelector<HTMLButtonElement>('.masthead__burger');
-  const menu = document.getElementById('site-menu');
-  menu?.querySelectorAll<HTMLElement>('.menu__link').forEach((l, i) => l.style.setProperty('--i', String(i)));
+  const burger = document.querySelector<HTMLButtonElement>(".masthead__burger");
+  const menu = document.getElementById("site-menu");
+  menu
+    ?.querySelectorAll<HTMLElement>(".menu__link")
+    .forEach((l, i) => l.style.setProperty("--i", String(i)));
 
   const setMenu = (open: boolean) => {
     if (!burger || !menu) return;
-    burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     if (open) {
       menu.hidden = false;
       // Next frame so the entrance animation runs after unhiding.
-      requestAnimationFrame(() => menu.setAttribute('data-open', ''));
-      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(() => menu.setAttribute("data-open", ""));
+      document.body.style.overflow = "hidden";
     } else {
-      menu.removeAttribute('data-open');
+      menu.removeAttribute("data-open");
       menu.hidden = true;
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
   };
 
-  burger?.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
-  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && burger?.getAttribute('aria-expanded') === 'true') setMenu(false);
+  burger?.addEventListener("click", () =>
+    setMenu(burger.getAttribute("aria-expanded") !== "true"),
+  );
+  menu
+    ?.querySelectorAll("a")
+    .forEach((a) => a.addEventListener("click", () => setMenu(false)));
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && burger?.getAttribute("aria-expanded") === "true")
+      setMenu(false);
   });
 
   // Crossing into desktop hides the menu via CSS; close it for real too, or
   // the body scroll lock would outlive any visible way to release it.
-  window.matchMedia('(min-width: 761px)').addEventListener('change', (e) => {
+  window.matchMedia("(min-width: 761px)").addEventListener("change", (e) => {
     if (e.matches) setMenu(false);
   });
 </script>

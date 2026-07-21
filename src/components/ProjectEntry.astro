@@ -1,8 +1,8 @@
 ---
-import type { Repo } from '../data/github';
-import type { NuGetPackage } from '../data/nuget';
-import type { ProjectProof } from '../data/featured';
-import { languageColor, formatCount, relativeTime, pad2 } from '../lib/format';
+import type { Repo } from "../data/github";
+import type { NuGetPackage } from "../data/nuget";
+import type { ProjectProof } from "../data/featured";
+import { languageColor, formatCount, relativeTime, pad2 } from "../lib/format";
 
 interface Props {
   index: number;
@@ -15,28 +15,54 @@ interface Props {
   proof?: ProjectProof;
   anchor: string;
 }
-const { index, kicker, title, blurb, repo, primary, package: nuget, proof, anchor } = Astro.props;
+const {
+  index,
+  kicker,
+  title,
+  blurb,
+  repo,
+  primary,
+  package: nuget,
+  proof,
+  anchor,
+} = Astro.props;
 
 // Destinations are editorially explicit. Deduping prevents a GitHub homepage
 // from producing two differently-labelled links to the same place.
 const links: { href: string; label: string }[] = [];
 if (primary) links.push(primary);
-if (repo) links.push({ href: repo.html_url, label: 'GitHub' });
-const uniqueLinks = [...new Map(links.map((link) => [link.href.replace(/\/$/, ''), link])).values()];
+if (repo) links.push({ href: repo.html_url, label: "GitHub" });
+const uniqueLinks = [
+  ...new Map(
+    links.map((link) => [link.href.replace(/\/$/, ""), link]),
+  ).values(),
+];
 
-const primaryHref = uniqueLinks[0]?.href ?? repo?.html_url ?? '#';
+const primaryHref = uniqueLinks[0]?.href ?? repo?.html_url ?? "#";
 const topics = (repo?.topics ?? []).slice(0, 6);
 const now = new Date();
 ---
 
-<article class="entry reveal" id={anchor} data-index={pad2(index)}>
-  <div class="entry__index" aria-hidden="true">{pad2(index)}</div>
+<article class="entry reveal" id={anchor}>
+  <div
+    class="entry__rail"
+    aria-label={proof ? `Diagnostic ${proof.diagnostic}` : `Project ${index}`}
+  >
+    <span class="entry__rail-signal" aria-hidden="true"></span>
+    <span>{proof?.diagnostic ?? pad2(index)}</span>
+    <small>{proof ? "intercepted" : "selected work"}</small>
+  </div>
 
   <div class="entry__body">
     <p class="kicker entry__kicker">{kicker}</p>
 
     <h3 class="entry__title">
-      <a href={primaryHref} target="_blank" rel="noopener" class="link link--on entry__title-link">
+      <a
+        href={primaryHref}
+        target="_blank"
+        rel="noopener"
+        class="link link--on entry__title-link"
+      >
         {title}
       </a>
     </h3>
@@ -53,14 +79,22 @@ const now = new Date();
           <div class="entry__diff">
             <div>
               <span class="entry__diff-label">Before</span>
-              <pre><code>{proof.before.join('\n')}</code></pre>
+              <pre>
+                <code>{proof.before.join("\n")}</code>
+              </pre>
             </div>
             <div>
-              <span class="entry__diff-label entry__diff-label--fixed">Quick fix</span>
-              <pre><code>{proof.after.join('\n')}</code></pre>
+              <span class="entry__diff-label entry__diff-label--fixed">
+                Quick fix
+              </span>
+              <pre>
+                <code>{proof.after.join("\n")}</code>
+              </pre>
             </div>
           </div>
-          <p class="entry__result"><span aria-hidden="true">✓</span> {proof.result}</p>
+          <p class="entry__result">
+            <span aria-hidden="true">✓</span> {proof.result}
+          </p>
         </div>
       )
     }
@@ -70,13 +104,17 @@ const now = new Date();
         <div class="entry__meta">
           {nuget && (
             <span class="entry__metaitem entry__downloads">
-              <strong>{formatCount(nuget.totalDownloads)}</strong> NuGet downloads
+              <strong>{formatCount(nuget.totalDownloads)}</strong> NuGet
+              downloads
             </span>
           )}
           {nuget && <span class="entry__metaitem">v{nuget.version}</span>}
           {repo?.language && (
             <span class="entry__metaitem">
-              <span class="lang-dot" style={`--dot:${languageColor(repo.language)}`} />
+              <span
+                class="lang-dot"
+                style={`--dot:${languageColor(repo.language)}`}
+              />
               {repo.language}
             </span>
           )}
@@ -86,7 +124,9 @@ const now = new Date();
             </span>
           )}
           {repo && (
-            <span class="entry__metaitem entry__updated">Updated {relativeTime(repo.pushed_at, now)}</span>
+            <span class="entry__metaitem entry__updated">
+              Updated {relativeTime(repo.pushed_at, now)}
+            </span>
           )}
         </div>
       )
@@ -106,7 +146,12 @@ const now = new Date();
       uniqueLinks.length > 0 && (
         <div class="entry__links">
           {uniqueLinks.map((l) => (
-            <a class="link entry__link" href={l.href} target="_blank" rel="noopener">
+            <a
+              class="link entry__link"
+              href={l.href}
+              target="_blank"
+              rel="noopener"
+            >
               {l.label} <span aria-hidden="true">↗</span>
             </a>
           ))}
@@ -120,65 +165,41 @@ const now = new Date();
   .entry {
     position: relative;
     display: grid;
-    grid-template-columns: clamp(3.5rem, 8vw, 7rem) 1fr;
+    grid-template-columns: clamp(7.6rem, 12vw, 10.5rem) minmax(0, 1fr);
     gap: clamp(1rem, 3vw, 2.5rem);
     padding: clamp(2.2rem, 5vw, 3.6rem) 0;
     border-top: 1.5px solid var(--ink);
   }
 
-  /* Ghost folio number: an oversized outlined figure behind each entry,
-     warming to the accent when the entry is hovered. */
-  .entry::before {
-    content: attr(data-index);
-    position: absolute;
-    top: clamp(0.6rem, 2vw, 1.4rem);
-    right: -0.04em;
-    z-index: 0;
-    font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 600;
-    font-size: clamp(7rem, 18vw, 16rem);
-    line-height: 0.8;
-    letter-spacing: -0.04em;
-    color: transparent;
-    -webkit-text-stroke: 1.5px var(--rule-strong);
-    opacity: 0.55;
-    pointer-events: none;
-    transition: opacity 0.5s var(--ease), -webkit-text-stroke-color 0.5s ease;
-  }
-  .entry:hover::before {
-    -webkit-text-stroke-color: var(--accent);
-    opacity: 0.32;
-  }
-
-  /* Scroll-driven parallax: the folio drifts against the scroll where the
-     browser supports view timelines; everyone else gets the static ghost. */
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      .entry::before {
-        animation: ghost-drift linear both;
-        animation-timeline: view();
-        animation-range: entry 0% exit 100%;
-      }
-    }
-  }
-
-  @keyframes ghost-drift {
-    from {
-      translate: 0 5rem;
-    }
-    to {
-      translate: 0 -5rem;
-    }
-  }
-
-  .entry__index {
+  .entry__rail {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
     font-family: var(--font-mono);
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--accent-text);
+    font-size: clamp(0.68rem, 1.2vw, 0.78rem);
+    color: var(--fault);
     padding-top: 0.5rem;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
+    overflow-wrap: anywhere;
+  }
+
+  .entry__rail-signal {
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-bottom: 0.35rem;
+    border: 2px solid var(--fault);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--fault-wash);
+  }
+
+  .entry__rail small {
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
   }
 
   .entry__body {
@@ -193,7 +214,10 @@ const now = new Date();
 
   .entry__title {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 144, 'WONK' 1, 'wght' 540;
+    font-variation-settings:
+      "opsz" 144,
+      "WONK" 1,
+      "wght" 540;
     font-size: clamp(2.3rem, 6.5vw, 4.6rem);
     line-height: 0.98;
     letter-spacing: -0.02em;
@@ -213,7 +237,10 @@ const now = new Date();
 
   .entry__blurb {
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 32, 'WONK' 0, 'wght' 400;
+    font-variation-settings:
+      "opsz" 32,
+      "WONK" 0,
+      "wght" 400;
     font-size: clamp(1.1rem, 1.7vw, 1.5rem);
     line-height: 1.42;
     color: var(--ink-soft);
@@ -226,8 +253,8 @@ const now = new Date();
     margin: 0 0 1.7rem;
     overflow: hidden;
     border: 1px solid var(--rule-strong);
-    border-radius: 10px;
-    background: color-mix(in srgb, var(--paper-raised) 88%, transparent);
+    border-radius: 6px;
+    background: var(--paper-raised);
   }
   .entry__proof-head {
     display: flex;
@@ -235,6 +262,7 @@ const now = new Date();
     gap: 0.8rem;
     padding: 0.8rem 1rem;
     border-bottom: 1px solid var(--rule);
+    border-left: 3px solid var(--fault);
     font-size: 0.86rem;
     color: var(--ink-soft);
   }
@@ -251,6 +279,7 @@ const now = new Date();
     padding: 0.12em 0.45em;
     border: 1px solid currentColor;
     border-radius: 4px;
+    color: var(--fault);
   }
   .entry__diff {
     display: grid;
@@ -262,7 +291,7 @@ const now = new Date();
   }
   .entry__diff > div + div {
     border-left: 1px solid var(--rule);
-    background: color-mix(in srgb, var(--accent-wash) 55%, transparent);
+    background: var(--fix-wash);
   }
   .entry__diff-label {
     display: block;
@@ -270,7 +299,7 @@ const now = new Date();
     color: var(--ink-faint);
   }
   .entry__diff-label--fixed {
-    color: var(--accent-text);
+    color: var(--fix);
   }
   .entry__diff pre {
     overflow-x: auto;
@@ -288,7 +317,7 @@ const now = new Date();
     color: var(--ink-soft);
   }
   .entry__result span {
-    color: var(--accent-text);
+    color: var(--fix);
   }
 
   .entry__meta {
@@ -344,8 +373,15 @@ const now = new Date();
       grid-template-columns: 1fr;
       gap: 0.5rem;
     }
-    .entry__index {
+    .entry__rail {
       padding-top: 0;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .entry__rail-signal {
+      margin: 0 0.2rem 0 0;
     }
     .entry__diff {
       grid-template-columns: 1fr;

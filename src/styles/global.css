@@ -1,29 +1,36 @@
 /* ============================================================================
-   ATLAS — design system for georgewall.uk
-   Editorial / Swiss-brutalist. Bone paper, ink, one vermilion accent.
+   TRACE — design system for georgewall.uk
+   A compiler instrument: carbon, chalk, fault orange and fix blue.
    Type: Fraunces (display serif) · Archivo (grotesque) · JetBrains Mono.
    ========================================================================== */
 
 /* ----- Tokens ----- */
 :root {
-  /* Dark "night print" — the default issue. Bone paper is the alt theme. */
-  --paper: #14110b;
-  --paper-raised: #1c1810;
-  --paper-sunk: #100d07;
-  --ink: #f2ecdc;
-  --ink-soft: #b6ad98;
-  --ink-faint: #877d63; /* AA-compliant on dark paper (~4.6:1) */
-  --rule: #2e2818;
-  --rule-strong: #3e3622;
-  --accent: #ff5128;
-  --accent-deep: #ff6f49;
-  --accent-text: #ff6f49;
-  --accent-wash: rgba(255, 81, 40, 0.12);
+  /* Dark is the house theme: the colours behave like diagnostic states. */
+  --paper: #0b0d10;
+  --paper-raised: #151a22;
+  --paper-sunk: #080a0d;
+  --ink: #f1eee6;
+  --ink-soft: #aeb5c0;
+  --ink-faint: #858e9e;
+  --rule: #252b35;
+  --rule-strong: #3a4351;
+  --fault: #ff6542;
+  --fault-wash: rgba(255, 101, 66, 0.12);
+  --fix: #62c4ff;
+  --fix-wash: rgba(98, 196, 255, 0.12);
+  --accent: var(--fault);
+  --accent-deep: #ff8469;
+  --accent-text: #ff8469;
+  --accent-wash: var(--fault-wash);
 
-  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-sans: 'Archivo Variable', 'Archivo', system-ui, -apple-system, sans-serif;
+  --font-display:
+    "Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans:
+    "Archivo Variable", "Archivo", system-ui, -apple-system, sans-serif;
   --font-mono:
-    'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo,
+    monospace;
 
   /* Editorial measure + rhythm */
   --maxw: 1340px;
@@ -37,19 +44,23 @@
   color-scheme: dark;
 }
 
-:root[data-theme='light'] {
-  --paper: #f4f0e6;
-  --paper-raised: #fbf8f0;
-  --paper-sunk: #ece6d6;
-  --ink: #18140d;
-  --ink-soft: #4d463a;
-  --ink-faint: #6f6857; /* AA-compliant on bone paper (~4.9:1) */
-  --rule: #dbd4c3;
-  --rule-strong: #c7bfa9;
-  --accent: #e12d0b;
-  --accent-deep: #b21f03;
-  --accent-text: #b21f03;
-  --accent-wash: rgba(225, 45, 11, 0.1);
+:root[data-theme="light"] {
+  --paper: #f3f1eb;
+  --paper-raised: #fbfaf6;
+  --paper-sunk: #e9e7df;
+  --ink: #11151a;
+  --ink-soft: #47515f;
+  --ink-faint: #626d7c;
+  --rule: #d4d8dd;
+  --rule-strong: #b8c0ca;
+  --fault: #c73517;
+  --fault-wash: rgba(199, 53, 23, 0.09);
+  --fix: #006ea8;
+  --fix-wash: rgba(0, 110, 168, 0.09);
+  --accent: var(--fault);
+  --accent-deep: #9f260e;
+  --accent-text: #a62911;
+  --accent-wash: var(--fault-wash);
   color-scheme: light;
 }
 
@@ -92,7 +103,7 @@ body {
   color: var(--ink);
   font-size: clamp(1rem, 0.96rem + 0.25vw, 1.12rem);
   line-height: 1.5;
-  font-variation-settings: 'wght' 420;
+  font-variation-settings: "wght" 420;
   overflow-x: hidden;
   transition:
     background-color 0.5s ease,
@@ -141,22 +152,6 @@ a {
   transform: none;
 }
 
-/* ----- Paper grain ----- */
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 9000;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: screen;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-:root[data-theme='light'] .grain {
-  mix-blend-mode: multiply;
-  opacity: 0.04;
-}
-
 /* ----- Layout ----- */
 .wrap {
   width: 100%;
@@ -179,20 +174,22 @@ a {
   font-family: var(--font-display);
   font-weight: 600;
   font-variation-settings:
-    'wght' 580,
-    'opsz' 144,
-    'SOFT' 0,
-    'WONK' 1;
+    "wght" 580,
+    "opsz" 144,
+    "SOFT" 0,
+    "WONK" 1;
   line-height: 0.92;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
-/* Every kicker earns its own squiggle, drawn shortly after load — the motif
-   threaded through the whole system. No-JS gets it pre-drawn. */
+/* Kicker: a restrained diagnostic gutter rather than another decoration. */
 .kicker {
   position: relative;
   width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
   font-family: var(--font-mono);
   font-size: 0.74rem;
   letter-spacing: 0.16em;
@@ -201,41 +198,16 @@ a {
   font-weight: 500;
 }
 
-.kicker::after {
-  content: '';
-  position: absolute;
-  left: 0.05em;
-  right: 0.4em;
-  bottom: -0.55em;
-  height: 0.4em;
-  background-color: var(--accent);
-  opacity: 0.7;
-  -webkit-mask: var(--wave) repeat-x left bottom / 0.8em 0.4em;
-  mask: var(--wave) repeat-x left bottom / 0.8em 0.4em;
-  transform-origin: 0 50%;
-}
-
-.js .kicker::after {
-  transform: scaleX(0);
-  animation: kicker-draw 0.7s var(--ease) 1.1s forwards;
-}
-
-@keyframes kicker-draw {
-  to {
-    transform: scaleX(1);
-  }
+.kicker::before {
+  content: "";
+  width: 1.1rem;
+  height: 2px;
+  background: currentColor;
 }
 
 /* Centered contexts (footer CTA) need the shrink-wrapped kicker recentred. */
 .colophon__cta .kicker {
   margin-inline: auto;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .js .kicker::after {
-    animation: none;
-    transform: scaleX(1);
-  }
 }
 
 .label {
@@ -249,11 +221,11 @@ a {
 .serif {
   font-family: var(--font-display);
   font-variation-settings:
-    'opsz' 40,
-    'WONK' 0;
+    "opsz" 40,
+    "WONK" 0;
 }
 
-/* ----- The signature squiggle link ----- */
+/* ----- Links ----- */
 .link {
   position: relative;
   text-decoration: none;
@@ -263,15 +235,13 @@ a {
 }
 
 .link::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -0.05em;
-  height: 0.36em;
-  background-color: var(--accent);
-  -webkit-mask: var(--wave) repeat-x left bottom / 0.6em 0.34em;
-  mask: var(--wave) repeat-x left bottom / 0.6em 0.34em;
+  bottom: -0.08em;
+  height: 2px;
+  background: currentColor;
   transform: scaleX(0);
   transform-origin: 0 50%;
   transition: transform 0.4s var(--ease);
@@ -282,16 +252,19 @@ a {
   transform: scaleX(1);
 }
 
-/* A link that wears the squiggle permanently, intensifying on hover. */
+/* A primary link keeps its underline, then shifts to the fix state on intent. */
 .link--on::after {
   transform: scaleX(1);
-  opacity: 0.55;
-  transition: opacity 0.3s var(--ease);
+  opacity: 0.42;
+  transition:
+    opacity 0.3s var(--ease),
+    background 0.3s ease;
 }
 
 .link--on:hover::after,
 .link--on:focus-visible::after {
   opacity: 1;
+  background: var(--fix);
 }
 
 /* ----- Tag / chip ----- */
@@ -310,8 +283,6 @@ a {
 }
 
 /* ----- Button ----- */
-/* Buttons are magnetic on fine pointers: JS feeds --mag-x/--mag-y and the
-   transform pulls toward the cursor. Falls back to a plain hover lift. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -324,9 +295,9 @@ a {
   background: var(--ink);
   padding: 0.85em 1.4em;
   border: 1.5px solid var(--ink);
-  border-radius: 999px;
+  border-radius: 4px;
   cursor: pointer;
-  transform: translate(var(--mag-x, 0px), var(--mag-y, 0px));
+  transform: translateY(0);
   transition:
     transform 0.3s var(--ease),
     background 0.25s ease,
@@ -334,11 +305,10 @@ a {
 }
 
 .btn:hover {
-  /* JS magnetics set --mag-x/--mag-y inline and win over this fallback lift. */
-  --mag-y: -2px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+  transform: translateY(-2px);
+  background: var(--fix);
+  border-color: var(--fix);
+  color: #071018;
 }
 
 .btn--ghost {
@@ -494,77 +464,6 @@ a {
     animation: none;
     clip-path: none;
   }
-}
-
-/* ----- Custom cursor (fine pointers, motion allowed) -----
-   .has-cursor is set by JS only when both conditions hold, so touch devices
-   and reduced-motion users keep the native cursor untouched. */
-.has-cursor,
-.has-cursor a,
-.has-cursor button,
-.has-cursor input,
-.has-cursor label,
-.has-cursor [role='button'] {
-  cursor: none;
-}
-
-.cursor {
-  display: none;
-}
-
-.has-cursor .cursor {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 9500;
-  pointer-events: none;
-}
-
-.cursor__dot,
-.cursor__ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  will-change: transform;
-}
-
-.cursor__dot {
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  background: var(--accent);
-}
-
-.cursor__ring {
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border: 1.5px solid var(--accent);
-  opacity: 0.55;
-  transition:
-    width 0.25s var(--ease),
-    height 0.25s var(--ease),
-    margin 0.25s var(--ease),
-    opacity 0.25s ease,
-    border-color 0.25s ease;
-}
-
-.cursor.is-hot .cursor__ring {
-  width: 52px;
-  height: 52px;
-  margin: -26px 0 0 -26px;
-  opacity: 0.9;
-}
-
-.cursor.is-down .cursor__ring {
-  width: 24px;
-  height: 24px;
-  margin: -12px 0 0 -12px;
-}
-
-.cursor.is-gone {
-  opacity: 0;
 }
 
 /* ----- Outlined display type ----- */

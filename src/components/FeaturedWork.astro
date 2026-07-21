@@ -1,8 +1,8 @@
 ---
-import ProjectEntry from './ProjectEntry.astro';
-import type { Repo } from '../data/github';
-import type { NuGetPackage } from '../data/nuget';
-import type { ProjectProof } from '../data/featured';
+import ProjectEntry from "./ProjectEntry.astro";
+import type { Repo } from "../data/github";
+import type { NuGetPackage } from "../data/nuget";
+import type { ProjectProof } from "../data/featured";
 
 export interface Entry {
   name: string;
@@ -21,17 +21,26 @@ interface Props {
   showAllLink?: boolean;
 }
 const { entries, showAllLink = false } = Astro.props;
+const heading = showAllLink
+  ? {
+      kicker: "Selected interceptions",
+      title: "Three failures that never made it out.",
+    }
+  : {
+      kicker: "Flagship work",
+      title: "The analysers behind the promise.",
+    };
 ---
 
 <section class="work" id="work">
   <div class="wrap">
     <header class="work__head reveal">
-      <p class="kicker">Selected work</p>
-      <h2 class="display work__title">Things built to stop other things breaking.</h2>
+      <p class="kicker">{heading.kicker}</p>
+      <h2 class="display work__title">{heading.title}</h2>
       <p class="work__intro">
-        Most of the open-source work sits just before the mess: analysers, source
-        generators and CLIs that make bad code complain early, where it is still cheap
-        to fix.
+        Most of the open-source work sits just before the mess: analysers,
+        source generators and CLIs that make bad code complain early, where it
+        is still cheap to fix.
       </p>
     </header>
 
@@ -56,7 +65,10 @@ const { entries, showAllLink = false } = Astro.props;
       showAllLink && (
         <div class="work__more reveal">
           <a class="btn btn--ghost" href="/work">
-            Explore every project <span class="arrow" aria-hidden="true">→</span>
+            Explore every project{" "}
+            <span class="arrow" aria-hidden="true">
+              →
+            </span>
           </a>
         </div>
       )

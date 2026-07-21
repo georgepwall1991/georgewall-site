@@ -1,28 +1,29 @@
 ---
-import Base from '../layouts/Base.astro';
-import SiteHeader from '../components/SiteHeader.astro';
-import Hero from '../components/Hero.astro';
-import Ticker from '../components/Ticker.astro';
-import FeaturedWork from '../components/FeaturedWork.astro';
-import PrivateApps from '../components/PrivateApps.astro';
-import WritingPreview from '../components/WritingPreview.astro';
-import About from '../components/About.astro';
-import Colophon from '../components/Colophon.astro';
-import { getSnapshot, type Repo } from '../data/github';
-import { getNuGetPackages, totalNuGetDownloads } from '../data/nuget';
-import { FEATURED } from '../data/featured';
-import { PRIVATE_APPS } from '../data/apps';
+import Base from "../layouts/Base.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import Hero from "../components/Hero.astro";
+import FeaturedWork from "../components/FeaturedWork.astro";
+import PrivateApps from "../components/PrivateApps.astro";
+import WritingPreview from "../components/WritingPreview.astro";
+import About from "../components/About.astro";
+import Colophon from "../components/Colophon.astro";
+import { getSnapshot, type Repo } from "../data/github";
+import { getNuGetPackages, totalNuGetDownloads } from "../data/nuget";
+import { FEATURED } from "../data/featured";
+import { PRIVATE_APPS } from "../data/apps";
 
 // Build-time data: live GitHub if reachable, committed snapshot otherwise.
 const snapshot = await getSnapshot();
 const packages = await getNuGetPackages();
-const repoByName = new Map<string, Repo>(snapshot.repos.map((r) => [r.name, r]));
+const repoByName = new Map<string, Repo>(
+  snapshot.repos.map((r) => [r.name, r]),
+);
 
 const slug = (s: string) =>
   s
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
 
 const featuredEntries = FEATURED.map((f) => ({
   ...f,
@@ -31,33 +32,35 @@ const featuredEntries = FEATURED.map((f) => ({
   anchor: `work-${slug(f.name)}`,
 }));
 const downloads = totalNuGetDownloads(Object.values(packages));
-const shippedApps = PRIVATE_APPS.filter((app) => app.status === 'App Store').length;
+const shippedApps = PRIVATE_APPS.filter(
+  (app) => app.status === "App Store",
+).length;
 const avatar = snapshot.user.avatar_url;
 
 // Per-project structured data — each featured repo as a SoftwareApplication,
 // linked back to the Person node so search/AI engines see authorship.
-const SITE_URL = 'https://www.georgewall.uk';
+const SITE_URL = "https://www.georgewall.uk";
 const softwareSchema = featuredEntries
   .filter((e) => e.repo)
   .map((e) => ({
-    '@type': 'SoftwareApplication',
-    '@id': `${SITE_URL}/#${e.anchor}`,
+    "@type": "SoftwareApplication",
+    "@id": `${SITE_URL}/#${e.anchor}`,
     name: e.title,
-    applicationCategory: 'DeveloperApplication',
-    operatingSystem: 'Cross-platform',
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Cross-platform",
     description: e.blurb,
-    author: { '@id': `${SITE_URL}/#person` },
+    author: { "@id": `${SITE_URL}/#person` },
     url: e.primary?.href ?? e.repo!.html_url,
     codeRepository: e.repo!.html_url,
   }));
 const appSchema = PRIVATE_APPS.map((app) => ({
-  '@type': 'MobileApplication',
-  '@id': `${SITE_URL}/#app-${slug(app.name)}`,
+  "@type": "MobileApplication",
+  "@id": `${SITE_URL}/#app-${slug(app.name)}`,
   name: app.title,
-  applicationCategory: 'GameApplication',
-  operatingSystem: 'iOS',
+  applicationCategory: "GameApplication",
+  operatingSystem: "iOS",
   description: app.blurb,
-  author: { '@id': `${SITE_URL}/#person` },
+  author: { "@id": `${SITE_URL}/#person` },
   ...(app.siteUrl ? { url: app.siteUrl } : app.url ? { url: app.url } : {}),
   ...(app.url ? { downloadUrl: app.url, sameAs: app.url } : {}),
   screenshot: app.screenshots.map((shot) => new URL(shot.src, SITE_URL).href),
@@ -68,7 +71,6 @@ const appSchema = PRIVATE_APPS.map((app) => ({
   <SiteHeader />
   <main id="main-content">
     <Hero totalDownloads={downloads} shippedApps={shippedApps} />
-    <Ticker />
     <FeaturedWork entries={featuredEntries.slice(0, 3)} showAllLink />
     <WritingPreview compact />
     <PrivateApps apps={PRIVATE_APPS} />
@@ -79,22 +81,22 @@ const appSchema = PRIVATE_APPS.map((app) => ({
 
 <script>
   // Scroll-reveal. Respects reduced-motion and degrades to "everything visible".
-  const els = document.querySelectorAll<HTMLElement>('.reveal, .reveal-clip');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = document.querySelectorAll<HTMLElement>(".reveal, .reveal-clip");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (!('IntersectionObserver' in window) || reduce) {
-    els.forEach((e) => e.classList.add('is-in'));
+  if (!("IntersectionObserver" in window) || reduce) {
+    els.forEach((e) => e.classList.add("is-in"));
   } else {
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('is-in');
+            entry.target.classList.add("is-in");
             io.unobserve(entry.target);
           }
         }
       },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.06 },
     );
     els.forEach((e) => io.observe(e));
   }
