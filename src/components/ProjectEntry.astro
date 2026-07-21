@@ -1,5 +1,7 @@
 ---
 import type { Repo } from '../data/github';
+import type { NuGetPackage } from '../data/nuget';
+import type { ProjectProof } from '../data/featured';
 import { languageColor, formatCount, relativeTime, pad2 } from '../lib/format';
 
 interface Props {
@@ -8,18 +10,21 @@ interface Props {
   title: string;
   blurb: string;
   repo?: Repo;
-  /** Preferred non-GitHub link label, e.g. "NuGet" or "Live". */
-  cta?: string;
+  primary?: { label: string; href: string };
+  package?: NuGetPackage;
+  proof?: ProjectProof;
   anchor: string;
 }
-const { index, kicker, title, blurb, repo, cta, anchor } = Astro.props;
+const { index, kicker, title, blurb, repo, primary, package: nuget, proof, anchor } = Astro.props;
 
-// Build the link chips: a homepage (NuGet/Live/App Store) first if present, then GitHub.
+// Destinations are editorially explicit. Deduping prevents a GitHub homepage
+// from producing two differently-labelled links to the same place.
 const links: { href: string; label: string }[] = [];
-if (repo?.homepage) links.push({ href: repo.homepage, label: cta ?? 'Live' });
+if (primary) links.push(primary);
 if (repo) links.push({ href: repo.html_url, label: 'GitHub' });
+const uniqueLinks = [...new Map(links.map((link) => [link.href.replace(/\/$/, ''), link])).values()];
 
-const primaryHref = links[0]?.href ?? repo?.html_url ?? '#';
+const primaryHref = uniqueLinks[0]?.href ?? repo?.html_url ?? '#';
 const topics = (repo?.topics ?? []).slice(0, 6);
 const now = new Date();
 ---
@@ -39,20 +44,50 @@ const now = new Date();
     <p class="entry__blurb">{blurb}</p>
 
     {
-      repo && (
+      proof && (
+        <div class="entry__proof" aria-label={`${title} diagnostic example`}>
+          <div class="entry__proof-head">
+            <span class="entry__diagnostic">{proof.diagnostic}</span>
+            <p>{proof.problem}</p>
+          </div>
+          <div class="entry__diff">
+            <div>
+              <span class="entry__diff-label">Before</span>
+              <pre><code>{proof.before.join('\n')}</code></pre>
+            </div>
+            <div>
+              <span class="entry__diff-label entry__diff-label--fixed">Quick fix</span>
+              <pre><code>{proof.after.join('\n')}</code></pre>
+            </div>
+          </div>
+          <p class="entry__result"><span aria-hidden="true">✓</span> {proof.result}</p>
+        </div>
+      )
+    }
+
+    {
+      (repo || nuget) && (
         <div class="entry__meta">
-          {repo.language && (
+          {nuget && (
+            <span class="entry__metaitem entry__downloads">
+              <strong>{formatCount(nuget.totalDownloads)}</strong> NuGet downloads
+            </span>
+          )}
+          {nuget && <span class="entry__metaitem">v{nuget.version}</span>}
+          {repo?.language && (
             <span class="entry__metaitem">
               <span class="lang-dot" style={`--dot:${languageColor(repo.language)}`} />
               {repo.language}
             </span>
           )}
-          {repo.stars > 0 && (
+          {repo && repo.stars > 0 && (
             <span class="entry__metaitem">
               <span class="entry__star">★</span> {formatCount(repo.stars)}
             </span>
           )}
-          <span class="entry__metaitem entry__updated">Updated {relativeTime(repo.pushed_at, now)}</span>
+          {repo && (
+            <span class="entry__metaitem entry__updated">Updated {relativeTime(repo.pushed_at, now)}</span>
+          )}
         </div>
       )
     }
@@ -68,9 +103,9 @@ const now = new Date();
     }
 
     {
-      links.length > 0 && (
+      uniqueLinks.length > 0 && (
         <div class="entry__links">
-          {links.map((l) => (
+          {uniqueLinks.map((l) => (
             <a class="link entry__link" href={l.href} target="_blank" rel="noopener">
               {l.label} <span aria-hidden="true">↗</span>
             </a>
@@ -141,7 +176,7 @@ const now = new Date();
     z-index: 1;
     font-family: var(--font-mono);
     font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--accent);
+    color: var(--accent-text);
     padding-top: 0.5rem;
     letter-spacing: 0.05em;
   }
@@ -186,6 +221,76 @@ const now = new Date();
     margin-bottom: 1.6rem;
   }
 
+  .entry__proof {
+    max-width: 52rem;
+    margin: 0 0 1.7rem;
+    overflow: hidden;
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--paper-raised) 88%, transparent);
+  }
+  .entry__proof-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+  }
+  .entry__diagnostic,
+  .entry__diff-label {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  .entry__diagnostic {
+    padding: 0.12em 0.45em;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+  }
+  .entry__diff {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .entry__diff > div {
+    min-width: 0;
+    padding: 1rem;
+  }
+  .entry__diff > div + div {
+    border-left: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--accent-wash) 55%, transparent);
+  }
+  .entry__diff-label {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--ink-faint);
+  }
+  .entry__diff-label--fixed {
+    color: var(--accent-text);
+  }
+  .entry__diff pre {
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 1.4vw, 0.8rem);
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .entry__result {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .entry__result span {
+    color: var(--accent-text);
+  }
+
   .entry__meta {
     display: flex;
     align-items: center;
@@ -202,7 +307,11 @@ const now = new Date();
     gap: 0.45em;
   }
   .entry__star {
-    color: var(--accent);
+    color: var(--accent-text);
+  }
+  .entry__downloads strong {
+    color: var(--ink);
+    font-weight: 650;
   }
   .entry__updated {
     color: var(--ink-faint);
@@ -224,6 +333,11 @@ const now = new Date();
     font-size: 0.82rem;
     letter-spacing: 0.03em;
   }
+  .entry__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
 
   @media (max-width: 620px) {
     .entry {
@@ -232,6 +346,13 @@ const now = new Date();
     }
     .entry__index {
       padding-top: 0;
+    }
+    .entry__diff {
+      grid-template-columns: 1fr;
+    }
+    .entry__diff > div + div {
+      border-left: 0;
+      border-top: 1px solid var(--rule);
     }
   }
 </style>

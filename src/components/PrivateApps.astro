@@ -40,6 +40,7 @@ const groups = [
             <p class="apps__groupLabel">{group.label}</p>
             {group.apps.map((app, appIndex) => {
               const revealIndex = groupIndex * 2 + appIndex;
+              const links = appLinks(app);
               return (
                 <article class="app reveal" style={`--reveal-delay:${revealIndex * 90}ms`}>
                   <div class={`app__media app__media--${app.screenshots.length === 1 ? 'icon' : 'screens'}`}>
@@ -62,18 +63,20 @@ const groups = [
                         <li>{item}</li>
                       ))}
                     </ul>
-                    <div class="app__links" aria-label={`${app.title} links`}>
-                      {appLinks(app).map((link) => (
-                        <a
-                          class={`app__cta ${link.primary ? 'app__cta--primary' : 'app__cta--secondary link link--on'}`}
-                          href={link.url}
-                          target="_blank"
-                          rel="noopener"
-                        >
-                          {link.label} <span aria-hidden="true">↗</span>
-                        </a>
-                      ))}
-                    </div>
+                    {links.length > 0 && (
+                      <div class="app__links" role="group" aria-label={`${app.title} links`}>
+                        {links.map((link) => (
+                          <a
+                            class={`app__cta ${link.primary ? 'app__cta--primary' : 'app__cta--secondary link link--on'}`}
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener"
+                          >
+                            {link.label} <span aria-hidden="true">↗</span>
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </article>
               );
@@ -235,7 +238,7 @@ const groups = [
     font-size: 0.72rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-text);
   }
 
   .app__titleRow {
@@ -302,6 +305,9 @@ const groups = [
   }
 
   .app__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     width: fit-content;
     font-family: var(--font-mono);
     font-size: 0.82rem;
@@ -310,12 +316,10 @@ const groups = [
   }
 
   .app__cta--primary {
-    display: inline-flex;
-    align-items: center;
     gap: 0.35em;
     color: var(--paper);
-    background: var(--accent);
-    border: 1.5px solid var(--accent);
+    background: var(--accent-text);
+    border: 1.5px solid var(--accent-text);
     border-radius: 999px;
     padding: 0.62em 0.95em;
     box-shadow: 3px 3px 0 var(--ink);

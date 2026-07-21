@@ -78,14 +78,22 @@ if (section && listEl && dataEl) {
   section.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
       filter = btn.dataset.filter!;
-      section.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('is-active', b === btn));
+      section.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((button) => {
+        const active = button === btn;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
       render();
     });
   });
   section.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((btn) => {
     btn.addEventListener('click', () => {
       sort = btn.dataset.sort as SortMode;
-      section.querySelectorAll('[data-sort]').forEach((b) => b.classList.toggle('is-active', b === btn));
+      section.querySelectorAll<HTMLButtonElement>('[data-sort]').forEach((button) => {
+        const active = button === btn;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
       render();
     });
   });

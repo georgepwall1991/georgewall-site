@@ -35,14 +35,10 @@ const year = new Date().getFullYear();
       <div class="colophon__col">
         <p class="label">Index</p>
         <ul class="colophon__links">
-          <li><a class="link" href="#work">Work</a></li>
-          <li><a class="link" href="#archive">Archive</a></li>
-          <li><a class="link" href="#about">About</a></li>
-          <li>
-            <a class="link" href="/writing/catching-n-plus-1-at-compile-time">
-              Writing: Catching N+1 at compile time
-            </a>
-          </li>
+          <li><a class="link" href="/work">Work</a></li>
+          <li><a class="link" href="/work#archive">Archive</a></li>
+          <li><a class="link" href="/writing">Writing</a></li>
+          <li><a class="link" href="/#about">About</a></li>
           <li><a class="link" href="#top">Back to top ↑</a></li>
         </ul>
       </div>
@@ -138,6 +134,11 @@ const year = new Date().getFullYear();
     font-family: var(--font-mono);
     font-size: 0.85rem;
   }
+  .colophon__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
   .colophon__col--end {
     text-align: right;
   }
@@ -151,7 +152,7 @@ const year = new Date().getFullYear();
   .colophon__reg {
     font-family: var(--font-mono);
     font-size: 0.4em;
-    color: var(--accent);
+    color: var(--accent-text);
     vertical-align: super;
   }
   .colophon__copy {

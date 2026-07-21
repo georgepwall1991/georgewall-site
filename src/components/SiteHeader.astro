@@ -4,9 +4,10 @@ import { SITE } from '../data/site';
 
 // Root-relative anchors so the nav also works from /writing/* pages.
 const NAV = [
-  { href: '/#work', label: 'Work', spy: 'work' },
+  { href: '/work', label: 'Work', spy: 'work' },
   { href: '/#apps', label: 'Apps', spy: 'apps' },
-  { href: '/#archive', label: 'Archive', spy: 'archive' },
+  { href: '/writing', label: 'Writing', spy: 'writing' },
+  { href: '/work#archive', label: 'Archive', spy: 'archive' },
   { href: '/#about', label: 'About', spy: 'about' },
 ];
 ---
@@ -114,6 +115,8 @@ const NAV = [
     color: var(--ink);
     display: inline-flex;
     align-items: baseline;
+    min-height: 44px;
+    justify-content: center;
     gap: 0.15em;
     white-space: nowrap;
   }
@@ -121,7 +124,7 @@ const NAV = [
   .masthead__reg {
     font-family: var(--font-mono);
     font-size: 0.5em;
-    color: var(--accent);
+    color: var(--accent-text);
     transform: translateY(-0.6em);
   }
 
@@ -255,7 +258,7 @@ const NAV = [
   .menu__no {
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--accent);
+    color: var(--accent-text);
     min-width: 1.6rem;
   }
 

@@ -1,13 +1,13 @@
 ---
 import DiagnosticHero from './DiagnosticHero.astro';
 import { SITE } from '../data/site';
-import { formatCount } from '../lib/format';
 
 interface Props {
-  repoCount: number;
-  totalStars: number;
+  totalDownloads: number;
+  shippedApps: number;
 }
-const { repoCount, totalStars } = Astro.props;
+const { totalDownloads, shippedApps } = Astro.props;
+const downloadThousands = Math.floor(totalDownloads / 1000);
 
 // The brand squiggle at architectural scale: one long wave path that draws
 // itself behind the headline on load.
@@ -71,16 +71,12 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
 
         <dl class="hero__stats intro" style="--intro-delay: 780ms">
           <div>
-            <dt class="label">Public repos</dt>
-            <dd><span class="stat" data-count={repoCount}>{repoCount}</span></dd>
+            <dt class="label">NuGet downloads</dt>
+            <dd><span class="stat" data-count={downloadThousands} data-suffix="K+">{downloadThousands}K+</span></dd>
           </div>
           <div>
-            <dt class="label">GitHub stars</dt>
-            <dd>
-              <span class="stat" data-count={totalStars}>{formatCount(totalStars)}</span><span
-                class="hero__star">★</span
-              >
-            </dd>
+            <dt class="label">App Store releases</dt>
+            <dd><span class="stat" data-count={shippedApps}>{shippedApps}</span></dd>
           </div>
           <div>
             <dt class="label">Years in fintech</dt>
@@ -232,7 +228,7 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
     transition: color 0.3s var(--ease), -webkit-text-stroke-color 0.3s var(--ease);
   }
   .hero__line--slam :global(.slam-ch.is-lit) {
-    color: var(--accent);
+    color: var(--accent-text);
     -webkit-text-stroke-color: var(--accent);
   }
 
@@ -293,7 +289,7 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
     line-height: 1;
   }
   .hero__star {
-    color: var(--accent);
+    color: var(--accent-text);
     font-size: 0.6em;
     vertical-align: 0.3em;
     margin-left: 0.1em;
@@ -395,12 +391,13 @@ const wavePath = `M0 80 Q40 0 80 80 ${waveTail}`;
       const target = Number(el.dataset.count);
       if (!Number.isFinite(target)) return;
       const final = el.textContent ?? '';
+      const suffix = el.dataset.suffix ?? '';
       const start = performance.now() + 750;
       const duration = 1300;
       const tick = (t: number) => {
         const p = Math.min(Math.max((t - start) / duration, 0), 1);
         const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = p >= 1 ? final : String(Math.round(target * eased));
+        el.textContent = p >= 1 ? final : `${Math.round(target * eased)}${suffix}`;
         if (p < 1) requestAnimationFrame(tick);
       };
       requestAnimationFrame(tick);

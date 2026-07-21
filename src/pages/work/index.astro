@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import FeaturedWork from '../../components/FeaturedWork.astro';
+import SecondaryGrid from '../../components/SecondaryGrid.astro';
+import StackSection from '../../components/StackSection.astro';
+import Archive from '../../components/Archive.astro';
+import Colophon from '../../components/Colophon.astro';
+import { getSnapshot, portfolioRepos, type Repo } from '../../data/github';
+import { getNuGetPackages } from '../../data/nuget';
+import { FEATURED, SECONDARY } from '../../data/featured';
+
+const snapshot = await getSnapshot();
+const packages = await getNuGetPackages();
+const portfolio = portfolioRepos(snapshot.repos);
+const repoByName = new Map<string, Repo>(snapshot.repos.map((repo) => [repo.name, repo]));
+const slug = (value: string) =>
+  value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+const featuredEntries = FEATURED.map((project) => ({
+  ...project,
+  repo: repoByName.get(project.name),
+  package: project.packageId ? packages[project.packageId] : undefined,
+  anchor: `work-${slug(project.name)}`,
+}));
+const secondaryEntries = SECONDARY.map((project) => ({
+  ...project,
+  repo: repoByName.get(project.name),
+}));
+
+const SITE_URL = 'https://www.georgewall.uk';
+const softwareSchema = featuredEntries
+  .filter((entry) => entry.repo)
+  .map((entry) => ({
+    '@type': 'SoftwareApplication',
+    '@id': `${SITE_URL}/work#${entry.anchor}`,
+    name: entry.title,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Cross-platform',
+    description: entry.blurb,
+    author: { '@id': `${SITE_URL}/#person` },
+    url: entry.primary?.href ?? entry.repo!.html_url,
+    codeRepository: entry.repo!.html_url,
+  }));
+---
+
+<Base
+  title="Work — George Wall, full-stack engineer and toolmaker"
+  description="Roslyn analysers, .NET tooling, full-stack systems and shipped products by George Wall."
+  schema={softwareSchema}
+>
+  <SiteHeader />
+  <main id="main-content">
+    <PageIntro
+      kicker="Work · Open source"
+      title="Proof, not a project grid."
+      standfirst="Tools that move failures toward the keyboard, full-stack systems built across the boundary, and the complete public archive behind them."
+      detail={`${featuredEntries.length + secondaryEntries.length} selected projects · ${portfolio.length} public repos`}
+    />
+    <FeaturedWork entries={featuredEntries} />
+    <SecondaryGrid entries={secondaryEntries} />
+    <StackSection />
+    <Archive repos={portfolio} allRepos={snapshot.repos} generatedAt={snapshot.generatedAt} />
+  </main>
+  <Colophon />
+</Base>
+
+<script>
+  const elements = document.querySelectorAll<HTMLElement>('.reveal, .reveal-clip');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!('IntersectionObserver' in window) || reduce) {
+    elements.forEach((element) => element.classList.add('is-in'));
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+    );
+    elements.forEach((element) => observer.observe(element));
+  }
+</script>

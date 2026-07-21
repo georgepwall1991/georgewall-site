@@ -91,7 +91,7 @@ async function fetchLive(timeoutMs = 6000): Promise<Snapshot> {
  * Build-time data. Tries live, falls back to the snapshot. Never throws —
  * a portfolio that won't build because GitHub hiccuped is a bad portfolio.
  */
-export async function getSnapshot(): Promise<Snapshot> {
+async function loadSnapshot(): Promise<Snapshot> {
   try {
     const live = await fetchLive();
     if (live.repos.length >= 3) return live;
@@ -99,4 +99,12 @@ export async function getSnapshot(): Promise<Snapshot> {
   } catch {
     return snapshotFallback;
   }
+}
+
+let buildSnapshot: Promise<Snapshot> | undefined;
+
+/** Reuse one coherent GitHub snapshot across every route in a static build. */
+export function getSnapshot(): Promise<Snapshot> {
+  buildSnapshot ??= loadSnapshot();
+  return buildSnapshot;
 }

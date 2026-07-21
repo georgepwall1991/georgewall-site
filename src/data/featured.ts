@@ -7,6 +7,16 @@
  * GitHub fill in around them. Order here is the order on the page.
  */
 
+import type { PackageId } from './nuget';
+
+export interface ProjectProof {
+  diagnostic: string;
+  problem: string;
+  before: string[];
+  after: string[];
+  result: string;
+}
+
 export interface Featured {
   /** Must match a GitHub repo `name` exactly. */
   name: string;
@@ -16,8 +26,12 @@ export interface Featured {
   title: string;
   /** 1–2 sentence editorial blurb. */
   blurb: string;
-  /** Optional: a non-GitHub primary link label, if the repo has a homepage. */
-  cta?: string;
+  /** Explicit destination: repository homepage metadata is not trusted as UX copy. */
+  primary?: { label: string; href: string };
+  /** NuGet package used for live adoption/version proof. */
+  packageId?: PackageId;
+  /** Evidence panel for flagship work. */
+  proof?: ProjectProof;
 }
 
 export const FEATURED: Featured[] = [
@@ -27,7 +41,15 @@ export const FEATURED: Featured[] = [
     title: 'LinqContraband',
     blurb:
       'A Roslyn analyser that reads your LINQ the way the database will. N+1 queries and client-side evaluation get caught in the editor, not after a slow page has annoyed everyone.',
-    cta: 'NuGet',
+    primary: { label: 'Install package', href: 'https://www.nuget.org/packages/LinqContraband' },
+    packageId: 'LinqContraband',
+    proof: {
+      diagnostic: 'LINQ001',
+      problem: 'Materialising before filtering pulls the whole table into memory.',
+      before: ['db.Orders', '  .ToList()', '  .Where(o => o.Total > 1_000)'],
+      after: ['db.Orders', '  .Where(o => o.Total > 1_000)', '  .ToList()'],
+      result: 'The database filters; the editor catches the expensive shape before review.',
+    },
   },
   {
     name: 'DependencyInjection.Lifetime.Analyzers',
@@ -35,7 +57,18 @@ export const FEATURED: Featured[] = [
     title: 'DI Lifetime Analyzers',
     blurb:
       'Captive dependencies, leaked scopes, lifetime mismatches: the bugs that look fine in tests and then embarrass you under load. This catches them while you type, with zero runtime overhead.',
-    cta: 'NuGet',
+    primary: {
+      label: 'Install package',
+      href: 'https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers',
+    },
+    packageId: 'DependencyInjection.Lifetime.Analyzers',
+    proof: {
+      diagnostic: 'DILIFETIME001',
+      problem: 'A singleton captures a scoped dependency and quietly extends its lifetime.',
+      before: ['AddSingleton<ReportService>()', 'AddScoped<AppDbContext>()'],
+      after: ['AddScoped<ReportService>()', 'AddScoped<AppDbContext>()'],
+      result: 'The container graph becomes a compile-time contract instead of a runtime surprise.',
+    },
   },
   {
     name: 'CancelCop.Analyzer',
@@ -43,14 +76,29 @@ export const FEATURED: Featured[] = [
     title: 'CancelCop',
     blurb:
       'A focused analyser for CancellationToken propagation across handlers, EF Core, HTTP and Minimal APIs. Cooperative cancellation, enforced, with code fixes that wire the token for you.',
-    cta: 'NuGet',
+    primary: {
+      label: 'Install package',
+      href: 'https://www.nuget.org/packages/CancelCop.Analyzer',
+    },
+    packageId: 'CancelCop.Analyzer',
+    proof: {
+      diagnostic: 'CANCEL001',
+      problem: 'A cancellation token reaches the handler, then disappears at the database call.',
+      before: ['Task Handle(CancellationToken ct)', '  => db.SaveChangesAsync();'],
+      after: ['Task Handle(CancellationToken ct)', '  => db.SaveChangesAsync(ct);'],
+      result: 'The code fix wires cooperative cancellation through the whole call chain.',
+    },
   },
   {
     name: 'automapper-analyser',
     kicker: 'Compile-time safety · mapping',
     title: 'AutoMapper Analyzer',
     blurb:
-      "AutoMapper’s convenience hides its sharpest edge: the mapping you forgot. This flags missing and misconfigured maps at build, before they become a runtime shrug.",
+      'AutoMapper’s convenience hides its sharpest edge: the mapping you forgot. This flags missing and misconfigured maps at build, before they become a runtime shrug.',
+    primary: {
+      label: 'View source',
+      href: 'https://github.com/georgepwall1991/automapper-analyser',
+    },
   },
   {
     name: 'CPMigrate',
@@ -58,7 +106,8 @@ export const FEATURED: Featured[] = [
     title: 'CPMigrate',
     blurb:
       'Move an entire .NET solution onto Central Package Management without doing diff archaeology by hand. It checks dependency health, migrates carefully, and rolls back when reality disagrees.',
-    cta: 'Live',
+    primary: { label: 'View tool', href: 'https://georgepwall1991.github.io/CPMigrate/' },
+    packageId: 'CPMigrate',
   },
   {
     name: 'NotifyGen',
@@ -66,6 +115,8 @@ export const FEATURED: Featured[] = [
     title: 'NotifyGen',
     blurb:
       'Add [Notify], delete the boilerplate. A source generator that turns fields into INotifyPropertyChanged-aware properties at compile time: MVVM with less ceremony and no runtime tax.',
+    primary: { label: 'Install package', href: 'https://www.nuget.org/packages/NotifyGen' },
+    packageId: 'NotifyGen',
   },
 ];
 
@@ -80,6 +131,8 @@ export const SECONDARY: Featured[] = [
     title: 'ConfigContraband',
     blurb:
       'Broken appsettings should not be a deploy-time surprise. Analysers for the .NET Options pattern that catch misbound configuration before it ships.',
+    primary: { label: 'Install package', href: 'https://www.nuget.org/packages/ConfigContraband' },
+    packageId: 'ConfigContraband',
   },
   {
     name: 'CQRSPrototype',
@@ -105,6 +158,4 @@ export const SECONDARY: Featured[] = [
 ];
 
 /** Names that get the headline treatment, in case the archive wants to flag them. */
-export const FEATURED_NAMES: Set<string> = new Set(
-  [...FEATURED, ...SECONDARY].map((f) => f.name),
-);
+export const FEATURED_NAMES: Set<string> = new Set([...FEATURED, ...SECONDARY].map((f) => f.name));

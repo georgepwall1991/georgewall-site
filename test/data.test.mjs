@@ -1,14 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import {
-  isPortfolioRepo,
-  sortForArchive,
-  portfolioRepos,
-  totalStars,
-} from '../src/lib/repos.ts';
+import { isPortfolioRepo, sortForArchive, portfolioRepos, totalStars } from '../src/lib/repos.ts';
 import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
 import { pad2, relativeTime, languageColor, linkLabel } from '../src/lib/format.ts';
+import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
 
 /** Build a Repo with sensible defaults; override what a test cares about. */
 function repo(overrides = {}) {
@@ -48,7 +44,10 @@ test('sortForArchive does not mutate its input', () => {
   const input = [repo({ name: 'x', stars: 1 }), repo({ name: 'y', stars: 5 })];
   const snapshot = input.map((r) => r.name);
   sortForArchive(input);
-  assert.deepEqual(input.map((r) => r.name), snapshot);
+  assert.deepEqual(
+    input.map((r) => r.name),
+    snapshot,
+  );
 });
 
 test('portfolioRepos filters then sorts', () => {
@@ -68,12 +67,21 @@ test('totalStars sums stars', () => {
 });
 
 test('categoryOf classifies by topics, name and language', () => {
-  assert.equal(categoryOf(repo({ name: 'LinqContraband', topics: ['roslyn-analyzer'] })), 'Analyzers');
+  assert.equal(
+    categoryOf(repo({ name: 'LinqContraband', topics: ['roslyn-analyzer'] })),
+    'Analyzers',
+  );
   assert.equal(categoryOf(repo({ name: 'CancelCop.Analyzer', topics: [] })), 'Analyzers');
-  assert.equal(categoryOf(repo({ name: 'NotifyGen', topics: ['source-generators'] })), 'Source gen');
+  assert.equal(
+    categoryOf(repo({ name: 'NotifyGen', topics: ['source-generators'] })),
+    'Source gen',
+  );
   assert.equal(categoryOf(repo({ name: 'CPMigrate', topics: ['cli', 'dotnet-tool'] })), 'Tooling');
   assert.equal(categoryOf(repo({ name: 'AOEOverlay', language: 'TypeScript', topics: [] })), 'Web');
-  assert.equal(categoryOf(repo({ name: 'AspireMicroservices', language: 'C#', topics: [] })), 'Other');
+  assert.equal(
+    categoryOf(repo({ name: 'AspireMicroservices', language: 'C#', topics: [] })),
+    'Other',
+  );
 });
 
 test('categoriesIn returns present categories in canonical order', () => {
@@ -108,4 +116,13 @@ test('linkLabel maps known hosts to friendly labels', () => {
   assert.equal(linkLabel('https://www.nuget.org/packages/LinqContraband'), 'NuGet');
   assert.equal(linkLabel('https://github.com/georgepwall1991/x'), 'GitHub');
   assert.equal(linkLabel('https://georgepwall1991.github.io/CPMigrate/'), 'Live');
+});
+
+test('NuGet fallback exposes credible adoption totals when the API is unavailable', () => {
+  const packages = Object.values(NUGET_FALLBACK);
+  assert.equal(packages.length, 6);
+  assert.equal(totalNuGetDownloads(packages), 116246);
+  assert.ok(
+    packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
+  );
 });
