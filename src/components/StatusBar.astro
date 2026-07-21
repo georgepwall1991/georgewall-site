@@ -89,6 +89,7 @@ const initialCrumb = segment ?? 'lede';
   }
 
   button.statusbar__ok {
+    min-height: 24px;
     background: none;
     border: 0;
     font: inherit;
@@ -128,7 +129,7 @@ const initialCrumb = segment ?? 'lede';
     color: var(--ink-faint);
   }
   .statusbar__crumb [data-crumb] {
-    color: var(--accent);
+    color: var(--accent-text);
     min-width: 4.5em;
   }
   .statusbar__sep {
@@ -193,7 +194,7 @@ const initialCrumb = segment ?? 'lede';
     margin-bottom: 0.35rem;
   }
   .gw-toast__id {
-    color: var(--accent);
+    color: var(--accent-text);
     border: 1px solid var(--accent);
     border-radius: 4px;
     padding: 0.05em 0.35em;
@@ -222,7 +223,7 @@ const initialCrumb = segment ?? 'lede';
     transition: color 0.2s ease;
   }
   .gw-toast__close:hover {
-    color: var(--accent);
+    color: var(--accent-text);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,29 @@
+---
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import PageIntro from '../../components/PageIntro.astro';
+import WritingPreview from '../../components/WritingPreview.astro';
+import Colophon from '../../components/Colophon.astro';
+import { ARTICLES } from '../../data/writing';
+---
+
+<Base
+  title="Writing — George Wall"
+  description="Practical writing about Roslyn analysers, .NET performance, developer tooling and catching expensive failures early."
+>
+  <SiteHeader />
+  <main id="main-content">
+    <PageIntro
+      kicker="Writing · Engineering notes"
+      title="The failure boundary, annotated."
+      standfirst="Field notes on bugs that survive tests, compiler tooling that makes them visible, and the engineering trade-offs behind reliable systems."
+      detail={`${ARTICLES.length} essay${ARTICLES.length === 1 ? '' : 's'}`}
+    />
+    <WritingPreview />
+  </main>
+  <Colophon />
+</Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.reveal').forEach((element) => element.classList.add('is-in'));
+</script>

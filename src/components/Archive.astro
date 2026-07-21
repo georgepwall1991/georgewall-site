@@ -25,18 +25,18 @@ const now = new Date();
       </div>
       <p class="archive__note">
         This list reads the public GitHub API in your browser. No server, no token.
-        <span class="archive__status" data-status>Snapshot · {formatMonthYear(generatedAt)}</span>
+        <span class="archive__status" data-status aria-live="polite">Snapshot · {formatMonthYear(generatedAt)}</span>
       </p>
     </header>
 
     <div class="archive__controls reveal" role="group" aria-label="Filter and sort repositories">
       <div class="archive__filters" data-filters>
-        <button class="chip is-active" data-filter="All" type="button">All</button>
-        {cats.map((c) => <button class="chip" data-filter={c} type="button">{c}</button>)}
+        <button class="chip is-active" data-filter="All" type="button" aria-pressed="true">All</button>
+        {cats.map((c) => <button class="chip" data-filter={c} type="button" aria-pressed="false">{c}</button>)}
       </div>
       <div class="archive__sorts">
-        <button class="chip chip--sort is-active" data-sort="stars" type="button">★ Stars</button>
-        <button class="chip chip--sort" data-sort="recent" type="button">Recent</button>
+        <button class="chip chip--sort is-active" data-sort="stars" type="button" aria-pressed="true">★ Stars</button>
+        <button class="chip chip--sort" data-sort="recent" type="button" aria-pressed="false">Recent</button>
         <label class="archive__forks">
           <input type="checkbox" data-forks />
           <span>Show forks</span>
@@ -109,7 +109,7 @@ const now = new Date();
     display: inline-flex;
     align-items: center;
     gap: 0.4em;
-    color: var(--accent);
+    color: var(--accent-text);
   }
   .archive__status::before {
     content: '';
@@ -144,6 +144,7 @@ const now = new Date();
     align-items: center;
   }
   .chip {
+    min-height: 44px;
     font-family: var(--font-mono);
     font-size: 0.74rem;
     letter-spacing: 0.05em;
@@ -170,6 +171,7 @@ const now = new Date();
     color: #fff;
   }
   .archive__forks {
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     gap: 0.45em;
@@ -260,7 +262,7 @@ const now = new Date();
     overflow-wrap: anywhere;
   }
   .arc-row:hover .arc-name {
-    color: var(--accent);
+    color: var(--accent-text);
   }
   .arc-forktag {
     font-size: 0.62rem;
@@ -296,7 +298,7 @@ const now = new Date();
   .arc-stars {
     font-family: var(--font-mono);
     font-size: 0.78rem;
-    color: var(--accent);
+    color: var(--accent-text);
     text-align: right;
     white-space: nowrap;
   }
@@ -313,7 +315,7 @@ const now = new Date();
     transition: transform 0.25s var(--ease), color 0.25s ease;
   }
   .arc-row:hover .arc-go {
-    color: var(--accent);
+    color: var(--accent-text);
     transform: translate(2px, -2px);
   }
 

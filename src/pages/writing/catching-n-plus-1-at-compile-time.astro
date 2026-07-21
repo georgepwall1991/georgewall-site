@@ -42,12 +42,12 @@ const articleSchema = {
 
 <Base title={title} description={description} schema={[articleSchema]}>
   <SiteHeader />
-  <main class="article">
+  <main class="article" id="main-content">
     <article class="wrap article__wrap">
       <nav class="article__crumbs" aria-label="Breadcrumb">
         <a class="link" href="/">George Wall</a>
         <span aria-hidden="true">/</span>
-        <span>Writing</span>
+        <a class="link" href="/writing">Writing</a>
       </nav>
 
       <header class="article__head">
@@ -268,7 +268,7 @@ const articleSchema = {
     -webkit-initial-letter: 3 2;
     font-family: var(--font-display);
     font-weight: 600;
-    color: var(--accent);
+    color: var(--accent-text);
     margin-right: 0.6rem;
     font-variation-settings: 'opsz' 144, 'WONK' 1;
   }

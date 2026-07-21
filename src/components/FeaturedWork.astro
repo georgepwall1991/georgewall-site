@@ -1,21 +1,26 @@
 ---
 import ProjectEntry from './ProjectEntry.astro';
 import type { Repo } from '../data/github';
+import type { NuGetPackage } from '../data/nuget';
+import type { ProjectProof } from '../data/featured';
 
 export interface Entry {
   name: string;
   kicker: string;
   title: string;
   blurb: string;
-  cta?: string;
+  primary?: { label: string; href: string };
+  package?: NuGetPackage;
+  proof?: ProjectProof;
   repo?: Repo;
   anchor: string;
 }
 
 interface Props {
   entries: Entry[];
+  showAllLink?: boolean;
 }
-const { entries } = Astro.props;
+const { entries, showAllLink = false } = Astro.props;
 ---
 
 <section class="work" id="work">
@@ -39,12 +44,23 @@ const { entries } = Astro.props;
             title={e.title}
             blurb={e.blurb}
             repo={e.repo}
-            cta={e.cta}
+            primary={e.primary}
+            package={e.package}
+            proof={e.proof}
             anchor={e.anchor}
           />
         ))
       }
     </div>
+    {
+      showAllLink && (
+        <div class="work__more reveal">
+          <a class="btn btn--ghost" href="/work">
+            Explore every project <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      )
+    }
   </div>
 </section>
 
@@ -72,5 +88,10 @@ const { entries } = Astro.props;
   /* The first entry's top rule meets the section intro cleanly. */
   .work__list :global(.entry:last-child) {
     border-bottom: 1.5px solid var(--ink);
+  }
+  .work__more {
+    display: flex;
+    justify-content: center;
+    padding-top: clamp(2rem, 5vw, 3.5rem);
   }
 </style>

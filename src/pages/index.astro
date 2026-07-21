@@ -3,21 +3,19 @@ import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import Hero from '../components/Hero.astro';
 import Ticker from '../components/Ticker.astro';
-import Contents from '../components/Contents.astro';
 import FeaturedWork from '../components/FeaturedWork.astro';
-import SecondaryGrid from '../components/SecondaryGrid.astro';
-import StackSection from '../components/StackSection.astro';
 import PrivateApps from '../components/PrivateApps.astro';
-import Archive from '../components/Archive.astro';
+import WritingPreview from '../components/WritingPreview.astro';
 import About from '../components/About.astro';
 import Colophon from '../components/Colophon.astro';
-import { getSnapshot, portfolioRepos, totalStars, type Repo } from '../data/github';
-import { FEATURED, SECONDARY } from '../data/featured';
+import { getSnapshot, type Repo } from '../data/github';
+import { getNuGetPackages, totalNuGetDownloads } from '../data/nuget';
+import { FEATURED } from '../data/featured';
 import { PRIVATE_APPS } from '../data/apps';
 
 // Build-time data: live GitHub if reachable, committed snapshot otherwise.
 const snapshot = await getSnapshot();
-const portfolio = portfolioRepos(snapshot.repos);
+const packages = await getNuGetPackages();
 const repoByName = new Map<string, Repo>(snapshot.repos.map((r) => [r.name, r]));
 
 const slug = (s: string) =>
@@ -29,17 +27,11 @@ const slug = (s: string) =>
 const featuredEntries = FEATURED.map((f) => ({
   ...f,
   repo: repoByName.get(f.name),
+  package: f.packageId ? packages[f.packageId] : undefined,
   anchor: `work-${slug(f.name)}`,
 }));
-const secondaryEntries = SECONDARY.map((f) => ({ ...f, repo: repoByName.get(f.name) }));
-const contentsItems = featuredEntries.map((e) => ({
-  title: e.title,
-  kicker: e.kicker,
-  anchor: e.anchor,
-}));
-
-const stars = totalStars(portfolio);
-const repoCount = snapshot.user.public_repos;
+const downloads = totalNuGetDownloads(Object.values(packages));
+const shippedApps = PRIVATE_APPS.filter((app) => app.status === 'App Store').length;
 const avatar = snapshot.user.avatar_url;
 
 // Per-project structured data — each featured repo as a SoftwareApplication,
@@ -55,7 +47,7 @@ const softwareSchema = featuredEntries
     operatingSystem: 'Cross-platform',
     description: e.blurb,
     author: { '@id': `${SITE_URL}/#person` },
-    url: e.repo!.homepage ?? e.repo!.html_url,
+    url: e.primary?.href ?? e.repo!.html_url,
     codeRepository: e.repo!.html_url,
   }));
 const appSchema = PRIVATE_APPS.map((app) => ({
@@ -74,15 +66,12 @@ const appSchema = PRIVATE_APPS.map((app) => ({
 
 <Base schema={[...softwareSchema, ...appSchema]}>
   <SiteHeader />
-  <main>
-    <Hero repoCount={repoCount} totalStars={stars} />
+  <main id="main-content">
+    <Hero totalDownloads={downloads} shippedApps={shippedApps} />
     <Ticker />
-    <Contents items={contentsItems} />
-    <FeaturedWork entries={featuredEntries} />
-    <SecondaryGrid entries={secondaryEntries} />
-    <StackSection />
+    <FeaturedWork entries={featuredEntries.slice(0, 3)} showAllLink />
+    <WritingPreview compact />
     <PrivateApps apps={PRIVATE_APPS} />
-    <Archive repos={portfolio} allRepos={snapshot.repos} generatedAt={snapshot.generatedAt} />
     <About avatar={avatar} />
   </main>
   <Colophon />

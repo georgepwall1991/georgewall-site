@@ -93,7 +93,7 @@ const { entries } = Astro.props;
     font-size: 0.68rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-text);
   }
   .card__title {
     font-family: var(--font-display);
@@ -129,14 +129,14 @@ const { entries } = Astro.props;
     gap: 0.4em;
   }
   .card__stars {
-    color: var(--accent);
+    color: var(--accent-text);
   }
   .card__go {
     color: var(--ink-faint);
     transition: transform 0.25s var(--ease), color 0.25s ease;
   }
   .card:hover .card__go {
-    color: var(--accent);
+    color: var(--accent-text);
     transform: translate(2px, -2px);
   }
 
