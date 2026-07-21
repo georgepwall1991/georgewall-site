@@ -1,25 +1,148 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f4f0e6"/>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1200"
+  height="630"
+  viewBox="0 0 1200 630"
+>
+  <rect width="1200" height="630" fill="#0b0d10" />
 
-  <!-- hairline frame -->
-  <rect x="40" y="40" width="1120" height="550" fill="none" stroke="#18140d" stroke-width="2"/>
+  <g opacity="0.42" stroke="#252b35" stroke-width="1">
+    <path d="M0 112H1200M0 224H1200M0 336H1200M0 448H1200M0 560H1200" />
+    <path
+      d="M120 0V630M240 0V630M360 0V630M480 0V630M600 0V630M720 0V630M840 0V630M960 0V630M1080 0V630"
+    />
+  </g>
 
-  <!-- masthead row -->
-  <line x1="64" y1="118" x2="1136" y2="118" stroke="#dbd4c3" stroke-width="1"/>
-  <text x="64" y="100" font-family="'JetBrains Mono','SF Mono',monospace" font-size="22" letter-spacing="3" fill="#8c8472">№ 01</text>
-  <text x="1136" y="100" text-anchor="end" font-family="'JetBrains Mono','SF Mono',monospace" font-size="22" letter-spacing="3" fill="#8c8472">LONDON · MMXXVI</text>
+  <rect
+    x="38"
+    y="38"
+    width="1124"
+    height="554"
+    rx="6"
+    fill="none"
+    stroke="#3a4351"
+    stroke-width="2"
+  />
 
-  <!-- kicker -->
-  <text x="64" y="210" font-family="'JetBrains Mono','SF Mono',monospace" font-size="24" letter-spacing="5" fill="#e12d0b">FULL-STACK DEVELOPER · FINANCIAL SERVICES</text>
+  <text
+    x="64"
+    y="88"
+    font-family="Arial,sans-serif"
+    font-weight="700"
+    font-size="24"
+    fill="#f1eee6"
+  >
+    George Wall
+  </text>
+  <text
+    x="1136"
+    y="88"
+    text-anchor="end"
+    font-family="'JetBrains Mono','SF Mono',monospace"
+    font-size="17"
+    letter-spacing="3"
+    fill="#858e9e"
+  >
+    LONDON · FULL-STACK SYSTEMS
+  </text>
+  <line x1="64" y1="116" x2="1136" y2="116" stroke="#3a4351" stroke-width="1" />
 
-  <!-- headline -->
-  <text x="60" y="330" font-family="Georgia,'Times New Roman',serif" font-weight="600" font-size="132" fill="#18140d">Catching <tspan font-style="italic">bugs</tspan></text>
-  <!-- squiggle under "bugs" -->
-  <path d="M700 352 q18 -18 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0" fill="none" stroke="#e12d0b" stroke-width="8" stroke-linecap="round"/>
-  <text x="60" y="462" font-family="Georgia,'Times New Roman',serif" font-weight="600" font-size="132" fill="#18140d">before they ship.</text>
+  <line x1="64" y1="170" x2="88" y2="170" stroke="#ff6542" stroke-width="3" />
+  <text
+    x="104"
+    y="177"
+    font-family="'JetBrains Mono','SF Mono',monospace"
+    font-size="18"
+    letter-spacing="3.2"
+    fill="#ff8469"
+  >
+    FAILURE DISTANCE: EDITOR
+  </text>
+  <circle
+    cx="1108"
+    cy="170"
+    r="8"
+    fill="none"
+    stroke="#62c4ff"
+    stroke-width="3"
+  />
+  <circle
+    cx="1108"
+    cy="170"
+    r="15"
+    fill="none"
+    stroke="#62c4ff"
+    stroke-opacity="0.25"
+    stroke-width="2"
+  />
 
-  <!-- footer -->
-  <line x1="64" y1="520" x2="1136" y2="520" stroke="#dbd4c3" stroke-width="1"/>
-  <text x="64" y="560" font-family="Georgia,serif" font-weight="600" font-size="30" fill="#18140d">George Wall</text>
-  <text x="1136" y="560" text-anchor="end" font-family="'JetBrains Mono','SF Mono',monospace" font-size="24" letter-spacing="2" fill="#8c8472">georgewall.uk</text>
+  <text
+    x="60"
+    y="318"
+    font-family="Arial,sans-serif"
+    font-weight="800"
+    font-size="112"
+    letter-spacing="-5"
+    fill="#f1eee6"
+  >
+    Production
+  </text>
+  <text
+    x="640"
+    y="318"
+    font-family="Georgia,'Times New Roman',serif"
+    font-style="italic"
+    font-weight="600"
+    font-size="116"
+    letter-spacing="-4"
+    fill="#ff6542"
+  >
+    bugs
+  </text>
+
+  <text
+    x="60"
+    y="438"
+    font-family="Arial,sans-serif"
+    font-weight="800"
+    font-size="106"
+    letter-spacing="-5"
+    fill="#f1eee6"
+  >
+    belong in the
+  </text>
+  <text
+    x="738"
+    y="438"
+    font-family="Arial,sans-serif"
+    font-weight="800"
+    font-size="106"
+    letter-spacing="-5"
+    fill="#62c4ff"
+  >
+    editor.
+  </text>
+
+  <line x1="64" y1="518" x2="1136" y2="518" stroke="#3a4351" stroke-width="1" />
+  <text
+    x="64"
+    y="558"
+    font-family="'JetBrains Mono','SF Mono',monospace"
+    font-size="17"
+    letter-spacing="2"
+    fill="#aeb5c0"
+  >
+    ROSLYN ANALYSERS · .NET · REACT · TYPESCRIPT · iOS
+  </text>
+  <text
+    x="1136"
+    y="558"
+    text-anchor="end"
+    font-family="'JetBrains Mono','SF Mono',monospace"
+    font-size="17"
+    letter-spacing="2"
+    fill="#62c4ff"
+  >
+    georgewall.uk
+  </text>
 </svg>

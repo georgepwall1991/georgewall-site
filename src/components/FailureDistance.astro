@@ -1,0 +1,359 @@
+---
+const stages = [
+  { name: "Production", cost: "days" },
+  { name: "Runtime", cost: "hours" },
+  { name: "Tests", cost: "minutes" },
+  { name: "Build", cost: "seconds" },
+  { name: "Editor", cost: "now" },
+];
+---
+
+<figure
+  class="trace"
+  aria-labelledby="trace-title"
+  aria-describedby="trace-caption"
+>
+  <div class="trace__top">
+    <div>
+      <p class="trace__eyebrow">Failure distance</p>
+      <figcaption id="trace-title">
+        Move the catch closer to the author.
+      </figcaption>
+    </div>
+    <span class="trace__state"><i aria-hidden="true"></i> Live trace</span>
+  </div>
+
+  <div class="trace__plot" aria-hidden="true">
+    <div class="trace__route"><span></span></div>
+    <span class="trace__runner"></span>
+    <ol class="trace__stages">
+      {
+        stages.map((stage, index) => (
+          <li
+            class:list={{
+              trace__stage: true,
+              "trace__stage--caught": index === stages.length - 1,
+            }}
+          >
+            <span class="trace__node" />
+            <strong>{stage.name}</strong>
+            <small>{stage.cost}</small>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <div class="trace__intercept">
+    <div class="trace__intercept-head">
+      <span class="trace__code">LINQ001</span>
+      <span class="trace__caught">Caught at source</span>
+    </div>
+    <pre><code><span>db.Orders.</span><mark>ToList()</mark><span>.Where(...)</span></code></pre>
+    <p>
+      <span aria-hidden="true">↳</span> Filter in the database before materialising
+      the result.
+    </p>
+  </div>
+
+  <p class="trace__caption" id="trace-caption">
+    The same fault; a radically shorter feedback loop.
+  </p>
+</figure>
+
+<style>
+  .trace {
+    margin: 0;
+    padding: clamp(1.1rem, 2.2vw, 1.6rem);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, var(--fix-wash), transparent 42%),
+      var(--paper-raised);
+    box-shadow: 0 1.25rem 4rem rgba(0, 0, 0, 0.22);
+  }
+
+  .trace__top,
+  .trace__intercept-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .trace__eyebrow,
+  .trace__state,
+  .trace__code,
+  .trace__caught,
+  .trace__stages,
+  .trace__caption {
+    font-family: var(--font-mono);
+  }
+
+  .trace__eyebrow {
+    margin-bottom: 0.35rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fix);
+  }
+
+  .trace figcaption {
+    font-family: var(--font-display);
+    font-variation-settings:
+      "opsz" 40,
+      "WONK" 0,
+      "wght" 470;
+    font-size: clamp(1.2rem, 2vw, 1.55rem);
+    line-height: 1.18;
+    color: var(--ink);
+  }
+
+  .trace__state {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.45rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 3px;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .trace__state i {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--fix);
+    box-shadow: 0 0 0 0 var(--fix);
+    animation: trace-pulse 2.4s ease-out 2.5s infinite;
+  }
+
+  .trace__plot {
+    position: relative;
+    margin: clamp(2.2rem, 5vw, 3.4rem) 0 2.2rem;
+  }
+
+  .trace__route {
+    position: absolute;
+    top: 0.42rem;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: var(--rule-strong);
+    overflow: hidden;
+  }
+
+  .trace__route span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--fault) 0 78%, var(--fix) 92% 100%);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    animation: trace-route 1.8s var(--ease) 0.65s forwards;
+  }
+
+  .trace__runner {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: calc(10% - 0.45rem);
+    width: 0.9rem;
+    height: 0.9rem;
+    border: 2px solid var(--fault);
+    border-radius: 50%;
+    background: var(--paper-raised);
+    box-shadow: 0 0 0 4px var(--fault-wash);
+    animation: trace-runner 1.8s var(--ease) 0.65s forwards;
+  }
+
+  .trace__stages {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    list-style: none;
+  }
+
+  .trace__stage {
+    min-width: 0;
+    text-align: center;
+  }
+
+  .trace__node {
+    display: block;
+    width: 0.86rem;
+    height: 0.86rem;
+    margin: 0 auto 0.8rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 50%;
+    background: var(--paper-raised);
+  }
+
+  .trace__stage strong,
+  .trace__stage small {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .trace__stage strong {
+    font-size: clamp(0.58rem, 1.2vw, 0.68rem);
+    font-weight: 520;
+    color: var(--ink-soft);
+  }
+
+  .trace__stage small {
+    margin-top: 0.2rem;
+    font-size: 0.56rem;
+    color: var(--ink-faint);
+  }
+
+  .trace__stage--caught .trace__node {
+    border-color: var(--fix);
+  }
+
+  .trace__stage--caught strong,
+  .trace__stage--caught small {
+    color: var(--fix);
+  }
+
+  .trace__intercept {
+    padding: 0.9rem;
+    border: 1px solid var(--rule-strong);
+    border-left: 3px solid var(--fault);
+    border-radius: 4px;
+    background: var(--paper-sunk);
+  }
+
+  .trace__code,
+  .trace__caught {
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .trace__code {
+    color: var(--fault);
+  }
+
+  .trace__caught {
+    color: var(--fix);
+  }
+
+  .trace__intercept pre {
+    margin: 0.8rem 0 0.65rem;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: clamp(0.7rem, 1.35vw, 0.82rem);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .trace__intercept mark {
+    position: relative;
+    color: inherit;
+    background: transparent;
+  }
+
+  .trace__intercept mark::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.3em;
+    height: 0.32em;
+    background-color: var(--fault);
+    -webkit-mask: var(--wave) repeat-x left bottom / 0.55em 0.32em;
+    mask: var(--wave) repeat-x left bottom / 0.55em 0.32em;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    animation: trace-flag 0.6s var(--ease) 2.2s forwards;
+  }
+
+  .trace__intercept p {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    line-height: 1.5;
+    color: var(--fix);
+  }
+
+  .trace__caption {
+    margin-top: 0.8rem;
+    font-size: 0.6rem;
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+
+  @keyframes trace-route {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes trace-runner {
+    78% {
+      border-color: var(--fault);
+      box-shadow: 0 0 0 4px var(--fault-wash);
+    }
+    100% {
+      left: calc(90% - 0.45rem);
+      border-color: var(--fix);
+      box-shadow: 0 0 0 5px var(--fix-wash);
+    }
+  }
+
+  @keyframes trace-flag {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes trace-pulse {
+    70% {
+      box-shadow: 0 0 0 0.5rem transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .trace__route span,
+    .trace__runner,
+    .trace__intercept mark::after,
+    .trace__state i {
+      animation: none;
+    }
+
+    .trace__route span,
+    .trace__intercept mark::after {
+      transform: none;
+    }
+
+    .trace__runner {
+      left: calc(90% - 0.45rem);
+      border-color: var(--fix);
+      box-shadow: 0 0 0 5px var(--fix-wash);
+    }
+  }
+
+  @media (max-width: 430px) {
+    .trace {
+      padding: 1rem;
+    }
+
+    .trace__state {
+      display: none;
+    }
+
+    .trace__stage strong {
+      font-size: 0.53rem;
+    }
+
+    .trace__stage small {
+      display: none;
+    }
+  }
+</style>
