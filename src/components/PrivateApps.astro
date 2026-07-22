@@ -1,5 +1,5 @@
 ---
-import type { PrivateApp } from '../data/apps';
+import type { PrivateApp } from "../data/apps";
 
 interface Props {
   apps: PrivateApp[];
@@ -8,83 +8,167 @@ interface Props {
 const { apps } = Astro.props;
 
 const appLinks = (app: PrivateApp) => [
-  ...(app.url ? [{ label: app.cta ?? 'App Store', url: app.url, primary: true }] : []),
+  ...(app.url
+    ? [{ label: app.cta ?? "App Store", url: app.url, primary: true }]
+    : []),
   ...(app.links ?? []).map((link) => ({ ...link, primary: false })),
 ];
 
-const shippedApps = apps.filter((app) => app.status === 'App Store');
-const prototypeApps = apps.filter((app) => app.status !== 'App Store');
-const groups = [
-  { label: 'Shipped App Store iOS games', apps: shippedApps },
-  { label: 'Private iOS prototypes', apps: prototypeApps },
-].filter((group) => group.apps.length > 0);
+const featuredApps = apps.filter((app) => app.featured !== false);
+const labApps = apps.filter((app) => app.featured === false);
+const shippedCount = apps.filter((app) => app.status === "App Store").length;
 ---
 
 <section class="apps" id="apps" aria-labelledby="apps-title">
   <div class="wrap">
     <header class="apps__head reveal">
-      <p class="kicker">iOS games</p>
-      <h2 class="display apps__title" id="apps-title">iOS games that made it past the README.</h2>
-      <p class="apps__intro">
-        Shipped App Store games first, private iOS prototypes after that. This is the
-        product end of the work: screenshots, store copy, Game Center, monetisation,
-        release notes, support pages, and all the dull bits between “it runs” and
-        “someone can actually download it”.
-      </p>
+      <div class="apps__heading">
+        <p class="kicker">iOS products</p>
+        <h2 class="display apps__title" id="apps-title">
+          From first tap to App Store.
+        </h2>
+      </div>
+
+      <div class="apps__brief">
+        <p class="apps__intro">
+          Two games live, one focused product coming next. I design the systems,
+          build the interfaces, make the store art, and carry each release
+          through the unglamorous final mile.
+        </p>
+        <dl class="apps__scoreboard" aria-label="iOS product status">
+          <div>
+            <dt>Live now</dt>
+            <dd>{String(shippedCount).padStart(2, "0")}</dd>
+          </div>
+          <div>
+            <dt>In build</dt>
+            <dd>
+              {String(featuredApps.length - shippedCount).padStart(2, "0")}
+            </dd>
+          </div>
+        </dl>
+      </div>
     </header>
 
-    <div class="apps__grid">
+    <div class="apps__storefront">
       {
-        groups.map((group, groupIndex) => (
-          <section class="apps__group" aria-label={group.label}>
-            <p class="apps__groupLabel">{group.label}</p>
-            {group.apps.map((app, appIndex) => {
-              const revealIndex = groupIndex * 2 + appIndex;
-              const links = appLinks(app);
-              return (
-                <article class="app reveal" style={`--reveal-delay:${revealIndex * 90}ms`}>
-                  <div class={`app__media app__media--${app.screenshots.length === 1 ? 'icon' : 'screens'}`}>
-                    {app.screenshots.map((shot, shotIndex) => (
-                      <figure class={`phone phone--${shotIndex + 1}`}>
-                        <img src={shot.src} alt={shot.alt} loading="lazy" decoding="async" />
-                      </figure>
+        featuredApps.map((app, appIndex) => {
+          const links = appLinks(app);
+          const number = String(appIndex + 1).padStart(2, "0");
+          return (
+            <article
+              id={`app-${app.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
+              class={`app app--${app.theme} reveal`}
+              style={`--reveal-delay:${appIndex * 90}ms`}
+            >
+              <div
+                class={`app__media ${app.screenshots.length === 1 ? "app__media--single" : ""}`}
+              >
+                <span class="app__number" aria-hidden="true">
+                  /{number}
+                </span>
+                <div class="app__posterRail">
+                  {app.screenshots.map((shot) => (
+                    <figure class="app__poster">
+                      <img
+                        src={shot.src}
+                        alt={shot.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      {shot.caption && <figcaption>{shot.caption}</figcaption>}
+                    </figure>
+                  ))}
+
+                  {app.category === "health" && (
+                    <aside
+                      class="app__buildNote"
+                      aria-label="NoBooze product principle"
+                    >
+                      <p>Design premise</p>
+                      <strong>Progress without punishment.</strong>
+                      <span>Private by default</span>
+                      <span>Science-backed milestones</span>
+                      <span>Support after a slip</span>
+                    </aside>
+                  )}
+                </div>
+              </div>
+
+              <div class="app__body">
+                <p class="app__kicker">{app.kicker}</p>
+                <h3 class="app__title">{app.title}</h3>
+
+                <div
+                  class="app__release"
+                  aria-label={`${app.title} release status`}
+                >
+                  <span>{app.status}</span>
+                  {app.release && <span>{app.release}</span>}
+                </div>
+
+                <p class="app__blurb">{app.blurb}</p>
+
+                <ul class="app__stack" aria-label={`${app.title} stack`}>
+                  {app.stack.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+
+                {links.length > 0 && (
+                  <div
+                    class="app__links"
+                    role="group"
+                    aria-label={`${app.title} links`}
+                  >
+                    {links.map((link) => (
+                      <a
+                        class={`app__cta ${link.primary ? "app__cta--primary" : "app__cta--secondary link link--on"}`}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        {link.label} <span aria-hidden="true">↗</span>
+                      </a>
                     ))}
                   </div>
-
-                  <div class="app__body">
-                    <p class="app__kicker">{app.kicker}</p>
-                    <div class="app__titleRow">
-                      <h3 class="app__title">{app.title}</h3>
-                      <span class="app__status">{app.status}</span>
-                    </div>
-                    <p class="app__blurb">{app.blurb}</p>
-                    <ul class="app__stack" aria-label={`${app.title} stack`}>
-                      {app.stack.map((item) => (
-                        <li>{item}</li>
-                      ))}
-                    </ul>
-                    {links.length > 0 && (
-                      <div class="app__links" role="group" aria-label={`${app.title} links`}>
-                        {links.map((link) => (
-                          <a
-                            class={`app__cta ${link.primary ? 'app__cta--primary' : 'app__cta--secondary link link--on'}`}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener"
-                          >
-                            {link.label} <span aria-hidden="true">↗</span>
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </section>
-        ))
+                )}
+              </div>
+            </article>
+          );
+        })
       }
     </div>
+
+    {
+      labApps.length > 0 && (
+        <aside class="apps__lab reveal" aria-labelledby="apps-lab-title">
+          <div class="apps__labCopy">
+            <p class="apps__labKicker">From the lab</p>
+            <h3 id="apps-lab-title">{labApps[0].title}</h3>
+            <p>{labApps[0].blurb}</p>
+            <ul class="app__stack" aria-label={`${labApps[0].title} stack`}>
+              {labApps[0].stack.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <div
+            class="apps__labScreens"
+            aria-label={`${labApps[0].title} preview`}
+          >
+            {labApps[0].screenshots.map((shot) => (
+              <img
+                src={shot.src}
+                alt={shot.alt}
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+          </div>
+        </aside>
+      )
+    }
   </div>
 </section>
 
@@ -95,205 +179,328 @@ const groups = [
 
   .apps__head {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(18rem, 0.55fr);
-    gap: clamp(1.5rem, 6vw, 5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.66fr);
+    gap: clamp(2rem, 7vw, 6rem);
     align-items: end;
-    margin-bottom: clamp(1.5rem, 4vw, 3rem);
-    padding-bottom: clamp(1.3rem, 3vw, 2rem);
+    padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
     border-bottom: 1.5px solid var(--ink);
   }
 
   .apps__title {
-    grid-column: 1;
-    font-size: clamp(2.3rem, 5.4vw, 4.8rem);
-    max-width: 14ch;
-    margin-top: 0.75rem;
+    max-width: 11ch;
+    margin-top: 0.72rem;
+    font-size: clamp(2.6rem, 6vw, 5.7rem);
+  }
+
+  .apps__brief {
+    display: grid;
+    gap: 1.5rem;
   }
 
   .apps__intro {
-    grid-column: 2;
-    grid-row: 1 / span 2;
+    max-width: 41ch;
     color: var(--ink-soft);
-    font-size: clamp(1rem, 1.25vw, 1.16rem);
-    line-height: 1.55;
-    max-width: 38ch;
+    font-size: clamp(1rem, 1.2vw, 1.14rem);
+    line-height: 1.58;
   }
 
-  .apps__grid {
+  .apps__scoreboard {
     display: grid;
-    gap: clamp(1.4rem, 3.4vw, 2.4rem);
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--rule-strong);
   }
 
-  .apps__group {
-    display: grid;
-    gap: clamp(1rem, 2.4vw, 1.6rem);
+  .apps__scoreboard div {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.7rem;
   }
 
-  .apps__groupLabel {
+  .apps__scoreboard div + div {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--rule);
+  }
+
+  .apps__scoreboard dt,
+  .apps__scoreboard dd {
     font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
+  }
+
+  .apps__scoreboard dt {
     color: var(--ink-faint);
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.65rem;
+    font-size: 0.67rem;
+    letter-spacing: 0.1em;
+  }
+
+  .apps__scoreboard dd {
+    color: var(--accent-text);
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .apps__storefront {
+    display: grid;
   }
 
   .app {
+    --scene: #845cff;
+    --scene-soft: #e9cf83;
     display: grid;
-    grid-template-columns: minmax(18rem, 0.74fr) minmax(0, 1fr);
-    gap: clamp(1.2rem, 4vw, 3.2rem);
-    align-items: stretch;
-    padding: clamp(1rem, 2.4vw, 1.8rem);
-    border: 1.5px solid var(--ink);
-    border-radius: 8px;
-    background:
-      linear-gradient(135deg, var(--paper-raised), var(--paper) 58%),
-      var(--paper-raised);
-    box-shadow: 6px 7px 0 var(--ink);
+    grid-template-columns: minmax(0, 1.18fr) minmax(20rem, 0.82fr);
+    gap: clamp(1.75rem, 5vw, 5rem);
+    align-items: center;
+    padding-block: clamp(2rem, 6vw, 5rem);
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .app:nth-child(even) {
+    grid-template-columns: minmax(20rem, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .app:nth-child(even) .app__media {
+    order: 2;
+  }
+
+  .app--fleet {
+    --scene: #2ed5ef;
+    --scene-soft: #986cff;
+  }
+
+  .app--wellness {
+    --scene: #ff714b;
+    --scene-soft: #79cdb3;
   }
 
   .app__media {
-    min-height: clamp(20rem, 42vw, 31rem);
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: center;
-    justify-items: center;
-    gap: 0.9rem;
+    min-height: clamp(31rem, 53vw, 42rem);
     overflow: hidden;
+    padding: clamp(1rem, 3.2vw, 2.4rem);
     border-radius: 6px;
+    isolation: isolate;
     background:
-      linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, transparent), transparent 45%),
-      var(--paper-sunk);
-    padding: clamp(0.9rem, 2.6vw, 1.5rem);
+      radial-gradient(
+        circle at 15% 12%,
+        color-mix(in srgb, var(--scene) 36%, transparent),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 86% 88%,
+        color-mix(in srgb, var(--scene-soft) 24%, transparent),
+        transparent 38%
+      ),
+      #090b12;
+    box-shadow: 0 1.2rem 3rem rgb(0 0 0 / 0.2);
   }
 
-  .app__media--icon {
-    grid-template-columns: 1fr;
-    min-height: clamp(14rem, 26vw, 22rem);
+  .app__media::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    opacity: 0.28;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    mask-image: linear-gradient(to bottom, black, transparent 76%);
   }
 
-  .phone {
-    width: min(100%, 13.2rem);
-    aspect-ratio: 9 / 19.5;
-    border: 0.48rem solid var(--ink);
-    border-radius: 1.75rem;
-    overflow: hidden;
-    background: #050505;
-    box-shadow: 0 1.2rem 2.5rem rgba(0, 0, 0, 0.24);
-    transition: transform 0.45s var(--ease);
+  .app__number {
+    position: absolute;
+    top: 0.9rem;
+    left: 1rem;
+    z-index: 3;
+    color: rgb(255 255 255 / 0.62);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
   }
 
-  .phone--2 {
-    transform: translateY(1.6rem);
+  .app__posterRail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.7rem, 2vw, 1.25rem);
+    min-width: 0;
   }
 
-  /* The handsets lean apart when the card is hovered. */
-  .app:hover .phone--1 {
-    transform: rotate(-2.5deg) translateY(-0.3rem);
-  }
-  .app:hover .phone--2 {
-    transform: translateY(1.3rem) rotate(2.5deg);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .app:hover .phone--1,
-    .app:hover .phone--2 {
-      transform: none;
-    }
-    .app:hover .phone--2 {
-      transform: translateY(1.6rem);
-    }
+  .app__poster {
+    width: min(47%, 17rem);
+    min-width: 0;
+    transition:
+      transform 0.45s var(--ease),
+      filter 0.45s var(--ease);
   }
 
-  .app__media--icon .phone {
-    width: min(78%, 14rem);
-    aspect-ratio: 1;
-    border-width: 0.28rem;
-    border-radius: 2rem;
-    background: var(--paper-raised);
+  .app__poster:nth-child(2) {
+    transform: translateY(1.4rem);
   }
 
-  .phone img {
+  .app__media:hover .app__poster:first-child {
+    transform: translateY(-0.35rem);
+  }
+
+  .app__media:hover .app__poster:nth-child(2) {
+    transform: translateY(1.05rem);
+  }
+
+  .app__poster img {
+    display: block;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 129 / 280;
     object-fit: cover;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 3px;
+    box-shadow: 0 1rem 2.6rem rgb(0 0 0 / 0.52);
   }
 
-  .app__media--icon .phone img {
-    object-fit: contain;
+  .app__poster figcaption {
+    margin-top: 0.62rem;
+    color: rgb(255 255 255 / 0.72);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .app__media--single .app__posterRail {
+    gap: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .app__media--single .app__poster {
+    width: min(58%, 18rem);
+  }
+
+  .app__media--single .app__poster img {
+    object-position: center top;
+  }
+
+  .app__buildNote {
+    display: grid;
+    width: min(34%, 12rem);
+    gap: 0.7rem;
+    color: #f7f4ed;
+    border-top: 1px solid rgb(255 255 255 / 0.44);
+    border-bottom: 1px solid rgb(255 255 255 / 0.44);
+    padding-block: 1rem;
+  }
+
+  .app__buildNote p,
+  .app__buildNote span {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .app__buildNote p {
+    color: var(--scene-soft);
+  }
+
+  .app__buildNote strong {
+    margin-bottom: 0.35rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+    font-variation-settings:
+      "opsz" 60,
+      "WONK" 1,
+      "wght" 560;
+    line-height: 1.02;
+  }
+
+  .app__buildNote span {
+    color: rgb(255 255 255 / 0.64);
+    line-height: 1.45;
   }
 
   .app__body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1rem;
+    display: grid;
+    align-content: center;
     min-width: 0;
-    padding-block: 0.4rem;
   }
 
-  .app__kicker {
+  .app__kicker,
+  .apps__labKicker {
+    color: var(--accent-text);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent-text);
-  }
-
-  .app__titleRow {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.9rem;
   }
 
   .app__title {
+    max-width: 12ch;
+    margin-top: 0.85rem;
     font-family: var(--font-display);
-    font-variation-settings: 'opsz' 70, 'WONK' 1, 'wght' 560;
-    font-size: clamp(2rem, 4vw, 3.3rem);
-    line-height: 0.98;
+    font-size: clamp(2.65rem, 5vw, 5rem);
+    font-variation-settings:
+      "opsz" 80,
+      "WONK" 1,
+      "wght" 560;
+    line-height: 0.9;
+    letter-spacing: -0.035em;
     text-wrap: balance;
   }
 
-  .app__status {
-    flex: none;
+  .app__release {
+    display: flex;
+    gap: 0;
+    width: fit-content;
+    margin-top: 1.35rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .app__release span {
+    padding: 0.44rem 0.72rem;
+    color: var(--ink-soft);
     font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
+  }
+
+  .app__release span:first-child {
     color: var(--paper);
     background: var(--ink);
-    border-radius: 999px;
-    padding: 0.45em 0.75em;
-    margin-top: 0.2rem;
-    white-space: nowrap;
+  }
+
+  .app__release span + span {
+    border-left: 1px solid var(--rule-strong);
   }
 
   .app__blurb {
-    max-width: 54ch;
+    max-width: 51ch;
+    margin-top: 1.35rem;
     color: var(--ink-soft);
-    font-size: clamp(1rem, 1.4vw, 1.16rem);
-    line-height: 1.55;
+    font-size: clamp(1rem, 1.35vw, 1.16rem);
+    line-height: 1.6;
   }
 
   .app__stack {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
     list-style: none;
   }
 
   .app__stack li {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
+    padding: 0.31rem 0.58rem;
     color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
     border: 1px solid var(--rule-strong);
     border-radius: 999px;
-    padding: 0.3rem 0.58rem;
-    background: color-mix(in srgb, var(--paper-raised) 72%, transparent);
+    background: color-mix(in srgb, var(--paper-raised) 74%, transparent);
   }
 
   .app__links {
@@ -301,73 +508,176 @@ const groups = [
     flex-wrap: wrap;
     align-items: center;
     gap: 0.65rem 1rem;
-    margin-top: 0.35rem;
+    margin-top: 1.55rem;
   }
 
   .app__cta {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
     width: fit-content;
+    min-height: 44px;
     font-family: var(--font-mono);
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     letter-spacing: 0.04em;
     text-decoration: none;
   }
 
   .app__cta--primary {
     gap: 0.35em;
+    padding: 0.62em 0.95em;
     color: var(--paper);
     background: var(--accent-text);
     border: 1.5px solid var(--accent-text);
     border-radius: 999px;
-    padding: 0.62em 0.95em;
     box-shadow: 3px 3px 0 var(--ink);
-    transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), background 0.18s ease;
+    transition:
+      transform 0.18s var(--ease),
+      box-shadow 0.18s var(--ease),
+      background 0.18s ease;
   }
 
   .app__cta--primary:hover {
     color: var(--paper);
     background: var(--ink);
     border-color: var(--ink);
-    transform: translate(-1px, -1px);
     box-shadow: 4px 4px 0 var(--accent);
+    transform: translate(-1px, -1px);
   }
 
   .app__cta--secondary {
     color: var(--ink-soft);
   }
 
+  .apps__lab {
+    display: grid;
+    grid-template-columns: minmax(19rem, 0.72fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.5rem);
+    align-items: center;
+    margin-top: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    color: var(--paper);
+    background: var(--ink);
+    border-radius: 6px;
+  }
+
+  .apps__labCopy h3 {
+    margin-top: 0.65rem;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-variation-settings:
+      "opsz" 60,
+      "WONK" 1,
+      "wght" 560;
+    line-height: 0.95;
+  }
+
+  .apps__labCopy > p:not(.apps__labKicker) {
+    max-width: 48ch;
+    margin-top: 1rem;
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    line-height: 1.55;
+  }
+
+  .apps__lab .app__stack li {
+    color: color-mix(in srgb, var(--paper) 76%, transparent);
+    border-color: color-mix(in srgb, var(--paper) 26%, transparent);
+    background: transparent;
+  }
+
+  .apps__labScreens {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    max-height: 18rem;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #141820;
+  }
+
+  .apps__labScreens img {
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app__poster,
+    .app__poster:nth-child(2),
+    .app__media:hover .app__poster:first-child,
+    .app__media:hover .app__poster:nth-child(2) {
+      transition: none;
+      transform: none;
+    }
+  }
+
   @media (max-width: 980px) {
     .apps__head,
-    .app {
+    .app,
+    .app:nth-child(even) {
       grid-template-columns: 1fr;
     }
 
-    .apps__intro {
-      grid-column: auto;
-      grid-row: auto;
+    .app:nth-child(even) .app__media {
+      order: 0;
+    }
+
+    .app__body {
+      max-width: 44rem;
+    }
+
+    .apps__lab {
+      grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 620px) {
+    .apps__head {
+      gap: 1.5rem;
+    }
+
+    .apps__scoreboard {
+      max-width: 22rem;
+    }
+
     .app__media {
-      min-height: 25rem;
-      padding: 0.85rem;
-      gap: 0.55rem;
+      min-height: 28rem;
+      padding: 1.8rem 0.75rem 1rem;
     }
 
-    .phone {
-      border-width: 0.34rem;
-      border-radius: 1.35rem;
+    .app__posterRail {
+      gap: 0.5rem;
     }
 
-    .app__titleRow {
-      display: grid;
+    .app__poster {
+      width: min(49%, 14rem);
     }
 
-    .app__status {
-      width: fit-content;
+    .app__poster figcaption {
+      font-size: 0.52rem;
+      letter-spacing: 0.05em;
+    }
+
+    .app__media--single .app__poster {
+      width: min(66%, 15rem);
+    }
+
+    .app__buildNote {
+      width: min(30%, 8rem);
+    }
+
+    .app__buildNote strong {
+      font-size: 1.15rem;
+    }
+
+    .app__buildNote span {
+      font-size: 0.5rem;
+    }
+
+    .apps__labScreens,
+    .apps__labScreens img {
+      max-height: 13rem;
+      height: 13rem;
     }
   }
 </style>
