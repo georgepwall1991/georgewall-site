@@ -1,0 +1,115 @@
+---
+import Article from '../../layouts/Article.astro';
+---
+
+<Article
+  title="When HTTP retries make failures worse — George Wall"
+  description="Retries are not resilience by themselves. A practical look at retry storms, unsafe methods, latency budgets and catching fragile HttpClient policies before production."
+  slug="when-http-retries-make-failures-worse"
+  kicker="Compile-time safety · HTTP resilience"
+  headline="When HTTP retries make failures worse."
+  standfirst="A retry can rescue a transient request. It can also multiply load, repeat a payment and turn a small outage into a queue with a postcode."
+  published="2026-07-22"
+  readingTime="7 min read"
+  keywords={['HttpClient', 'HTTP retries', 'Polly', 'Microsoft.Extensions.Http.Resilience', 'idempotency', 'Roslyn analyser']}
+  about={{ name: 'HttpClient.Resilience.Analyzers', url: 'https://www.nuget.org/packages/HttpClient.Resilience.Analyzers' }}
+>
+  <p class="article__lead">
+    Retries feel like the obvious resilience feature. A request fails, so the client tries
+    again. The second attempt often works, the error disappears, and the policy earns its
+    place in the shared platform package. The danger is that the word “retry” describes a
+    mechanism, not a safety guarantee.
+  </p>
+
+  <p>
+    A retry changes the amount of traffic, the time a caller waits and the number of times an
+    operation may happen. Those are architectural effects. If they are not deliberate, the
+    resilience pipeline can become the thing that makes the incident larger.
+  </p>
+
+  <h2>The retry storm</h2>
+
+  <p>
+    Imagine a downstream service beginning to time out under load. Every caller waits, fails
+    and immediately sends two more requests. The struggling service now receives three times
+    the work while its own threads and connections are already occupied. If several services
+    share the same fixed delay, their next attempts arrive together as another wave.
+  </p>
+
+  <p>
+    Exponential back-off and jitter help because they spread those attempts over time. They do
+    not create capacity. A sound policy still needs a finite attempt count, a total timeout and
+    a decision about which failures are genuinely transient. Honour <code>Retry-After</code>
+    where the server provides it; it knows more about its recovery window than the caller does.
+  </p>
+
+  <h2>The unsafe method problem</h2>
+
+  <p>
+    A <code>GET</code> can normally be repeated without changing state. A <code>POST</code>
+    might charge a card, create an order or publish an event. The first request can succeed
+    while its response is lost. Retrying then repeats the side effect even though the client
+    only observed a timeout.
+  </p>
+
+  <figure class="article__code">
+    <pre><code>{`services.AddHttpClient<PaymentsClient>()
+    .AddStandardResilienceHandler();
+
+await client.PostAsync("/payments", content, cancellationToken);`}</code></pre>
+    <figcaption>The pipeline is technically resilient; the operation may still be unsafe to repeat.</figcaption>
+  </figure>
+
+  <p>
+    The durable answer is application-level idempotency: a stable request key that lets the
+    server recognise and return the result of the first operation. Where that contract does
+    not exist, disable retries for unsafe HTTP methods rather than hoping a timeout means the
+    server did nothing.
+  </p>
+
+  <figure class="article__code">
+    <pre><code>{`services.AddHttpClient<PaymentsClient>()
+    .AddStandardResilienceHandler(options =>
+    {
+        options.Retry.DisableForUnsafeHttpMethods();
+    });`}</code></pre>
+    <figcaption>Make the unsafe case explicit; add idempotency before adding repetition.</figcaption>
+  </figure>
+
+  <h2>Latency is part of correctness</h2>
+
+  <p>
+    Three attempts with a ten-second timeout are not a ten-second operation. They are a queue
+    of waits that may outlive the user request, the caller's cancellation budget or an upstream
+    load balancer. Resilience policies should fit inside one end-to-end deadline. Cancellation
+    must flow through every attempt so abandoned work does not continue consuming connections.
+  </p>
+
+  <ul>
+    <li>Set a total timeout, not only a timeout per attempt.</li>
+    <li>Propagate the caller's <code>CancellationToken</code>.</li>
+    <li>Limit concurrency as well as attempts.</li>
+    <li>Measure retries separately from successful first attempts.</li>
+  </ul>
+
+  <h2>Make the policy reviewable</h2>
+
+  <p>
+    The risky shapes are visible in source: an unsafe method behind a generic retry handler,
+    a factory-created client held for too long, a response stream without a clear owner, or an
+    available cancellation token omitted at the call site. Those are good candidates for
+    compile-time feedback because the warning can appear while the policy is still being
+    written.
+  </p>
+
+  <p>
+    <a class="link link--on" href="https://www.nuget.org/packages/HttpClient.Resilience.Analyzers" target="_blank" rel="noopener">HttpClient.Resilience.Analyzers</a>
+    packages those checks as focused Roslyn diagnostics and code fixes. The point is not to
+    ban retries. It is to require the code to state why repetition is safe, who owns the
+    response and when the caller is allowed to stop waiting.
+  </p>
+
+  <blockquote class="article__quote">
+    <p>Resilience is controlled failure, not repeated optimism.</p>
+  </blockquote>
+</Article>

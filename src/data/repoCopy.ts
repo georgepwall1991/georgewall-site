@@ -15,6 +15,8 @@ const DESCRIPTIONS: Record<string, string> = {
     'C# source generator for INotifyPropertyChanged boilerplate. Add [Notify], get the property wiring.',
   'CancelCop.Analyzer':
     'Roslyn analyser for CancellationToken propagation across handlers, EF Core, HTTP and Minimal APIs.',
+  'HttpClient.Resilience.Analyzers':
+    'Roslyn analysers for HttpClient lifetime, outbound resilience, response ownership and safe retries.',
   CQRSPrototype:
     'Clean-architecture CQRS reference using MediatR, DDD and the transactional outbox pattern.',
 };

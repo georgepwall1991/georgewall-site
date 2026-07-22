@@ -7,7 +7,7 @@ interface Entry {
   kicker: string;
   title: string;
   blurb: string;
-  cta?: string;
+  primary?: { label: string; href: string };
   repo?: Repo;
 }
 interface Props {
@@ -22,7 +22,7 @@ const { entries } = Astro.props;
     <div class="more__grid">
       {
         entries.map((e) => {
-          const href = e.repo?.homepage ?? e.repo?.html_url ?? '#';
+          const href = e.primary?.href ?? e.repo?.homepage ?? e.repo?.html_url ?? '#';
           return (
             <a class="card reveal" href={href} target="_blank" rel="noopener">
               <p class="card__kicker">{e.kicker}</p>

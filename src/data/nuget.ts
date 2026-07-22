@@ -17,8 +17,11 @@ const PACKAGE_IDS = [
   'LinqContraband',
   'DependencyInjection.Lifetime.Analyzers',
   'CancelCop.Analyzer',
+  'AutoMapperAnalyzer.Analyzers',
   'ConfigContraband',
+  'ConfigContraband.Tool',
   'CPMigrate',
+  'HttpClient.Resilience.Analyzers',
   'NotifyGen',
 ] as const;
 
@@ -27,27 +30,39 @@ export type PackageId = (typeof PACKAGE_IDS)[number];
 export const NUGET_FALLBACK: Record<PackageId, NuGetPackage> = {
   LinqContraband: {
     id: 'LinqContraband',
-    version: '5.6.47',
-    totalDownloads: 44190,
+    version: '5.7.0',
+    totalDownloads: 44245,
     url: 'https://www.nuget.org/packages/LinqContraband',
   },
   'DependencyInjection.Lifetime.Analyzers': {
     id: 'DependencyInjection.Lifetime.Analyzers',
     version: '2.18.24',
-    totalDownloads: 23899,
+    totalDownloads: 24868,
     url: 'https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers',
   },
   'CancelCop.Analyzer': {
     id: 'CancelCop.Analyzer',
-    version: '1.27.175',
-    totalDownloads: 29701,
+    version: '1.27.224',
+    totalDownloads: 29703,
     url: 'https://www.nuget.org/packages/CancelCop.Analyzer',
+  },
+  'AutoMapperAnalyzer.Analyzers': {
+    id: 'AutoMapperAnalyzer.Analyzers',
+    version: '2.30.86',
+    totalDownloads: 21759,
+    url: 'https://www.nuget.org/packages/AutoMapperAnalyzer.Analyzers',
   },
   ConfigContraband: {
     id: 'ConfigContraband',
-    version: '0.7.21',
-    totalDownloads: 4684,
+    version: '0.7.22',
+    totalDownloads: 4852,
     url: 'https://www.nuget.org/packages/ConfigContraband',
+  },
+  'ConfigContraband.Tool': {
+    id: 'ConfigContraband.Tool',
+    version: '0.7.22',
+    totalDownloads: 2755,
+    url: 'https://www.nuget.org/packages/ConfigContraband.Tool',
   },
   CPMigrate: {
     id: 'CPMigrate',
@@ -55,10 +70,16 @@ export const NUGET_FALLBACK: Record<PackageId, NuGetPackage> = {
     totalDownloads: 13091,
     url: 'https://www.nuget.org/packages/CPMigrate',
   },
+  'HttpClient.Resilience.Analyzers': {
+    id: 'HttpClient.Resilience.Analyzers',
+    version: '0.1.119',
+    totalDownloads: 129,
+    url: 'https://www.nuget.org/packages/HttpClient.Resilience.Analyzers',
+  },
   NotifyGen: {
     id: 'NotifyGen',
     version: '1.4.0',
-    totalDownloads: 681,
+    totalDownloads: 682,
     url: 'https://www.nuget.org/packages/NotifyGen',
   },
 };

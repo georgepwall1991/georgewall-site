@@ -12,6 +12,8 @@ export const SITE = {
   email: 'georgewall91@gmail.com',
   github: 'https://github.com/georgepwall1991',
   githubUser: 'georgepwall1991',
+  avatar: 'https://avatars.githubusercontent.com/u/84231788?v=4',
+  bio: 'London-based full-stack engineer building .NET analysers, developer tooling, iOS apps and production-safety systems.',
   /** Roman-numeral year for the masthead flourish. */
   issueYear: 'MMXXVI',
   issueNo: '01',

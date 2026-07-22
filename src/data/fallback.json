@@ -1,52 +1,157 @@
 {
-  "generatedAt": "2026-05-31T22:00:26.492Z",
+  "generatedAt": "2026-07-22T15:56:08.428Z",
   "user": {
     "login": "georgepwall1991",
     "name": "George Wall",
-    "bio": "34, full-stack developer in financial services building .NET analysers, developer tooling, iOS apps, and systems that catch problems early.",
+    "bio": "34, Full-stack developer in financial services building .NET analyzers, developer tooling, iOS apps, and production-safety systems.",
     "location": "London",
     "avatar_url": "https://avatars.githubusercontent.com/u/84231788?v=4",
     "html_url": "https://github.com/georgepwall1991",
     "followers": 3,
-    "public_repos": 20
+    "public_repos": 23
   },
   "repos": [
     {
-      "name": "fleet-commander-site",
-      "description": "Public website, support, privacy, and terms pages for Fleet Commander on the App Store.",
-      "language": "HTML",
+      "name": "georgewall-site",
+      "description": "Personal portfolio — georgewall.uk. Static Astro site, repos fetched live from the GitHub API, deployed on Vercel.",
+      "language": "Astro",
+      "stars": 0,
+      "forks": 0,
+      "topics": [
+        "astro",
+        "personal-website",
+        "portfolio",
+        "typescript",
+        "vercel"
+      ],
+      "fork": false,
+      "archived": false,
+      "homepage": "https://georgewall.uk",
+      "html_url": "https://github.com/georgepwall1991/georgewall-site",
+      "pushed_at": "2026-07-22T15:38:34Z"
+    },
+    {
+      "name": "georgepwall1991",
+      "description": "GitHub profile README",
+      "language": null,
       "stars": 0,
       "forks": 0,
       "topics": [],
       "fork": false,
       "archived": false,
       "homepage": null,
-      "html_url": "https://github.com/georgepwall1991/fleet-commander-site",
-      "pushed_at": "2026-05-31T21:57:05Z"
+      "html_url": "https://github.com/georgepwall1991/georgepwall1991",
+      "pushed_at": "2026-07-22T15:22:45Z"
+    },
+    {
+      "name": "HttpClient.Resilience.Analyzers",
+      "description": "Roslyn analysers for .NET HttpClient, IHttpClientFactory and outbound HTTP resilience.",
+      "language": "C#",
+      "stars": 2,
+      "forks": 0,
+      "topics": [
+        "analyzer",
+        "dotnet",
+        "httpclient",
+        "ihttpclientfactory",
+        "polly",
+        "resilience",
+        "retry",
+        "roslyn",
+        "static-analysis",
+        "typed-client"
+      ],
+      "fork": false,
+      "archived": false,
+      "homepage": "https://www.nuget.org/packages/HttpClient.Resilience.Analyzers",
+      "html_url": "https://github.com/georgepwall1991/HttpClient.Resilience.Analyzers",
+      "pushed_at": "2026-07-22T15:12:21Z"
     },
     {
       "name": "LinqContraband",
-      "description": "Stop smuggling bad queries into production. A Roslyn analyser that catches EF Core performance problems (client-side eval, N+1) at compile time.",
+      "description": "EF Core LINQ performance analyzer and Roslyn analyzer for catching N+1 queries, client-side evaluation, sync-over-async, raw SQL risks, and other query issues at compile time.",
       "language": "C#",
       "stars": 9,
       "forks": 0,
       "topics": [
+        "analyzer",
         "code-analysis",
         "csharp",
         "dotnet",
+        "ef-core",
+        "ef-core-performance",
         "efcore",
+        "entity-framework",
         "entity-framework-core",
+        "iqueryable",
         "linq",
+        "linq-to-entities",
+        "n-plus-one",
+        "nuget-package",
         "performance",
+        "query-performance",
+        "roslyn",
         "roslyn-analyzer",
         "sql",
         "static-analysis"
       ],
       "fork": false,
       "archived": false,
-      "homepage": "https://www.nuget.org/packages/LinqContraband",
+      "homepage": "https://georgepwall1991.github.io/LinqContraband/",
       "html_url": "https://github.com/georgepwall1991/LinqContraband",
-      "pushed_at": "2026-05-29T12:31:54Z"
+      "pushed_at": "2026-07-22T13:47:28Z"
+    },
+    {
+      "name": "automapper-analyser",
+      "description": "A Roslyn analyser for AutoMapper that catches missing and misconfigured mappings at compile time.",
+      "language": "C#",
+      "stars": 4,
+      "forks": 0,
+      "topics": [
+        "automapper",
+        "code-analysis",
+        "code-quality",
+        "compile-time",
+        "csharp",
+        "developer-tools",
+        "dotnet",
+        "mapping",
+        "nuget",
+        "roslyn",
+        "roslyn-analyzer",
+        "static-analysis"
+      ],
+      "fork": false,
+      "archived": false,
+      "homepage": "https://www.nuget.org/packages/AutoMapperAnalyzer.Analyzers",
+      "html_url": "https://github.com/georgepwall1991/automapper-analyser",
+      "pushed_at": "2026-07-22T07:46:21Z"
+    },
+    {
+      "name": "CancelCop.Analyzer",
+      "description": "C#/.NET Roslyn analyzer with 28 diagnostics and code fixes for CancellationToken propagation, async/await, ASP.NET Core, EF Core, HttpClient, gRPC, blocking I/O, and sync-over-async.",
+      "language": "C#",
+      "stars": 4,
+      "forks": 0,
+      "topics": [
+        "aspnet-core",
+        "async-await",
+        "cancellationtoken",
+        "code-fix",
+        "csharp",
+        "dotnet",
+        "entity-framework-core",
+        "grpc",
+        "httpclient",
+        "roslyn",
+        "roslyn-analyzer",
+        "static-analysis"
+      ],
+      "fork": false,
+      "archived": false,
+      "homepage": "https://www.nuget.org/packages/CancelCop.Analyzer/",
+      "html_url": "https://github.com/georgepwall1991/CancelCop.Analyzer",
+      "pushed_at": "2026-07-22T07:45:38Z"
     },
     {
       "name": "ConfigContraband",
@@ -67,13 +172,13 @@
       ],
       "fork": false,
       "archived": false,
-      "homepage": null,
+      "homepage": "https://www.nuget.org/packages/ConfigContraband",
       "html_url": "https://github.com/georgepwall1991/ConfigContraband",
-      "pushed_at": "2026-05-26T23:07:27Z"
+      "pushed_at": "2026-07-21T20:14:03Z"
     },
     {
-      "name": "georgepwall1991.github.io",
-      "description": "Public app support and privacy pages",
+      "name": "fleet-commander-site",
+      "description": "Public website, support, privacy, and terms pages for Fleet Commander on the App Store.",
       "language": "HTML",
       "stars": 0,
       "forks": 0,
@@ -81,12 +186,12 @@
       "fork": false,
       "archived": false,
       "homepage": null,
-      "html_url": "https://github.com/georgepwall1991/georgepwall1991.github.io",
-      "pushed_at": "2026-05-22T07:44:56Z"
+      "html_url": "https://github.com/georgepwall1991/fleet-commander-site",
+      "pushed_at": "2026-07-20T00:00:03Z"
     },
     {
       "name": "DependencyInjection.Lifetime.Analyzers",
-      "description": "Prevent memory leaks and runtime crashes in .NET Dependency Injection. A zero-overhead Roslyn analyser that catches captive dependencies, undisposed scopes, and lifetime mismatches at compile time.",
+      "description": "Prevent memory leaks and runtime crashes in .NET Dependency Injection. A zero-overhead Roslyn analyzer that catches captive dependencies, undisposed scopes, and lifetime mismatches at compile-time.",
       "language": "C#",
       "stars": 9,
       "forks": 0,
@@ -116,50 +221,11 @@
       "archived": false,
       "homepage": "https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers/",
       "html_url": "https://github.com/georgepwall1991/DependencyInjection.Lifetime.Analyzers",
-      "pushed_at": "2026-05-18T01:34:27Z"
-    },
-    {
-      "name": "automapper-analyser",
-      "description": "A Roslyn analyser for AutoMapper that detects configuration errors and missing maps at compile time, before they turn into runtime surprises.",
-      "language": "C#",
-      "stars": 4,
-      "forks": 0,
-      "topics": [
-        "automapper",
-        "code-analysis",
-        "code-quality",
-        "compile-time",
-        "csharp",
-        "developer-tools",
-        "dotnet",
-        "mapping",
-        "nuget",
-        "roslyn",
-        "roslyn-analyzer",
-        "static-analysis"
-      ],
-      "fork": false,
-      "archived": false,
-      "homepage": "https://github.com/georgepwall1991/automapper-analyser",
-      "html_url": "https://github.com/georgepwall1991/automapper-analyser",
-      "pushed_at": "2026-05-15T11:58:43Z"
-    },
-    {
-      "name": "georgepwall1991",
-      "description": "GitHub profile README",
-      "language": null,
-      "stars": 0,
-      "forks": 0,
-      "topics": [],
-      "fork": false,
-      "archived": false,
-      "homepage": null,
-      "html_url": "https://github.com/georgepwall1991/georgepwall1991",
-      "pushed_at": "2026-04-29T14:37:58Z"
+      "pushed_at": "2026-07-17T15:27:31Z"
     },
     {
       "name": "CPMigrate",
-      "description": "Migrate .NET solutions to NuGet Central Package Management, check dependency health, and update packages safely with rollback.",
+      "description": "Migrate .NET solutions to NuGet Central Package Management, analyse dependency health and update packages safely with rollback.",
       "language": "C#",
       "stars": 1,
       "forks": 0,
@@ -183,7 +249,52 @@
       "archived": false,
       "homepage": "https://georgepwall1991.github.io/CPMigrate/",
       "html_url": "https://github.com/georgepwall1991/CPMigrate",
-      "pushed_at": "2026-04-21T09:23:57Z"
+      "pushed_at": "2026-06-28T22:46:26Z"
+    },
+    {
+      "name": "aoe4-overlay-rs",
+      "description": "Rust/Tauri rewrite of FluffyMaguro's AoE4 Overlay - live match overlay, build orders, OBS streaming",
+      "language": "HTML",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "html_url": "https://github.com/georgepwall1991/aoe4-overlay-rs",
+      "pushed_at": "2026-06-15T06:41:50Z"
+    },
+    {
+      "name": "AOEOverlay",
+      "description": "Tauri desktop overlay for live Age of Empires IV match data, built with TypeScript and React.",
+      "language": "TypeScript",
+      "stars": 2,
+      "forks": 0,
+      "topics": [
+        "age-of-empires-4",
+        "desktop-app",
+        "react",
+        "tauri",
+        "typescript"
+      ],
+      "fork": false,
+      "archived": false,
+      "homepage": "https://www.georgewall.uk/work",
+      "html_url": "https://github.com/georgepwall1991/AOEOverlay",
+      "pushed_at": "2026-06-05T06:56:55Z"
+    },
+    {
+      "name": "georgepwall1991.github.io",
+      "description": "Public app support and privacy pages",
+      "language": "HTML",
+      "stars": 0,
+      "forks": 0,
+      "topics": [],
+      "fork": false,
+      "archived": false,
+      "homepage": null,
+      "html_url": "https://github.com/georgepwall1991/georgepwall1991.github.io",
+      "pushed_at": "2026-05-22T07:44:56Z"
     },
     {
       "name": "posting",
@@ -241,7 +352,7 @@
       "name": "NotifyGen",
       "description": "C# source generator that eliminates INotifyPropertyChanged boilerplate. Add [Notify] to your class, get properties with change notification. Zero runtime overhead.",
       "language": "C#",
-      "stars": 1,
+      "stars": 2,
       "forks": 0,
       "topics": [
         "blazor",
@@ -263,19 +374,6 @@
       "pushed_at": "2026-02-09T19:16:25Z"
     },
     {
-      "name": "CancelCop.Analyzer",
-      "description": "A focused Roslyn analyser for CancellationToken propagation across public APIs, handlers, EF Core, HTTP calls, and Minimal APIs, with code fixes that wire the token for you.",
-      "language": "C#",
-      "stars": 4,
-      "forks": 0,
-      "topics": [],
-      "fork": false,
-      "archived": false,
-      "homepage": "https://www.nuget.org/packages/CancelCop.Analyzer/",
-      "html_url": "https://github.com/georgepwall1991/CancelCop.Analyzer",
-      "pushed_at": "2026-01-25T17:41:25Z"
-    },
-    {
       "name": "AspireMicroservices",
       "description": null,
       "language": "C#",
@@ -283,7 +381,7 @@
       "forks": 0,
       "topics": [],
       "fork": false,
-      "archived": false,
+      "archived": true,
       "homepage": null,
       "html_url": "https://github.com/georgepwall1991/AspireMicroservices",
       "pushed_at": "2026-01-25T14:25:46Z"
@@ -296,36 +394,30 @@
       "forks": 0,
       "topics": [],
       "fork": false,
-      "archived": false,
+      "archived": true,
       "homepage": null,
       "html_url": "https://github.com/georgepwall1991/Frontend",
       "pushed_at": "2026-01-22T14:35:55Z"
     },
     {
       "name": "DuplicatePhotoHandler",
-      "description": null,
+      "description": "Fast duplicate-photo finder with a Rust core and a React/Tauri desktop interface.",
       "language": "TypeScript",
       "stars": 0,
       "forks": 0,
-      "topics": [],
+      "topics": [
+        "duplicate-files",
+        "photo-management",
+        "react",
+        "rust",
+        "tauri",
+        "typescript"
+      ],
       "fork": false,
       "archived": false,
-      "homepage": null,
+      "homepage": "https://www.georgewall.uk/work",
       "html_url": "https://github.com/georgepwall1991/DuplicatePhotoHandler",
       "pushed_at": "2026-01-22T12:12:12Z"
-    },
-    {
-      "name": "AOEOverlay",
-      "description": "Tauri desktop overlay built with TypeScript and React.",
-      "language": "TypeScript",
-      "stars": 2,
-      "forks": 0,
-      "topics": [],
-      "fork": false,
-      "archived": false,
-      "homepage": null,
-      "html_url": "https://github.com/georgepwall1991/AOEOverlay",
-      "pushed_at": "2026-01-06T19:10:02Z"
     },
     {
       "name": "NuKeeper",
@@ -342,7 +434,7 @@
     },
     {
       "name": "CQRSPrototype",
-      "description": "A .NET clean-architecture CQRS reference: MediatR, DDD, and the patterns that keep enterprise code testable.",
+      "description": "A robust .NET solution demonstrating Clean Architecture and CQRS (Command Query Responsibility Segregation) principles. This project serves as a reference implementation for building scalable, maintainable, and testable enterprise applications using modern .NET technologies.",
       "language": "C#",
       "stars": 2,
       "forks": 0,

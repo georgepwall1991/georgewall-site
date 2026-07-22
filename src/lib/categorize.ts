@@ -4,9 +4,9 @@
  */
 import type { Repo } from '../data/types';
 
-export type Category = 'Analyzers' | 'Source gen' | 'Tooling' | 'Web' | 'Other';
+export type Category = 'Analysers' | 'Source gen' | 'Tooling' | 'Web' | 'Other';
 
-export const CATEGORY_ORDER: Category[] = ['Analyzers', 'Source gen', 'Tooling', 'Web', 'Other'];
+export const CATEGORY_ORDER: Category[] = ['Analysers', 'Source gen', 'Tooling', 'Web', 'Other'];
 
 export function categoryOf(repo: Repo): Category {
   const topics = repo.topics.map((t) => t.toLowerCase());
@@ -20,7 +20,7 @@ export function categoryOf(repo: Repo): Category {
     has('roslyn-analyzer', 'roslyn', 'static-analysis', 'code-analysis', 'linter') ||
     nameHas('analyzer', 'analyser', 'contraband', 'cop')
   ) {
-    return 'Analyzers';
+    return 'Analysers';
   }
 
   if (

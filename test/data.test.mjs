@@ -69,9 +69,9 @@ test('totalStars sums stars', () => {
 test('categoryOf classifies by topics, name and language', () => {
   assert.equal(
     categoryOf(repo({ name: 'LinqContraband', topics: ['roslyn-analyzer'] })),
-    'Analyzers',
+    'Analysers',
   );
-  assert.equal(categoryOf(repo({ name: 'CancelCop.Analyzer', topics: [] })), 'Analyzers');
+  assert.equal(categoryOf(repo({ name: 'CancelCop.Analyzer', topics: [] })), 'Analysers');
   assert.equal(
     categoryOf(repo({ name: 'NotifyGen', topics: ['source-generators'] })),
     'Source gen',
@@ -88,9 +88,9 @@ test('categoriesIn returns present categories in canonical order', () => {
   const repos = [
     repo({ name: 'AspireMicroservices', language: 'C#' }), // Other
     repo({ name: 'AOEOverlay', language: 'TypeScript' }), // Web
-    repo({ name: 'LinqContraband', topics: ['roslyn-analyzer'] }), // Analyzers
+    repo({ name: 'LinqContraband', topics: ['roslyn-analyzer'] }), // Analysers
   ];
-  assert.deepEqual(categoriesIn(repos), ['Analyzers', 'Web', 'Other']);
+  assert.deepEqual(categoriesIn(repos), ['Analysers', 'Web', 'Other']);
 });
 
 test('pad2 zero-pads single digits', () => {
@@ -120,8 +120,8 @@ test('linkLabel maps known hosts to friendly labels', () => {
 
 test('NuGet fallback exposes credible adoption totals when the API is unavailable', () => {
   const packages = Object.values(NUGET_FALLBACK);
-  assert.equal(packages.length, 6);
-  assert.equal(totalNuGetDownloads(packages), 116246);
+  assert.equal(packages.length, 9);
+  assert.equal(totalNuGetDownloads(packages), 142084);
   assert.ok(
     packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
   );

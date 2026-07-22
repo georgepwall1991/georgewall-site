@@ -1,10 +1,16 @@
 ---
 // The site wears its own toolchain: a VS Code-style status bar pinned to the
-// bottom. Decorative-but-true — the analyzers listed are real, the clock is
+// bottom. Decorative-but-true — the analysers listed are real, the clock is
 // live, the breadcrumb tracks the section you're reading, and "0 errors"
 // hides one diagnostic for the curious.
 import { SITE } from '../data/site';
-const ANALYZERS = ['LinqContraband', 'CancelCop', 'DI.Lifetime', 'ConfigContraband'];
+const ANALYSERS = [
+  'LinqContraband',
+  'CancelCop',
+  'DI.Lifetime',
+  'ConfigContraband',
+  'HttpClient.Resilience',
+];
 
 // Initial crumb comes from the route, so non-index pages (e.g. /writing/*)
 // read correctly even before — or without — the section observer.
@@ -20,7 +26,7 @@ const initialCrumb = segment ?? 'lede';
     <span class="statusbar__dot" aria-hidden="true"></span> 0 errors · 0 warnings
   </button>
   <div class="statusbar__cell statusbar__armed" aria-hidden="true">
-    analyzers armed — {ANALYZERS.join(' · ')}
+    analysers armed — {ANALYSERS.join(' · ')}
   </div>
   <div class="statusbar__spacer"></div>
   <div class="statusbar__cell statusbar__crumb" aria-hidden="true">

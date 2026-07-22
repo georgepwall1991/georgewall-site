@@ -6,8 +6,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
-import { snapshotFallback } from "../data/github";
-import { SOCIALS } from "../data/site";
+import { SITE, SOCIALS } from "../data/site";
 import StatusBar from "../components/StatusBar.astro";
 
 interface Props {
@@ -26,16 +25,14 @@ const {
 const SITE_URL = "https://www.georgewall.uk";
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).href;
 const ogImage = new URL("/og.png", Astro.site ?? SITE_URL).href;
-const { user } = snapshotFallback;
-
 const personSchema = {
   "@type": "Person",
   "@id": `${SITE_URL}/#person`,
   name: "George Wall",
   url: SITE_URL,
-  image: user.avatar_url,
+  image: SITE.avatar,
   jobTitle: "Full-stack engineer",
-  description: user.bio,
+  description: SITE.bio,
   address: {
     "@type": "PostalAddress",
     addressLocality: "London",
@@ -64,7 +61,7 @@ const jsonLd = {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

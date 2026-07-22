@@ -1,0 +1,112 @@
+---
+import Article from '../../layouts/Article.astro';
+---
+
+<Article
+  title="Catching broken appsettings before deployment — George Wall"
+  description="How .NET configuration drifts away from its Options types, why startup validation is not always enough, and how to move appsettings failures into the editor."
+  slug="catching-broken-appsettings-before-deployment"
+  kicker="Compile-time safety · configuration"
+  headline="Catching broken appsettings before deployment."
+  standfirst="Configuration is code with none of code’s usual protection. A one-letter section typo can compile cleanly, pass review and wait until startup to introduce itself."
+  published="2026-07-22"
+  readingTime="7 min read"
+  keywords={['appsettings.json', '.NET Options', 'ValidateOnStart', 'configuration validation', 'Roslyn analyser', 'JSON Schema']}
+  about={{ name: 'ConfigContraband', url: 'https://www.nuget.org/packages/ConfigContraband' }}
+>
+  <p class="article__lead">
+    Strongly typed Options make configuration pleasant to consume. They do not make the
+    configuration itself strongly typed. The C# model and the JSON file can drift in separate
+    pull requests, with separate reviewers, and the compiler is perfectly happy with both.
+  </p>
+
+  <p>
+    That gap explains a familiar class of production failure: the application builds, the
+    deployment succeeds, and the process then discovers that a section was renamed, a required
+    value is absent or the string <code>"eighty"</code> will not bind to an integer port.
+  </p>
+
+  <h2>Binding is not validation</h2>
+
+  <p>
+    This registration creates an Options object, but by itself it does not prove the section
+    exists or force every validation rule to run when the application starts.
+  </p>
+
+  <figure class="article__code">
+    <pre><code>{`services.AddOptions<PaymentsOptions>()
+    .BindConfiguration("Paymnets"); // typo compiles cleanly`}</code></pre>
+    <figcaption>The string and the JSON section have no compile-time relationship.</figcaption>
+  </figure>
+
+  <p>
+    Data annotations and startup validation close part of the gap. They turn missing required
+    values into an early process failure instead of a later null reference or bad request.
+  </p>
+
+  <figure class="article__code">
+    <pre><code>{`services.AddOptions<PaymentsOptions>()
+    .BindConfiguration("Payments")
+    .ValidateDataAnnotations()
+    .ValidateOnStart();`}</code></pre>
+    <figcaption>Useful protection, provided the correct section is bound and validation is actually enabled.</figcaption>
+  </figure>
+
+  <h2>The failures that remain</h2>
+
+  <p>Even a careful registration leaves questions the compiler normally cannot answer:</p>
+
+  <ul>
+    <li>Does <code>Payments</code> exist in any visible <code>appsettings*.json</code> file?</li>
+    <li>Does every required Options property have a matching key?</li>
+    <li>Is a JSON key merely unknown, or will strict binding make it fatal?</li>
+    <li>Can the configured scalar convert to the target CLR type?</li>
+    <li>Are nested Options objects being validated recursively?</li>
+  </ul>
+
+  <p>
+    Integration tests can answer those questions, but only for the configuration files and
+    environment combinations the test loads. Production overrides, renamed properties and
+    small spelling mistakes still have room to hide.
+  </p>
+
+  <h2>Treat JSON as part of the program</h2>
+
+  <p>
+    An analyser can inspect the Options registrations and the JSON additional files together.
+    When both sides are statically visible, it can join the section literal to the document,
+    walk the Options shape and report the mismatch on the line the developer is editing.
+  </p>
+
+  <p>
+    The important boundary is certainty. A dynamic section name, a custom configuration
+    provider or a value assembled at runtime should not produce a confident warning. High-signal
+    tooling reports what it can prove and stays quiet where the runtime owns the answer.
+  </p>
+
+  <h2>Generate the contract in the other direction</h2>
+
+  <p>
+    The same Options model can also produce a JSON Schema. Point the editor at that schema and
+    <code>appsettings.json</code> gains autocomplete, type checks, required-key hints and
+    unknown-property warnings before the application is built.
+  </p>
+
+  <figure class="article__code">
+    <pre><code>{`dotnet tool install --global ConfigContraband.Tool
+configcontraband schema --project src/MyApp/MyApp.csproj`}</code></pre>
+    <figcaption>One model becomes both the runtime Options type and the editor contract for its JSON.</figcaption>
+  </figure>
+
+  <p>
+    <a class="link link--on" href="https://www.nuget.org/packages/ConfigContraband" target="_blank" rel="noopener">ConfigContraband</a>
+    applies both sides of that approach: Roslyn diagnostics for provable configuration drift
+    and a companion schema tool for live JSON guidance. The deployment should still validate
+    its real environment. It simply should not be the first place a spelling mistake gets a
+    fair hearing.
+  </p>
+
+  <blockquote class="article__quote">
+    <p>If configuration can stop the application, it deserves feedback before the application starts.</p>
+  </blockquote>
+</Article>

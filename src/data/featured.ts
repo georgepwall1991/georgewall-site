@@ -92,13 +92,14 @@ export const FEATURED: Featured[] = [
   {
     name: 'automapper-analyser',
     kicker: 'Compile-time safety · mapping',
-    title: 'AutoMapper Analyzer',
+    title: 'AutoMapper Analyser',
     blurb:
       'AutoMapper’s convenience hides its sharpest edge: the mapping you forgot. This flags missing and misconfigured maps at build, before they become a runtime shrug.',
     primary: {
-      label: 'View source',
-      href: 'https://github.com/georgepwall1991/automapper-analyser',
+      label: 'Install package',
+      href: 'https://www.nuget.org/packages/AutoMapperAnalyzer.Analyzers',
     },
+    packageId: 'AutoMapperAnalyzer.Analyzers',
   },
   {
     name: 'CPMigrate',
@@ -106,7 +107,7 @@ export const FEATURED: Featured[] = [
     title: 'CPMigrate',
     blurb:
       'Move an entire .NET solution onto Central Package Management without doing diff archaeology by hand. It checks dependency health, migrates carefully, and rolls back when reality disagrees.',
-    primary: { label: 'View tool', href: 'https://georgepwall1991.github.io/CPMigrate/' },
+    primary: { label: 'Install tool', href: 'https://www.nuget.org/packages/CPMigrate' },
     packageId: 'CPMigrate',
   },
   {
@@ -133,6 +134,18 @@ export const SECONDARY: Featured[] = [
       'Broken appsettings should not be a deploy-time surprise. Analysers for the .NET Options pattern that catch misbound configuration before it ships.',
     primary: { label: 'Install package', href: 'https://www.nuget.org/packages/ConfigContraband' },
     packageId: 'ConfigContraband',
+  },
+  {
+    name: 'HttpClient.Resilience.Analyzers',
+    kicker: 'Compile-time safety · HTTP',
+    title: 'HttpClient Resilience Analysers',
+    blurb:
+      'Outbound HTTP failures are expensive and intermittent. These analysers catch unsafe retries, lifetime mistakes, dropped cancellation and response-ownership bugs while the code is still in the editor.',
+    primary: {
+      label: 'Install package',
+      href: 'https://www.nuget.org/packages/HttpClient.Resilience.Analyzers',
+    },
+    packageId: 'HttpClient.Resilience.Analyzers',
   },
   {
     name: 'CQRSPrototype',
