@@ -13,7 +13,7 @@ export interface NuGetPackage {
   url: string;
 }
 
-const PACKAGE_IDS = [
+export const PACKAGE_IDS = [
   'LinqContraband',
   'DependencyInjection.Lifetime.Analyzers',
   'CancelCop.Analyzer',
