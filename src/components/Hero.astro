@@ -86,7 +86,12 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
     <dl class="hero__stats intro" style="--intro-delay: 700ms">
       <div>
         <dt>Open-source adoption</dt>
-        <dd>{downloadThousands}K+ <span>NuGet downloads</span></dd>
+        <dd data-nuget-adoption data-total={totalDownloads}>
+          <strong data-nuget-total aria-live="polite"
+            >{downloadThousands}K+</strong
+          >
+          <span>NuGet downloads</span>
+        </dd>
       </div>
       <div>
         <dt>Product range</dt>
@@ -99,6 +104,113 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
     </dl>
   </div>
 </section>
+
+<script>
+  import { PACKAGE_IDS } from "../data/nuget";
+
+  interface AdoptionCache {
+    total: number;
+    checkedAt: number;
+  }
+
+  interface NuGetSearchHit {
+    id?: string;
+    totalDownloads?: number;
+  }
+
+  const adoption = document.querySelector<HTMLElement>("[data-nuget-adoption]");
+  const totalNode = adoption?.querySelector<HTMLElement>("[data-nuget-total]");
+
+  if (adoption && totalNode) {
+    const oneDay = 24 * 60 * 60 * 1000;
+    const cacheKey = `georgewall:nuget-adoption:${PACKAGE_IDS.join("|")}`;
+    const builtTotal = Number(adoption.dataset.total) || 0;
+
+    const renderTotal = (total: number, checkedAt?: number) => {
+      const safeTotal = Math.max(builtTotal, total);
+      totalNode.textContent = `${Math.floor(safeTotal / 1000)}K+`;
+      adoption.dataset.total = String(safeTotal);
+      adoption.title = `${safeTotal.toLocaleString("en-GB")} total NuGet downloads${
+        checkedAt
+          ? ` · checked ${new Date(checkedAt).toLocaleDateString("en-GB")}`
+          : ""
+      }`;
+    };
+
+    const readCache = (): AdoptionCache | undefined => {
+      try {
+        const parsed = JSON.parse(
+          localStorage.getItem(cacheKey) ?? "null",
+        ) as AdoptionCache | null;
+        if (
+          parsed &&
+          Number.isFinite(parsed.total) &&
+          Number.isFinite(parsed.checkedAt)
+        ) {
+          return parsed;
+        }
+      } catch {
+        // Storage is an enhancement; the build-time value remains usable.
+      }
+      return undefined;
+    };
+
+    const writeCache = (snapshot: AdoptionCache) => {
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(snapshot));
+      } catch {
+        // Private browsing and strict storage policies should not break the stat.
+      }
+    };
+
+    const cached = readCache();
+    if (cached) renderTotal(cached.total, cached.checkedAt);
+
+    if (!cached || Date.now() - cached.checkedAt >= oneDay) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 6000);
+
+      Promise.all(
+        PACKAGE_IDS.map(async (id) => {
+          const query = encodeURIComponent(`packageid:${id}`);
+          const response = await fetch(
+            `https://azuresearch-usnc.nuget.org/query?q=${query}&prerelease=true&take=5`,
+            {
+              signal: controller.signal,
+              headers: { Accept: "application/json" },
+            },
+          );
+          if (!response.ok) throw new Error(`NuGet ${response.status}`);
+
+          const payload = (await response.json()) as {
+            data?: NuGetSearchHit[];
+          };
+          const hit = payload.data?.find(
+            (item) => item.id?.toLowerCase() === id.toLowerCase(),
+          );
+          if (!Number.isFinite(hit?.totalDownloads)) {
+            throw new Error(`NuGet package ${id} missing from response`);
+          }
+          return hit!.totalDownloads!;
+        }),
+      )
+        .then((downloads) => {
+          const snapshot = {
+            total: downloads.reduce((sum, count) => sum + count, 0),
+            checkedAt: Date.now(),
+          };
+          writeCache(snapshot);
+          renderTotal(snapshot.total, snapshot.checkedAt);
+        })
+        .catch(() => {
+          // Keep the cached or build-time value when NuGet is unavailable.
+        })
+        .finally(() => window.clearTimeout(timer));
+    } else {
+      renderTotal(cached.total, cached.checkedAt);
+    }
+  }
+</script>
 
 <style>
   .hero {
@@ -263,6 +375,10 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
     font-family: var(--font-mono);
     font-size: clamp(1rem, 1.6vw, 1.25rem);
     color: var(--ink);
+  }
+
+  .hero__stats dd strong {
+    font-weight: inherit;
   }
 
   .hero__stats dd span {
