@@ -1,5 +1,5 @@
 ---
-import type { PrivateApp } from "../data/apps";
+import { appScoreboard, type PrivateApp } from "../data/apps";
 
 interface Props {
   apps: PrivateApp[];
@@ -16,7 +16,7 @@ const appLinks = (app: PrivateApp) => [
 
 const featuredApps = apps.filter((app) => app.featured !== false);
 const labApps = apps.filter((app) => app.featured === false);
-const shippedCount = apps.filter((app) => app.status === "App Store").length;
+const scoreboard = appScoreboard(apps);
 ---
 
 <section class="apps" id="apps" aria-labelledby="apps-title">
@@ -38,14 +38,16 @@ const shippedCount = apps.filter((app) => app.status === "App Store").length;
         <dl class="apps__scoreboard" aria-label="iOS product status">
           <div>
             <dt>Live now</dt>
-            <dd>{String(shippedCount).padStart(2, "0")}</dd>
+            <dd>{String(scoreboard.live).padStart(2, "0")}</dd>
           </div>
-          <div>
-            <dt>In review</dt>
-            <dd>
-              {String(featuredApps.length - shippedCount).padStart(2, "0")}
-            </dd>
-          </div>
+          {
+            scoreboard.pending > 0 && (
+              <div>
+                <dt>{scoreboard.pendingLabel}</dt>
+                <dd>{String(scoreboard.pending).padStart(2, "0")}</dd>
+              </div>
+            )
+          }
         </dl>
       </div>
     </header>
@@ -206,7 +208,10 @@ const shippedCount = apps.filter((app) => app.status === "App Store").length;
 
   .apps__scoreboard {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* Column per cell, so the row still reads correctly once nothing is
+       pending and the second cell drops out entirely. */
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     border-top: 1px solid var(--rule-strong);
   }
 

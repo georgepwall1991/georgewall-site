@@ -33,3 +33,6 @@ Thumbs.db
 review-home.png
 review-mobile.png
 review-page.png
+
+# tooling artifacts (local plugin hook state)
+.plugin-config/

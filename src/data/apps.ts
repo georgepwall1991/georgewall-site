@@ -23,6 +23,34 @@ export interface PrivateApp {
   }[];
 }
 
+/** The one status string that means "you can download this today". */
+export const LIVE_STATUS = "App Store";
+
+export interface AppScoreboard {
+  live: number;
+  pending: number;
+  /** Reads off the pending apps themselves, so shipping one needs no copy edit. */
+  pendingLabel: string;
+}
+
+/**
+ * Counts for the storefront scoreboard, derived from status rather than hand-
+ * maintained. Apps marked `featured: false` live in the lab strip and are not
+ * part of the tally. When several apps are pending under different statuses
+ * there is no single honest label, so it falls back to a generic one.
+ */
+export function appScoreboard(apps: PrivateApp[]): AppScoreboard {
+  const storefront = apps.filter((app) => app.featured !== false);
+  const pending = storefront.filter((app) => app.status !== LIVE_STATUS);
+  const statuses = new Set(pending.map((app) => app.status));
+
+  return {
+    live: storefront.length - pending.length,
+    pending: pending.length,
+    pendingLabel: statuses.size === 1 ? [...statuses][0] : "In build",
+  };
+}
+
 export const PRIVATE_APPS: PrivateApp[] = [
   {
     name: "GemGame",

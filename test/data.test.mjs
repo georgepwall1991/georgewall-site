@@ -5,6 +5,7 @@ import { isPortfolioRepo, sortForArchive, portfolioRepos, totalStars } from '../
 import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
 import { pad2, relativeTime, languageColor, linkLabel } from '../src/lib/format.ts';
 import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
+import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
 
 /** Build a Repo with sensible defaults; override what a test cares about. */
 function repo(overrides = {}) {
@@ -125,4 +126,51 @@ test('NuGet fallback exposes credible adoption totals when the API is unavailabl
   assert.ok(
     packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
   );
+});
+
+/** Build a PrivateApp with only the fields the scoreboard reads. */
+function app(overrides = {}) {
+  return { name: 'sample', status: 'App Store', ...overrides };
+}
+
+test('appScoreboard derives live and pending counts from app status', () => {
+  const board = appScoreboard([
+    app({ status: 'App Store' }),
+    app({ status: 'App Store' }),
+    app({ status: 'In review' }),
+  ]);
+  assert.equal(board.live, 2);
+  assert.equal(board.pending, 1);
+  assert.equal(board.pendingLabel, 'In review');
+});
+
+test('appScoreboard ignores apps excluded from the storefront', () => {
+  const board = appScoreboard([
+    app({ status: 'App Store' }),
+    app({ status: 'Private build', featured: false }),
+  ]);
+  assert.equal(board.live, 1);
+  assert.equal(board.pending, 0);
+});
+
+test('appScoreboard falls back to a generic label when pending statuses differ', () => {
+  const board = appScoreboard([
+    app({ status: 'In review' }),
+    app({ status: 'Coming next' }),
+  ]);
+  assert.equal(board.pending, 2);
+  assert.equal(board.pendingLabel, 'In build');
+});
+
+test('appScoreboard reports nothing pending once everything has shipped', () => {
+  const board = appScoreboard([app(), app(), app()]);
+  assert.equal(board.live, 3);
+  assert.equal(board.pending, 0);
+});
+
+test('appScoreboard matches the real showcase data', () => {
+  const board = appScoreboard(PRIVATE_APPS);
+  assert.equal(board.live, 2);
+  assert.equal(board.pending, 1);
+  assert.equal(board.pendingLabel, 'In review');
 });
