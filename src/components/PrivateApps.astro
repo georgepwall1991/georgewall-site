@@ -31,9 +31,9 @@ const shippedCount = apps.filter((app) => app.status === "App Store").length;
 
       <div class="apps__brief">
         <p class="apps__intro">
-          Two games live, one focused product coming next. I design the systems,
-          build the interfaces, make the store art, and carry each release
-          through the unglamorous final mile.
+          Two games live, a third product in App Store review. I design the
+          systems, build the interfaces, make the store art, and carry each
+          release through the unglamorous final mile.
         </p>
         <dl class="apps__scoreboard" aria-label="iOS product status">
           <div>
@@ -41,7 +41,7 @@ const shippedCount = apps.filter((app) => app.status === "App Store").length;
             <dd>{String(shippedCount).padStart(2, "0")}</dd>
           </div>
           <div>
-            <dt>In build</dt>
+            <dt>In review</dt>
             <dd>
               {String(featuredApps.length - shippedCount).padStart(2, "0")}
             </dd>

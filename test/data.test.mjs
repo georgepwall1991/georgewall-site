@@ -121,7 +121,7 @@ test('linkLabel maps known hosts to friendly labels', () => {
 test('NuGet fallback exposes credible adoption totals when the API is unavailable', () => {
   const packages = Object.values(NUGET_FALLBACK);
   assert.equal(packages.length, 9);
-  assert.equal(totalNuGetDownloads(packages), 142084);
+  assert.equal(totalNuGetDownloads(packages), 159521);
   assert.ok(
     packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
   );
