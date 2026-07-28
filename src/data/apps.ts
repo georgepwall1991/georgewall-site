@@ -29,7 +29,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     title: "GemGame: Cosy Match 3 Puzzle",
     kicker: "Shipped iOS game · Match-3",
     status: "App Store",
-    release: "v2.1",
+    release: "v2.1.2",
     category: "game",
     theme: "gem",
     blurb:
@@ -121,22 +121,22 @@ export const PRIVATE_APPS: PrivateApp[] = [
   {
     name: "NoBooze",
     title: "NoBooze",
-    kicker: "In development · Health & Fitness",
-    status: "Coming next",
-    release: "Build preview",
+    kicker: "Submitted · Health & Fitness",
+    status: "In review",
+    release: "v1.6.0",
     category: "health",
     theme: "wellness",
     blurb:
-      "A private, science-backed sobriety companion built to make progress feel tangible without making a difficult day feel like failure. It brings streaks, health milestones, check-ins, journalling, and slip support into one calm SwiftUI experience.",
-    stack: ["SwiftUI", "Core Data", "HealthKit", "CloudKit"],
+      "A private, science-backed sobriety companion built to make progress feel tangible without making a difficult day feel like failure. Streaks, health milestones, check-ins, journalling and slip support in one calm SwiftUI experience — now finished, signed, and sitting in App Store review.",
+    stack: ["SwiftUI", "Core Data", "CloudKit", "StoreKit 2", "WidgetKit"],
     siteUrl: "https://funny-boba-67508f.netlify.app/",
     url: "https://funny-boba-67508f.netlify.app/",
     cta: "Product site",
     screenshots: [
       {
         src: "/apps/nobooze-dashboard.webp",
-        alt: "NoBooze development build showing the daily sobriety dashboard and first-day health milestone",
-        caption: "Dashboard · development build",
+        alt: "NoBooze App Store artwork showing a 128-day alcohol-free streak on the daily dashboard",
+        caption: "Streak & milestones",
       },
     ],
   },
