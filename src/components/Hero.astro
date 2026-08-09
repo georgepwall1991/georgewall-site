@@ -19,40 +19,38 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
       <span class="hero__meta-rule" aria-hidden="true"></span>
       <span class="label">{SITE.location}</span>
       <span class="hero__meta-spacer"></span>
-      <span class="label hero__meta-end"
-        >Full-stack systems · developer tooling</span
-      >
+      <span class="label hero__meta-end">Products in public · protection in code</span>
     </div>
 
     <div class="hero__grid">
       <div class="hero__copy">
-        <p class="kicker intro" style="--intro-delay: 120ms">
+        <p class="kicker intro" style="--intro-delay: 100ms">
           Product engineering · 10+ years in fintech
         </p>
 
         <h1 class="hero__title">
-          <span class="intro-mask">
-            <span class="hero__line intro-line" style="--intro-delay: 200ms">
-              Build the <em>thing.</em>
-            </span>
+          <span class="hero__line intro" style="--intro-delay: 180ms">
+            Build the <em>thing.</em>
           </span>
-          <span class="intro-mask">
-            <span
-              class="hero__line hero__line--middle intro-line"
-              style="--intro-delay: 300ms"
-            >
-              Then build what
-            </span>
+          <span
+            class="hero__line hero__line--middle intro"
+            style="--intro-delay: 260ms"
+          >
+            Then build what
           </span>
-          <span class="intro-mask">
-            <span
-              class="hero__line hero__line--fix intro-line"
-              style="--intro-delay: 400ms"
-            >
-              protects it<span aria-hidden="true">.</span>
-            </span>
+          <span
+            class="hero__line hero__line--fix intro"
+            style="--intro-delay: 340ms"
+          >
+            protects it.
           </span>
         </h1>
+
+        <div class="hero__outcome intro" style="--intro-delay: 420ms">
+          <span>production fault</span>
+          <i aria-hidden="true"><b></b></i>
+          <strong>caught in the editor</strong>
+        </div>
 
         <p class="hero__standfirst intro" style="--intro-delay: 500ms">
           I build <strong>React and .NET systems</strong>, ship my own <strong
@@ -60,9 +58,9 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
           >, then turn what I learn into analysers, source generators and CLIs.
         </p>
 
-        <div class="hero__actions intro" style="--intro-delay: 600ms">
+        <div class="hero__actions intro" style="--intro-delay: 580ms">
           <a href="#now" class="btn">
-            See what I’ve shipped
+            Explore the work
             <span class="arrow" aria-hidden="true">↓</span>
           </a>
           <a
@@ -77,26 +75,26 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
         </div>
       </div>
 
-      <div class="hero__instrument intro" style="--intro-delay: 460ms">
+      <div class="hero__instrument intro" style="--intro-delay: 400ms">
         <BuildConsole />
       </div>
     </div>
 
-    <dl class="hero__stats intro" style="--intro-delay: 700ms">
+    <dl class="hero__stats intro" style="--intro-delay: 660ms">
       <div>
-        <dt>NuGet</dt>
+        <dt>NuGet reach</dt>
         <dd title={`${downloadLabel} total NuGet downloads`}>
           <strong>{downloadThousands}K+</strong>
           <span>downloads</span>
         </dd>
       </div>
       <div>
-        <dt>App Store</dt>
-        <dd>{shippedApps} <span>live releases</span></dd>
+        <dt>Products shipped</dt>
+        <dd><strong>{shippedApps}</strong> <span>live on the App Store</span></dd>
       </div>
       <div>
-        <dt>Experience</dt>
-        <dd>10+ <span>years in fintech</span></dd>
+        <dt>Production depth</dt>
+        <dd><strong>10+</strong> <span>years in fintech</span></dd>
       </div>
     </dl>
   </div>
@@ -105,22 +103,23 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
 <style>
   .hero {
     position: relative;
-    padding-top: clamp(2rem, 5vw, 4rem);
-    padding-bottom: clamp(3.5rem, 8vw, 6.5rem);
-    overflow: hidden;
+    padding-block: clamp(1.5rem, 3.5vw, 3rem) clamp(3.8rem, 8vw, 7rem);
+    overflow-x: clip;
   }
 
   .hero::before {
-    content: "";
     position: absolute;
     inset: 0;
+    content: "";
     pointer-events: none;
     background-image:
       linear-gradient(var(--rule) 1px, transparent 1px),
-      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-    background-size: 4rem 4rem;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent 72%);
-    opacity: 0.32;
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px),
+      radial-gradient(circle at 76% 38%, var(--fix-wash), transparent 28%),
+      radial-gradient(circle at 16% 58%, var(--fault-wash), transparent 23%);
+    background-size: 4rem 4rem, 4rem 4rem, auto, auto;
+    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 0.52), transparent 90%);
+    opacity: 0.46;
   }
 
   .hero > .wrap {
@@ -131,15 +130,16 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
   .hero__meta {
     display: flex;
     align-items: center;
-    gap: 0.85rem;
-    padding-bottom: 1.25rem;
+    gap: 0.8rem;
+    min-height: 2.6rem;
+    padding-bottom: 0.8rem;
     border-bottom: 1px solid var(--rule);
     flex-wrap: wrap;
   }
 
   .hero__meta-rule {
     width: 1px;
-    height: 0.9rem;
+    height: 0.85rem;
     background: var(--rule-strong);
   }
 
@@ -153,101 +153,162 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
 
   .hero__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.12fr) minmax(27rem, 0.88fr);
-    gap: clamp(2.5rem, 5vw, 5.5rem);
+    grid-template-columns: minmax(0, 0.92fr) minmax(36rem, 1.08fr);
+    gap: clamp(2.5rem, 4.5vw, 4.75rem);
     align-items: center;
-    padding-top: clamp(2.5rem, 5.5vw, 5rem);
+    padding-top: clamp(2.5rem, 5vw, 4.4rem);
+  }
+
+  .hero__copy {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
   }
 
   .hero__copy > .kicker {
-    margin-bottom: clamp(1.5rem, 3vw, 2.4rem);
+    margin-bottom: clamp(1.45rem, 2.5vw, 2.2rem);
   }
 
   .hero__title {
     font-family: var(--font-sans);
+    font-size: clamp(3.65rem, 5.75vw, 5.4rem);
     font-variation-settings: "wght" 790;
-    font-size: clamp(3.45rem, 5.85vw, 5.9rem);
     line-height: 0.84;
-    letter-spacing: -0.065em;
-    text-wrap: balance;
+    letter-spacing: -0.068em;
   }
 
   .hero__line {
     display: block;
+    width: fit-content;
+    max-width: 100%;
   }
 
   .hero__line em {
     color: var(--fault);
     font-family: var(--font-display);
-    font-variation-settings:
-      "opsz" 144,
-      "WONK" 1,
-      "wght" 520;
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "WONK" 1, "wght" 520;
     font-weight: 520;
+    letter-spacing: -0.045em;
   }
 
   .hero__line--middle {
-    padding-left: clamp(0rem, 3vw, 2.5rem);
+    margin-top: 0.08em;
+    margin-left: clamp(0rem, 2.5vw, 2rem);
+    font-size: 0.84em;
+    letter-spacing: -0.055em;
   }
 
   .hero__line--fix {
-    position: relative;
-    width: fit-content;
-    margin-left: clamp(2.5rem, 8vw, 7rem);
+    margin-top: 0.12em;
+    margin-left: clamp(1.1rem, 5.2vw, 4.6rem);
     color: var(--fix);
   }
 
-  .hero__line--fix::after {
-    content: "caught earlier";
-    position: absolute;
-    left: calc(100% + 1.1rem);
-    bottom: 0.12em;
-    width: max-content;
+  .hero__outcome {
+    display: grid;
+    grid-template-columns: auto minmax(2.8rem, 1fr) auto;
+    align-items: center;
+    gap: 0.55rem;
+    max-width: 32rem;
+    margin-top: clamp(1.1rem, 2vw, 1.55rem);
+    color: var(--ink-faint);
     font-family: var(--font-mono);
-    font-size: clamp(0.58rem, 0.85vw, 0.72rem);
-    font-variation-settings: "wght" 520;
-    letter-spacing: 0.1em;
-    line-height: 1;
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
+  }
+
+  .hero__outcome i {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg, var(--fault), var(--rule-strong), var(--fix));
+  }
+
+  .hero__outcome i::before,
+  .hero__outcome i::after,
+  .hero__outcome b {
+    position: absolute;
+    top: 50%;
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    content: "";
+    transform: translateY(-50%);
+  }
+
+  .hero__outcome i::before {
+    left: 0;
+    border: 1px solid var(--fault);
+    background: var(--paper);
+  }
+
+  .hero__outcome i::after {
+    right: 0;
+    border: 1px solid var(--fix);
+    background: var(--paper);
+  }
+
+  .hero__outcome b {
+    left: 0;
+    width: 0.3rem;
+    height: 0.3rem;
+    background: var(--fix);
+    box-shadow: 0 0 0.55rem var(--fix);
+    animation: outcome-route 3.4s var(--ease) infinite;
+  }
+
+  .hero__outcome strong {
     color: var(--fix);
+    font-weight: 550;
   }
 
   .hero__standfirst {
-    max-width: 47ch;
-    margin-top: clamp(2rem, 4vw, 3rem);
-    font-size: clamp(1.04rem, 1.35vw, 1.24rem);
-    line-height: 1.58;
+    max-width: 44ch;
+    margin-top: clamp(1.7rem, 3vw, 2.4rem);
     color: var(--ink-soft);
+    font-size: clamp(1.03rem, 1.32vw, 1.2rem);
+    line-height: 1.56;
   }
 
   .hero__standfirst strong {
     color: var(--ink);
-    font-weight: 610;
+    font-weight: 620;
   }
 
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
-    margin-top: 2rem;
+    gap: 0.78rem;
+    margin-top: 1.8rem;
   }
 
   .hero__instrument {
+    position: relative;
     min-width: 0;
-    align-self: end;
-    transform: translateY(1.2rem);
+  }
+
+  .hero__instrument::before {
+    position: absolute;
+    inset: 9% 3% -8%;
+    z-index: -1;
+    content: "";
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--fix) 16%, transparent);
+    filter: blur(3.6rem);
+    opacity: 0.82;
   }
 
   .hero__stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    margin-top: clamp(3rem, 6vw, 5rem);
-    border-top: 1px solid var(--rule-strong);
-    border-bottom: 1px solid var(--rule-strong);
+    margin-top: clamp(2.5rem, 4.5vw, 4rem);
+    border-block: 1px solid var(--rule-strong);
   }
 
   .hero__stats > div {
-    padding: 1rem clamp(1rem, 2.2vw, 1.8rem) 1.15rem;
+    min-width: 0;
+    padding: 0.95rem clamp(0.85rem, 2vw, 1.65rem) 1.05rem;
   }
 
   .hero__stats > div + div {
@@ -255,79 +316,136 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
   }
 
   .hero__stats dt {
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.38rem;
+    color: var(--ink-faint);
     font-family: var(--font-mono);
-    font-size: 0.64rem;
+    font-size: 0.59rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--ink-faint);
   }
 
   .hero__stats dd {
-    font-family: var(--font-mono);
-    font-size: clamp(1rem, 1.6vw, 1.25rem);
     color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: clamp(0.9rem, 1.45vw, 1.15rem);
   }
 
   .hero__stats dd strong {
-    font-weight: inherit;
+    font-weight: 580;
   }
 
   .hero__stats dd span {
     color: var(--ink-soft);
-    font-size: 0.72em;
+    font-size: 0.69em;
   }
 
-  @media (max-width: 1050px) {
+  @keyframes outcome-route {
+    0%,
+    15% {
+      left: 0;
+      background: var(--fault);
+      box-shadow: 0 0 0.55rem var(--fault);
+    }
+    82%,
+    100% {
+      left: calc(100% - 0.3rem);
+      background: var(--fix);
+      box-shadow: 0 0 0.55rem var(--fix);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__outcome b {
+      left: calc(100% - 0.3rem);
+      animation: none;
+    }
+  }
+
+  @media (max-width: 1180px) {
     .hero__grid {
       grid-template-columns: 1fr;
     }
 
-    .hero__instrument {
+    .hero__copy {
       max-width: 46rem;
-      transform: none;
+    }
+
+    .hero__instrument {
+      width: 100%;
+      max-width: 52rem;
     }
 
     .hero__title {
-      max-width: 10ch;
+      font-size: clamp(4.4rem, 8.8vw, 6.25rem);
     }
   }
 
   @media (max-width: 650px) {
+    .hero {
+      padding-top: 0.8rem;
+    }
+
     .hero__meta-spacer,
     .hero__meta-end {
       display: none;
     }
 
     .hero__grid {
-      padding-top: 2.2rem;
       gap: 2.8rem;
+      padding-top: 2rem;
+    }
+
+    .hero__copy > .kicker {
+      margin-bottom: 1.35rem;
     }
 
     .hero__title {
-      font-size: clamp(3.1rem, 14vw, 4.6rem);
-      line-height: 0.88;
+      font-size: clamp(2.85rem, 13.9vw, 4.35rem);
+      line-height: 0.87;
     }
 
     .hero__line--middle {
-      padding-left: 0;
+      margin-left: 0;
+      font-size: 0.8em;
     }
 
     .hero__line--fix {
-      margin-left: 1.6rem;
+      margin-left: clamp(0.9rem, 8vw, 2.2rem);
     }
 
-    .hero__line--fix::after {
+    .hero__outcome {
+      grid-template-columns: auto minmax(1.5rem, 1fr) auto;
+      gap: 0.38rem;
+      font-size: clamp(0.42rem, 2vw, 0.52rem);
+    }
+
+    .hero__stats > div {
+      padding-inline: 0.55rem;
+    }
+
+    .hero__stats dt {
+      font-size: clamp(0.43rem, 1.75vw, 0.54rem);
+      letter-spacing: 0.07em;
+    }
+
+    .hero__stats dd {
+      font-size: clamp(0.72rem, 3vw, 0.92rem);
+      line-height: 1.25;
+    }
+
+    .hero__stats dd span {
+      display: block;
+      margin-top: 0.16rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .hero__outcome span {
       display: none;
     }
 
-    .hero__stats {
-      grid-template-columns: 1fr;
-    }
-
-    .hero__stats > div + div {
-      border-left: 0;
-      border-top: 1px solid var(--rule);
+    .hero__outcome {
+      grid-template-columns: minmax(2rem, 1fr) auto;
     }
   }
 </style>
