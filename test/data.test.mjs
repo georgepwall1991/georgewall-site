@@ -122,7 +122,7 @@ test('linkLabel maps known hosts to friendly labels', () => {
 test('NuGet fallback exposes credible adoption totals when the API is unavailable', () => {
   const packages = Object.values(NUGET_FALLBACK);
   assert.equal(packages.length, 9);
-  assert.equal(totalNuGetDownloads(packages), 159521);
+  assert.equal(totalNuGetDownloads(packages), 185447);
   assert.ok(
     packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
   );
@@ -170,7 +170,6 @@ test('appScoreboard reports nothing pending once everything has shipped', () => 
 
 test('appScoreboard matches the real showcase data', () => {
   const board = appScoreboard(PRIVATE_APPS);
-  assert.equal(board.live, 2);
-  assert.equal(board.pending, 1);
-  assert.equal(board.pendingLabel, 'In review');
+  assert.equal(board.live, 3);
+  assert.equal(board.pending, 0);
 });

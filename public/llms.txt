@@ -1,8 +1,8 @@
 # George Wall
 
-> London-based full-stack developer in financial services. I build .NET Roslyn analysers, source generators, developer tooling, and iOS apps that catch bugs early — moving failures from production pain to a red squiggle in your editor.
+> London-based product engineer and toolmaker in financial services. I ship React/.NET systems and App Store products, then turn production lessons into analysers, source generators, and CLIs that protect the next release.
 
-George Wall (georgewall.uk) is the personal portfolio of a full-stack developer working across .NET/C#, TypeScript/React, and Swift/SwiftUI. The through-line is compile-time safety: tools that make bad code complain while it is still cheap to fix.
+George Wall (georgewall.uk) is the personal portfolio of a product engineer working across .NET/C#, TypeScript/React, and Swift/SwiftUI. The through-line is end-to-end ownership: build the product, carry it through release, and move the next failure somewhere cheaper to fix.
 
 ## Open-source projects
 
@@ -12,8 +12,14 @@ George Wall (georgewall.uk) is the personal portfolio of a full-stack developer 
 - [AutoMapper Analyser](https://www.nuget.org/packages/AutoMapperAnalyzer.Analyzers): Flags missing and misconfigured AutoMapper maps at build time, before they turn into runtime surprises.
 - [ConfigContraband](https://www.nuget.org/packages/ConfigContraband): Checks .NET Options and appsettings contracts before configuration mistakes reach startup.
 - [HttpClient Resilience Analysers](https://www.nuget.org/packages/HttpClient.Resilience.Analyzers): Catches unsafe retries, lifetime mistakes, response-ownership bugs and dropped cancellation in outbound HTTP code.
-- [CPMigrate](https://georgepwall1991.github.io/CPMigrate/): CLI that migrates .NET solutions to NuGet Central Package Management with dependency-health analysis and safe rollback.
+- [CPMigrate](https://georgepwall1991.github.io/CPMigrate/): CLI that migrates .NET solutions to NuGet Central Package Management with dependency-health analysis, restore-equivalence verification and update bisection.
 - [NotifyGen](https://github.com/georgepwall1991/NotifyGen): C# source generator that eliminates INotifyPropertyChanged boilerplate via a [Notify] attribute.
+
+## Shipped products
+
+- [NoBooze](https://apps.apple.com/gb/app/nobooze/id6755612993): Private, science-backed sobriety companion with progress tracking, health milestones, journalling and slip support.
+- [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Match-3 iOS game with handcrafted goals, power gems, live events and a starlit garden progression loop.
+- [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Compact iOS strategy game spanning a connected galaxy, fleet orders, tactical gambits, research and offline progress.
 
 ## Writing
 

@@ -43,7 +43,7 @@
     letter-spacing="3"
     fill="#858e9e"
   >
-    LONDON · FULL-STACK SYSTEMS
+    LONDON · PRODUCT ENGINEERING
   </text>
   <line x1="64" y1="116" x2="1136" y2="116" stroke="#3a4351" stroke-width="1" />
 
@@ -56,7 +56,7 @@
     letter-spacing="3.2"
     fill="#ff8469"
   >
-    FAILURE DISTANCE: EDITOR
+    BUILD OUTPUT: PRODUCT + GUARDRAILS
   </text>
   <circle
     cx="1108"
@@ -85,10 +85,10 @@
     letter-spacing="-5"
     fill="#f1eee6"
   >
-    Production
+    Build the
   </text>
   <text
-    x="640"
+    x="520"
     y="318"
     font-family="Georgia,'Times New Roman',serif"
     font-style="italic"
@@ -97,7 +97,7 @@
     letter-spacing="-4"
     fill="#ff6542"
   >
-    bugs
+    thing.
   </text>
 
   <text
@@ -109,10 +109,10 @@
     letter-spacing="-5"
     fill="#f1eee6"
   >
-    belong in the
+    Then protect
   </text>
   <text
-    x="738"
+    x="748"
     y="438"
     font-family="Arial,sans-serif"
     font-weight="800"
@@ -120,7 +120,7 @@
     letter-spacing="-5"
     fill="#62c4ff"
   >
-    editor.
+    it.
   </text>
 
   <line x1="64" y1="518" x2="1136" y2="518" stroke="#3a4351" stroke-width="1" />
@@ -132,7 +132,7 @@
     letter-spacing="2"
     fill="#aeb5c0"
   >
-    ROSLYN ANALYSERS · .NET · REACT · TYPESCRIPT · iOS
+    PRODUCT ENGINEERING · .NET · REACT · ROSLYN · iOS
   </text>
   <text
     x="1136"

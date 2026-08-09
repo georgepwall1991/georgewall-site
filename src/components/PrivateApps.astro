@@ -31,23 +31,19 @@ const scoreboard = appScoreboard(apps);
 
       <div class="apps__brief">
         <p class="apps__intro">
-          Two games live, a third product in App Store review. I design the
-          systems, build the interfaces, make the store art, and carry each
-          release through the unglamorous final mile.
+          {scoreboard.live} products live, with {labApps.length} more in TestFlight or
+          private build. I design the systems, build the interfaces, make the
+          store art, and carry each release through the unglamorous final mile.
         </p>
         <dl class="apps__scoreboard" aria-label="iOS product status">
           <div>
             <dt>Live now</dt>
             <dd>{String(scoreboard.live).padStart(2, "0")}</dd>
           </div>
-          {
-            scoreboard.pending > 0 && (
-              <div>
-                <dt>{scoreboard.pendingLabel}</dt>
-                <dd>{String(scoreboard.pending).padStart(2, "0")}</dd>
-              </div>
-            )
-          }
+          <div>
+            <dt>In the lab</dt>
+            <dd>{String(labApps.length).padStart(2, "0")}</dd>
+          </div>
         </dl>
       </div>
     </header>
@@ -85,7 +81,7 @@ const scoreboard = appScoreboard(apps);
                   {app.category === "health" && (
                     <aside
                       class="app__buildNote"
-                      aria-label="NoBooze product principle"
+                      aria-label={`${app.title} product principle`}
                     >
                       <p>Design premise</p>
                       <strong>Progress without punishment.</strong>
@@ -144,31 +140,66 @@ const scoreboard = appScoreboard(apps);
 
     {
       labApps.length > 0 && (
-        <aside class="apps__lab reveal" aria-labelledby="apps-lab-title">
-          <div class="apps__labCopy">
+        <section class="apps__lab reveal" aria-labelledby="apps-lab-title">
+          <header class="apps__labHead">
             <p class="apps__labKicker">From the lab</p>
-            <h3 id="apps-lab-title">{labApps[0].title}</h3>
-            <p>{labApps[0].blurb}</p>
-            <ul class="app__stack" aria-label={`${labApps[0].title} stack`}>
-              {labApps[0].stack.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
+            <h3 id="apps-lab-title">Products before the press release.</h3>
+            <p>
+              TestFlight builds and private prototypes, shown while the edges are
+              still being found.
+            </p>
+          </header>
+
+          <div class="apps__labGrid">
+            {labApps.map((app) => {
+              const links = appLinks(app);
+              return (
+                <article class={`apps__labCard apps__labCard--${app.theme}`}>
+                  <div
+                    class={`apps__labScreens ${app.screenshots.length === 1 ? "apps__labScreens--single" : ""}`}
+                    aria-label={`${app.title} preview`}
+                  >
+                    {app.screenshots.map((shot) => (
+                      <img
+                        src={shot.src}
+                        alt={shot.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ))}
+                  </div>
+                  <div class="apps__labCopy">
+                    <div class="apps__labStatus">
+                      <span>{app.status}</span>
+                      {app.release && <span>{app.release}</span>}
+                    </div>
+                    <h4>{app.title}</h4>
+                    <p>{app.blurb}</p>
+                    <ul class="app__stack" aria-label={`${app.title} stack`}>
+                      {app.stack.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                    {links.length > 0 && (
+                      <div class="app__links">
+                        {links.map((link) => (
+                          <a
+                            class="app__cta app__cta--secondary link link--on"
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener"
+                          >
+                            {link.label} <span aria-hidden="true">↗</span>
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
-          <div
-            class="apps__labScreens"
-            aria-label={`${labApps[0].title} preview`}
-          >
-            {labApps[0].screenshots.map((shot) => (
-              <img
-                src={shot.src}
-                alt={shot.alt}
-                loading="lazy"
-                decoding="async"
-              />
-            ))}
-          </div>
-        </aside>
+        </section>
       )
     }
   </div>
@@ -208,10 +239,7 @@ const scoreboard = appScoreboard(apps);
 
   .apps__scoreboard {
     display: grid;
-    /* Column per cell, so the row still reads correctly once nothing is
-       pending and the second cell drops out entirely. */
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     border-top: 1px solid var(--rule-strong);
   }
 
@@ -278,6 +306,11 @@ const scoreboard = appScoreboard(apps);
   .app--wellness {
     --scene: #ff714b;
     --scene-soft: #79cdb3;
+  }
+
+  .app--lumina {
+    --scene: #f2b84b;
+    --scene-soft: #d98578;
   }
 
   .app__media {
@@ -554,10 +587,6 @@ const scoreboard = appScoreboard(apps);
   }
 
   .apps__lab {
-    display: grid;
-    grid-template-columns: minmax(19rem, 0.72fr) minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3.5rem);
-    align-items: center;
     margin-top: clamp(1.5rem, 4vw, 3rem);
     padding: clamp(1.2rem, 3vw, 2rem);
     color: var(--paper);
@@ -565,7 +594,20 @@ const scoreboard = appScoreboard(apps);
     border-radius: 6px;
   }
 
-  .apps__labCopy h3 {
+  .apps__labHead {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.65fr);
+    gap: 0.65rem clamp(1.5rem, 5vw, 4rem);
+    align-items: end;
+    padding-bottom: clamp(1.2rem, 3vw, 2rem);
+    border-bottom: 1px solid color-mix(in srgb, var(--paper) 26%, transparent);
+  }
+
+  .apps__labHead .apps__labKicker {
+    grid-column: 1 / -1;
+  }
+
+  .apps__labHead h3 {
     margin-top: 0.65rem;
     font-family: var(--font-display);
     font-size: clamp(2rem, 4vw, 3.5rem);
@@ -576,11 +618,104 @@ const scoreboard = appScoreboard(apps);
     line-height: 0.95;
   }
 
-  .apps__labCopy > p:not(.apps__labKicker) {
-    max-width: 48ch;
-    margin-top: 1rem;
+  .apps__labHead > p:last-child {
+    max-width: 37ch;
     color: color-mix(in srgb, var(--paper) 72%, transparent);
     line-height: 1.55;
+  }
+
+  .apps__labGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+  }
+
+  .apps__labCard {
+    --lab-accent: #49c8ff;
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.72fr) minmax(0, 1.28fr);
+    min-height: 23rem;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
+    border-radius: 5px;
+    background:
+      radial-gradient(circle at 8% 8%, color-mix(in srgb, var(--lab-accent) 18%, transparent), transparent 34%),
+      #11151c;
+  }
+
+  .apps__labCard--lumina {
+    --lab-accent: #f4b940;
+  }
+
+  .apps__labScreens {
+    display: flex;
+    gap: 0.45rem;
+    min-width: 0;
+    overflow: hidden;
+    padding: 1rem 0 1rem 1rem;
+    background: color-mix(in srgb, var(--lab-accent) 9%, transparent);
+  }
+
+  .apps__labScreens img {
+    width: 72%;
+    flex: none;
+    min-width: 0;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 3px;
+    box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 0.36);
+  }
+
+  .apps__labScreens img:nth-child(2) {
+    margin-top: 1.1rem;
+  }
+
+  .apps__labScreens--single img {
+    width: calc(100% - 0.2rem);
+  }
+
+  .apps__labCopy {
+    align-self: center;
+    padding: clamp(1rem, 2.5vw, 1.7rem);
+  }
+
+  .apps__labStatus {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .apps__labStatus span {
+    padding: 0.22rem 0.42rem;
+    border: 1px solid color-mix(in srgb, var(--lab-accent) 70%, transparent);
+    border-radius: 3px;
+    color: var(--lab-accent);
+  }
+
+  .apps__labCopy h4 {
+    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.65rem, 3vw, 2.6rem);
+    font-variation-settings: "opsz" 60, "WONK" 1, "wght" 560;
+    line-height: 0.95;
+  }
+
+  .apps__labCopy > p {
+    margin-top: 0.8rem;
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    font-size: 0.84rem;
+    line-height: 1.55;
+  }
+
+  .apps__lab .app__stack {
+    margin-top: 0.9rem;
   }
 
   .apps__lab .app__stack li {
@@ -589,21 +724,12 @@ const scoreboard = appScoreboard(apps);
     background: transparent;
   }
 
-  .apps__labScreens {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.7rem;
-    max-height: 18rem;
-    overflow: hidden;
-    border-radius: 4px;
-    background: #141820;
+  .apps__lab .app__links {
+    margin-top: 0.85rem;
   }
 
-  .apps__labScreens img {
-    width: 100%;
-    height: 18rem;
-    object-fit: cover;
-    object-position: top center;
+  .apps__lab .app__cta--secondary {
+    color: var(--paper);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -632,6 +758,10 @@ const scoreboard = appScoreboard(apps);
     }
 
     .apps__lab {
+      padding: 1rem;
+    }
+
+    .apps__labGrid {
       grid-template-columns: 1fr;
     }
   }
@@ -679,10 +809,23 @@ const scoreboard = appScoreboard(apps);
       font-size: 0.5rem;
     }
 
-    .apps__labScreens,
+    .apps__labHead,
+    .apps__labCard {
+      grid-template-columns: 1fr;
+    }
+
+    .apps__labScreens {
+      height: 18rem;
+      padding: 0.8rem;
+    }
+
     .apps__labScreens img {
-      max-height: 13rem;
-      height: 13rem;
+      width: min(54%, 13rem);
+      flex: none;
+    }
+
+    .apps__labScreens img:only-child {
+      margin-inline: auto;
     }
   }
 </style>

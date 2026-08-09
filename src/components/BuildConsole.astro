@@ -1,0 +1,351 @@
+---
+const productLane = [
+  { name: "NoBooze", version: "1.6.1", state: "live" },
+  { name: "GemGame", version: "2.1.6", state: "live" },
+  { name: "Fleet Commander", version: "1.0.5", state: "live" },
+];
+
+const toolingLane = [
+  { name: "LinqContraband", version: "5.7.52", state: "armed" },
+  { name: "DI Lifetimes", version: "3.7.4", state: "armed" },
+  { name: "CPMigrate", version: "3.56.0", state: "ready" },
+];
+---
+
+<figure class="console" aria-labelledby="console-title">
+  <header class="console__top">
+    <div>
+      <p class="console__eyebrow">Build output</p>
+      <figcaption id="console-title">Both sides of production.</figcaption>
+    </div>
+    <span class="console__branch"><i aria-hidden="true"></i> main · current</span>
+  </header>
+
+  <div class="console__lanes">
+    <section class="lane lane--product" aria-labelledby="product-lane-title">
+      <div class="lane__head">
+        <span class="lane__command" aria-hidden="true">01</span>
+        <h2 id="product-lane-title">Ship the product</h2>
+        <span class="lane__signal">App Store</span>
+      </div>
+      <ul class="lane__list">
+        {
+          productLane.map((item) => (
+            <li>
+              <span class="lane__node" aria-hidden="true"></span>
+              <strong>{item.name}</strong>
+              <span>v{item.version}</span>
+              <small>{item.state}</small>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <div class="console__handoff" aria-hidden="true">
+      <span>production lessons</span>
+      <i></i>
+    </div>
+
+    <section class="lane lane--tooling" aria-labelledby="tooling-lane-title">
+      <div class="lane__head">
+        <span class="lane__command" aria-hidden="true">02</span>
+        <h2 id="tooling-lane-title">Protect the next release</h2>
+        <span class="lane__signal">NuGet</span>
+      </div>
+      <ul class="lane__list">
+        {
+          toolingLane.map((item) => (
+            <li>
+              <span class="lane__node" aria-hidden="true"></span>
+              <strong>{item.name}</strong>
+              <span>v{item.version}</span>
+              <small>{item.state}</small>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div class="console__result">
+    <span class="console__prompt" aria-hidden="true">$</span>
+    <code>idea → interface → release → feedback → guardrail</code>
+    <span class="console__ok">0 failures escaped</span>
+  </div>
+</figure>
+
+<style>
+  .console {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    padding: clamp(1rem, 2.2vw, 1.55rem);
+    border: 1px solid var(--rule-strong);
+    border-radius: 9px;
+    background:
+      linear-gradient(150deg, var(--fix-wash), transparent 34%),
+      linear-gradient(330deg, var(--fault-wash), transparent 32%),
+      var(--paper-raised);
+    box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.28);
+    isolation: isolate;
+  }
+
+  .console::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    opacity: 0.3;
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 2.4rem 2.4rem;
+    mask-image: linear-gradient(to bottom, black, transparent 86%);
+  }
+
+  .console__top,
+  .lane__head,
+  .lane__list li,
+  .console__result {
+    display: flex;
+    align-items: center;
+  }
+
+  .console__top {
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .console__eyebrow,
+  .console__branch,
+  .lane__command,
+  .lane__signal,
+  .lane__list,
+  .console__handoff,
+  .console__result {
+    font-family: var(--font-mono);
+  }
+
+  .console__eyebrow {
+    margin-bottom: 0.25rem;
+    color: var(--fix);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .console figcaption {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    font-variation-settings: "opsz" 48, "WONK" 0, "wght" 490;
+    line-height: 1.1;
+  }
+
+  .console__branch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--ink-soft);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .console__branch i {
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    background: var(--fix);
+    box-shadow: 0 0 0 0 var(--fix);
+    animation: console-pulse 2.4s ease-out infinite;
+  }
+
+  .console__lanes {
+    padding-block: clamp(1.15rem, 2.6vw, 1.8rem);
+  }
+
+  .lane {
+    padding: 0.85rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--paper-sunk) 88%, transparent);
+  }
+
+  .lane__head {
+    gap: 0.65rem;
+    padding-bottom: 0.72rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .lane__command {
+    color: var(--fault);
+    font-size: 0.58rem;
+  }
+
+  .lane--tooling .lane__command {
+    color: var(--fix);
+  }
+
+  .lane__head h2 {
+    color: var(--ink);
+    font-size: 0.78rem;
+    font-weight: 610;
+    letter-spacing: 0.01em;
+  }
+
+  .lane__signal {
+    margin-left: auto;
+    color: var(--ink-faint);
+    font-size: 0.55rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .lane__list {
+    list-style: none;
+  }
+
+  .lane__list li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 0.7rem minmax(0, 1fr) auto auto;
+    gap: 0.55rem;
+    padding: 0.62rem 0;
+    color: var(--ink-soft);
+    font-size: 0.62rem;
+  }
+
+  .lane__list li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .lane__list strong {
+    overflow: hidden;
+    color: var(--ink);
+    font-weight: 520;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lane__list small {
+    min-width: 3.4rem;
+    color: var(--ink-faint);
+    font-size: inherit;
+    text-align: right;
+  }
+
+  .lane__node {
+    align-self: center;
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 1px solid var(--fault);
+    border-radius: 50%;
+    background: var(--fault-wash);
+  }
+
+  .lane--tooling .lane__node {
+    border-color: var(--fix);
+    background: var(--fix-wash);
+  }
+
+  .console__handoff {
+    position: relative;
+    height: 2.25rem;
+    color: var(--ink-faint);
+    font-size: 0.52rem;
+    letter-spacing: 0.09em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .console__handoff::before,
+  .console__handoff::after {
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: 0.72rem;
+    content: "";
+    background: linear-gradient(var(--fault), var(--fix));
+  }
+
+  .console__handoff::before {
+    top: 0;
+  }
+
+  .console__handoff::after {
+    bottom: 0;
+  }
+
+  .console__handoff span {
+    position: relative;
+    top: 0.72rem;
+    padding-inline: 0.5rem;
+    background: var(--paper-raised);
+  }
+
+  .console__result {
+    gap: 0.5rem;
+    padding: 0.75rem 0.82rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    background: var(--paper-sunk);
+    color: var(--ink-soft);
+    font-size: 0.58rem;
+  }
+
+  .console__prompt,
+  .console__ok {
+    flex: none;
+  }
+
+  .console__prompt {
+    color: var(--fault);
+  }
+
+  .console__result code {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .console__ok {
+    margin-left: auto;
+    color: var(--fix);
+  }
+
+  @keyframes console-pulse {
+    70% {
+      box-shadow: 0 0 0 0.5rem transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .console__branch i {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 470px) {
+    .console {
+      padding: 0.9rem;
+    }
+
+    .console__branch,
+    .console__ok {
+      display: none;
+    }
+
+    .lane__list li {
+      grid-template-columns: 0.65rem minmax(0, 1fr) auto;
+    }
+
+    .lane__list small {
+      display: none;
+    }
+  }
+</style>

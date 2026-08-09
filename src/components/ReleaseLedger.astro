@@ -1,0 +1,377 @@
+---
+import { PULSE } from "../data/pulse";
+---
+
+<section class="ledger" id="now" aria-labelledby="ledger-title">
+  <div class="wrap ledger__grid">
+    <header class="ledger__intro reveal">
+      <p class="kicker">Latest on main</p>
+      <h2 class="display ledger__title" id="ledger-title">
+        The work did not stand still.
+      </h2>
+      <p class="ledger__standfirst">
+        A dated release ledger across the products people use and the tooling
+        that keeps production honest. Every line is tied to a shipped build,
+        package or documented pass.
+      </p>
+
+      <div class="ledger__filters" role="group" aria-label="Filter release ledger">
+        <button type="button" data-ledger-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-ledger-filter="product" aria-pressed="false">Products</button>
+        <button type="button" data-ledger-filter="tooling" aria-pressed="false">Tooling</button>
+      </div>
+
+      <p class="ledger__stamp">
+        <span aria-hidden="true"></span>
+        16 repos moved since the previous portfolio release · verified 09 Aug 2026
+      </p>
+    </header>
+
+    <ol class="ledger__list" data-ledger-list>
+      {
+        PULSE.map((entry, index) => (
+          <li
+            class={`ledger__entry ledger__entry--${entry.channel} reveal`}
+            data-ledger-channel={entry.channel}
+            style={`--reveal-delay:${Math.min(index, 5) * 55}ms`}
+          >
+            <div class="ledger__rail" aria-hidden="true">
+              <span></span>
+            </div>
+            <div class="ledger__meta">
+              <span>{entry.date}</span>
+              <span>{entry.channel}</span>
+            </div>
+            <div class="ledger__body">
+              <div class="ledger__name">
+                <h3>{entry.title}</h3>
+                <span>{entry.version}</span>
+              </div>
+              <p>{entry.summary}</p>
+            </div>
+            <a href={entry.href} target="_blank" rel="noopener">
+              {entry.linkLabel}<span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>(
+    "[data-ledger-filter]",
+  );
+  const entries = document.querySelectorAll<HTMLElement>(
+    "[data-ledger-channel]",
+  );
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filter = button.dataset.ledgerFilter ?? "all";
+      buttons.forEach((candidate) =>
+        candidate.setAttribute("aria-pressed", String(candidate === button)),
+      );
+      entries.forEach((entry) => {
+        entry.hidden =
+          filter !== "all" && entry.dataset.ledgerChannel !== filter;
+      });
+    });
+  });
+</script>
+
+<style>
+  .ledger {
+    position: relative;
+    padding-top: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .ledger::before {
+    position: absolute;
+    top: clamp(2rem, 5vw, 4rem);
+    right: 0;
+    width: min(34vw, 30rem);
+    height: min(34vw, 30rem);
+    content: "";
+    pointer-events: none;
+    background: radial-gradient(circle, var(--fix-wash), transparent 68%);
+    filter: blur(1px);
+  }
+
+  .ledger__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.72fr) minmax(0, 1.28fr);
+    gap: clamp(2rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .ledger__intro {
+    position: sticky;
+    top: calc(clamp(3.4rem, 7vw, 4.4rem) + 2rem);
+  }
+
+  .ledger__title {
+    max-width: 10ch;
+    margin-top: 0.9rem;
+    font-size: clamp(2.7rem, 5.6vw, 5.6rem);
+  }
+
+  .ledger__standfirst {
+    max-width: 42ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.2vw, 1.12rem);
+    line-height: 1.6;
+  }
+
+  .ledger__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.6rem;
+  }
+
+  .ledger__filters button {
+    min-height: 38px;
+    padding: 0.52rem 0.8rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .ledger__filters button:hover,
+  .ledger__filters button[aria-pressed="true"] {
+    border-color: var(--ink);
+    color: var(--paper);
+    background: var(--ink);
+  }
+
+  .ledger__stamp {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1.5rem;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .ledger__stamp span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 1px solid var(--fix);
+    border-radius: 50%;
+    background: var(--fix-wash);
+  }
+
+  .ledger__list {
+    border-top: 1.5px solid var(--ink);
+    list-style: none;
+  }
+
+  .ledger__entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.2rem 7.5rem minmax(0, 1fr) auto;
+    gap: clamp(0.8rem, 2vw, 1.4rem);
+    align-items: start;
+    min-height: 9rem;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .ledger__entry[hidden] {
+    display: none;
+  }
+
+  .ledger__entry::after {
+    position: absolute;
+    inset: 0 calc(var(--gutter) * -0.35);
+    z-index: -1;
+    content: "";
+    opacity: 0;
+    background: linear-gradient(90deg, var(--fault-wash), transparent 78%);
+    transition: opacity 0.3s ease;
+  }
+
+  .ledger__entry--tooling::after {
+    background: linear-gradient(90deg, var(--fix-wash), transparent 78%);
+  }
+
+  .ledger__entry:hover::after {
+    opacity: 1;
+  }
+
+  .ledger__rail {
+    position: relative;
+    align-self: stretch;
+  }
+
+  .ledger__rail::after {
+    position: absolute;
+    top: 0.9rem;
+    bottom: -2.15rem;
+    left: 0.34rem;
+    width: 1px;
+    content: "";
+    background: var(--rule-strong);
+  }
+
+  .ledger__entry:last-child .ledger__rail::after {
+    display: none;
+  }
+
+  .ledger__rail span {
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    z-index: 1;
+    width: 0.72rem;
+    height: 0.72rem;
+    border: 2px solid var(--fault);
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: 0 0 0 4px var(--fault-wash);
+  }
+
+  .ledger__entry--tooling .ledger__rail span {
+    border-color: var(--fix);
+    box-shadow: 0 0 0 4px var(--fix-wash);
+  }
+
+  .ledger__meta {
+    display: grid;
+    gap: 0.4rem;
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .ledger__meta span:last-child {
+    width: fit-content;
+    padding: 0.18rem 0.38rem;
+    border: 1px solid color-mix(in srgb, var(--fault) 65%, transparent);
+    border-radius: 3px;
+    color: var(--fault);
+  }
+
+  .ledger__entry--tooling .ledger__meta span:last-child {
+    border-color: color-mix(in srgb, var(--fix) 65%, transparent);
+    color: var(--fix);
+  }
+
+  .ledger__body {
+    min-width: 0;
+  }
+
+  .ledger__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+
+  .ledger__name h3 {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 2.4vw, 2rem);
+    font-variation-settings: "opsz" 60, "WONK" 0, "wght" 540;
+    line-height: 1;
+  }
+
+  .ledger__name span {
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+  }
+
+  .ledger__body p {
+    max-width: 55ch;
+    margin-top: 0.65rem;
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+
+  .ledger__entry > a {
+    display: inline-flex;
+    gap: 0.3rem;
+    align-items: center;
+    min-height: 38px;
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .ledger__entry > a span {
+    color: var(--fault);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .ledger__entry--tooling > a span {
+    color: var(--fix);
+  }
+
+  .ledger__entry > a:hover span {
+    transform: translate(2px, -2px);
+  }
+
+  @media (max-width: 900px) {
+    .ledger__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ledger__intro {
+      position: static;
+    }
+
+    .ledger__title {
+      max-width: 12ch;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .ledger__entry {
+      grid-template-columns: 1rem minmax(0, 1fr) auto;
+      min-height: 0;
+    }
+
+    .ledger__meta {
+      grid-column: 2 / -1;
+      grid-row: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .ledger__body {
+      grid-column: 2 / -1;
+      grid-row: 2;
+    }
+
+    .ledger__entry > a {
+      grid-column: 2 / -1;
+      grid-row: 3;
+      width: fit-content;
+    }
+
+    .ledger__rail {
+      grid-row: 1 / 4;
+    }
+  }
+</style>

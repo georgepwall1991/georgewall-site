@@ -1,5 +1,5 @@
 ---
-import FailureDistance from "./FailureDistance.astro";
+import BuildConsole from "./BuildConsole.astro";
 import { SITE } from "../data/site";
 
 interface Props {
@@ -26,13 +26,13 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
     <div class="hero__grid">
       <div class="hero__copy">
         <p class="kicker intro" style="--intro-delay: 120ms">
-          {SITE.role} · 10+ years in fintech
+          Product engineering · 10+ years in fintech
         </p>
 
         <h1 class="hero__title">
           <span class="intro-mask">
             <span class="hero__line intro-line" style="--intro-delay: 200ms">
-              Production <em>bugs</em>
+              Build the <em>thing.</em>
             </span>
           </span>
           <span class="intro-mask">
@@ -40,7 +40,7 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
               class="hero__line hero__line--middle intro-line"
               style="--intro-delay: 300ms"
             >
-              belong in the
+              Then build what
             </span>
           </span>
           <span class="intro-mask">
@@ -48,22 +48,21 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
               class="hero__line hero__line--fix intro-line"
               style="--intro-delay: 400ms"
             >
-              editor<span aria-hidden="true">.</span>
+              protects it<span aria-hidden="true">.</span>
             </span>
           </span>
         </h1>
 
         <p class="hero__standfirst intro" style="--intro-delay: 500ms">
-          I build <strong>React and TypeScript products</strong>, <strong
-            >.NET systems</strong
-          >
-          and <strong>iOS apps</strong> — then write the Roslyn analysers that move
-          failures from late-night incidents to a precise line of code.
+          I ship <strong>React and .NET systems</strong> and <strong
+            >App Store products</strong
+          > — then turn the production lessons into analysers, source generators
+          and CLIs that make the next release safer.
         </p>
 
         <div class="hero__actions intro" style="--intro-delay: 600ms">
-          <a href="#work" class="btn">
-            See the evidence
+          <a href="#now" class="btn">
+            See what moved
             <span class="arrow" aria-hidden="true">↓</span>
           </a>
           <a
@@ -79,7 +78,7 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
       </div>
 
       <div class="hero__instrument intro" style="--intro-delay: 460ms">
-        <FailureDistance />
+        <BuildConsole />
       </div>
     </div>
 
@@ -94,8 +93,8 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
         </dd>
       </div>
       <div>
-        <dt>Product range</dt>
-        <dd>{shippedApps} <span>App Store releases</span></dd>
+        <dt>Products shipped</dt>
+        <dd>{shippedApps} <span>live App Store releases</span></dd>
       </div>
       <div>
         <dt>Delivery context</dt>
@@ -276,7 +275,7 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
   .hero__title {
     font-family: var(--font-sans);
     font-variation-settings: "wght" 790;
-    font-size: clamp(3.65rem, 6.4vw, 6.4rem);
+    font-size: clamp(3.45rem, 5.85vw, 5.9rem);
     line-height: 0.84;
     letter-spacing: -0.065em;
     text-wrap: balance;
@@ -308,7 +307,7 @@ const downloadThousands = Math.floor(totalDownloads / 1000);
   }
 
   .hero__line--fix::after {
-    content: "caught at source";
+    content: "production hardened";
     position: absolute;
     left: calc(100% + 1.1rem);
     bottom: 0.12em;

@@ -264,7 +264,7 @@ const initialCrumb = segment ?? 'lede';
   // Breadcrumb follows the section being read.
   const crumb = document.querySelector<HTMLElement>('[data-crumb]');
   if (crumb && 'IntersectionObserver' in window) {
-    const sections = ['lede', 'work', 'stack', 'apps', 'archive', 'about', 'contact']
+    const sections = ['lede', 'now', 'work', 'stack', 'apps', 'archive', 'about', 'contact']
       .map((id) => document.getElementById(id))
       .filter((s): s is HTMLElement => Boolean(s));
     const io = new IntersectionObserver(

@@ -1,9 +1,10 @@
 # georgewall.uk
 
-George Wall's portfolio — an editorial, magazine-styled site for his open-source
-work. **Static, frontend-only, zero backend.** Repository data is read live from
-the public GitHub API in the visitor's browser, with a committed snapshot as a
-build-time and no-JavaScript fallback.
+George Wall's portfolio — a compiler-instrument-inspired site connecting shipped
+products with the tooling that protects them. **Static, frontend-only, zero
+backend.** Repository data is read live from the public GitHub API in the
+visitor's browser, with a committed snapshot as a build-time and no-JavaScript
+fallback.
 
 - **Framework:** [Astro](https://astro.build) (static output)
 - **Type:** Fraunces · Archivo · JetBrains Mono (self-hosted via Fontsource)

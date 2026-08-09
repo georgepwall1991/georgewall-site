@@ -2,6 +2,7 @@
 import Base from "../layouts/Base.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import Hero from "../components/Hero.astro";
+import ReleaseLedger from "../components/ReleaseLedger.astro";
 import FeaturedWork from "../components/FeaturedWork.astro";
 import PrivateApps from "../components/PrivateApps.astro";
 import WritingPreview from "../components/WritingPreview.astro";
@@ -74,6 +75,7 @@ const appSchema = PRIVATE_APPS.map((app) => ({
   <SiteHeader />
   <main id="main-content">
     <Hero totalDownloads={downloads} shippedApps={shippedApps} />
+    <ReleaseLedger />
     <FeaturedWork entries={featuredEntries.slice(0, 3)} showAllLink />
     <WritingPreview compact />
     <PrivateApps apps={PRIVATE_APPS} />

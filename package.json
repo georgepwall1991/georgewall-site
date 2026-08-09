@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "George Wall — editorial portfolio. Static, frontend-only, deploys free to Vercel.",
+  "description": "George Wall — product engineering and developer tooling portfolio. Static, frontend-only, deploys to Vercel.",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

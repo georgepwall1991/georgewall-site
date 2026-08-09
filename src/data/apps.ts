@@ -5,7 +5,7 @@ export interface PrivateApp {
   status: string;
   release?: string;
   category: "game" | "health";
-  theme: "gem" | "fleet" | "wellness" | "transit";
+  theme: "gem" | "fleet" | "wellness" | "transit" | "lumina";
   featured?: boolean;
   blurb: string;
   stack: string[];
@@ -57,7 +57,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     title: "GemGame: Cosy Match 3 Puzzle",
     kicker: "Shipped iOS game · Match-3",
     status: "App Store",
-    release: "v2.1.2",
+    release: "v2.1.6",
     category: "game",
     theme: "gem",
     blurb:
@@ -149,22 +149,53 @@ export const PRIVATE_APPS: PrivateApp[] = [
   {
     name: "NoBooze",
     title: "NoBooze",
-    kicker: "Submitted · Health & Fitness",
-    status: "In review",
-    release: "v1.6.0",
+    kicker: "Shipped iOS product · Health & Fitness",
+    status: "App Store",
+    release: "v1.6.1",
     category: "health",
     theme: "wellness",
     blurb:
-      "A private, science-backed sobriety companion built to make progress feel tangible without making a difficult day feel like failure. Streaks, health milestones, check-ins, journalling and slip support in one calm SwiftUI experience — now finished, signed, and sitting in App Store review.",
-    stack: ["SwiftUI", "Core Data", "CloudKit", "StoreKit 2", "WidgetKit"],
+      "A private, science-backed sobriety companion that makes progress tangible without turning a difficult day into failure. The live product brings streaks, health milestones, check-ins, a reflection-first journal, and slip support into one calm SwiftUI experience.",
+    stack: ["SwiftUI", "Core Data", "HealthKit", "CloudKit"],
     siteUrl: "https://funny-boba-67508f.netlify.app/",
-    url: "https://funny-boba-67508f.netlify.app/",
-    cta: "Product site",
+    url: "https://apps.apple.com/gb/app/nobooze/id6755612993",
+    cta: "App Store",
+    links: [
+      {
+        label: "Product site",
+        url: "https://funny-boba-67508f.netlify.app/",
+      },
+    ],
     screenshots: [
       {
-        src: "/apps/nobooze-dashboard.webp",
-        alt: "NoBooze App Store artwork showing a 128-day alcohol-free streak on the daily dashboard",
-        caption: "Streak & milestones",
+        src: "/apps/nobooze-today.webp",
+        alt: "NoBooze showing a 128-day alcohol-free streak, savings, achievements and daily support actions",
+        caption: "Today · live product",
+      },
+      {
+        src: "/apps/nobooze-journal.webp",
+        alt: "NoBooze journal showing a private reflection prompt, searchable entries and mood context",
+        caption: "Reflection-first journal",
+      },
+    ],
+  },
+  {
+    name: "Lumina",
+    title: "My Lumina",
+    kicker: "TestFlight · Recovery companion",
+    status: "TestFlight",
+    release: "v0.4",
+    category: "health",
+    theme: "lumina",
+    featured: false,
+    blurb:
+      "A calm, privacy-first native iOS companion for eating-disorder recovery. Body scans, mood palettes, on-device chat and a gentle mascot turn daily reflection into something approachable without sending disclosures to a remote service.",
+    stack: ["SwiftUI", "SwiftData", "Foundation Models", "CloudKit"],
+    screenshots: [
+      {
+        src: "/apps/lumina-home.webp",
+        alt: "My Lumina TestFlight home screen with a friendly yellow mascot, body scan and mood palette actions",
+        caption: "Home · TestFlight build",
       },
     ],
   },

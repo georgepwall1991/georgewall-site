@@ -106,7 +106,7 @@ export const FEATURED: Featured[] = [
     kicker: 'Developer tooling · CLI',
     title: 'CPMigrate',
     blurb:
-      'Move an entire .NET solution onto Central Package Management without doing diff archaeology by hand. It checks dependency health, migrates carefully, and rolls back when reality disagrees.',
+      'Move an entire .NET solution onto Central Package Management without doing diff archaeology by hand. It scores dependency health, proves restore equivalence, and bisects package updates so the working set stays instead of rolling everything back.',
     primary: { label: 'Install tool', href: 'https://www.nuget.org/packages/CPMigrate' },
     packageId: 'CPMigrate',
   },
