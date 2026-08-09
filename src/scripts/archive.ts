@@ -3,7 +3,7 @@
  *
  * The section is server-rendered from a committed snapshot (works with JS off).
  * On load we hydrate from the embedded data, wire up filter/sort/forks, then try
- * a fresh pull from the public GitHub API — on the visitor's own IP, so the
+ * a fresh pull from the public GitHub API on the visitor's own IP, so the
  * 60 req/hr unauthenticated limit is per-visitor and never a bottleneck.
  * Results are cached in localStorage for 6h to be a polite API citizen.
  */
@@ -182,6 +182,6 @@ function writeCache(key: string, value: unknown): void {
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch {
-    /* storage full / private mode — caching is best-effort */
+    /* Storage full or private mode. Caching is best-effort. */
   }
 }

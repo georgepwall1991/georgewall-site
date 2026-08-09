@@ -7,7 +7,7 @@ import { languageColor, formatCount, relativeTime, formatMonthYear } from '../li
 interface Props {
   /** Portfolio repos (no forks/meta), pre-sorted. Server-rendered as the no-JS baseline. */
   repos: Repo[];
-  /** Everything, including forks — embedded for the client to re-filter live. */
+  /** Everything, including forks, embedded for the client to re-filter live. */
   allRepos: Repo[];
   generatedAt: string;
 }
@@ -20,11 +20,11 @@ const now = new Date();
   <div class="wrap">
     <header class="archive__head reveal">
       <div>
-        <p class="kicker">The archive</p>
-        <h2 class="display archive__title">The rest, straight from GitHub.</h2>
+        <p class="kicker">GitHub</p>
+        <h2 class="display archive__title">Project archive.</h2>
       </div>
       <p class="archive__note">
-        This list reads the public GitHub API in your browser. No server, no token.
+        Refreshed from the public GitHub API in your browser. No token required.
         <span class="archive__status" data-status aria-live="polite">Snapshot · {formatMonthYear(generatedAt)}</span>
       </p>
     </header>
@@ -233,7 +233,7 @@ const now = new Date();
 
   /* Rows fade up as they enter the viewport (view timelines, progressive).
      Animation-driven rather than .reveal so client-side re-filtering keeps
-     working — re-inserted rows already in view render at the range end. */
+     working. Re-inserted rows already in view render at the range end. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       .arc-row {

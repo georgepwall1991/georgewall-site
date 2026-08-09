@@ -1,4 +1,4 @@
-/** Shared GitHub data shapes. No runtime code — safe to import anywhere. */
+/** Shared GitHub data shapes. No runtime code, so this is safe to import anywhere. */
 
 export interface Repo {
   name: string;

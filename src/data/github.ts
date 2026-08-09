@@ -2,7 +2,7 @@
  * Build-time GitHub data access.
  *
  * Strategy: at build we try the public GitHub REST API (no token, no backend).
- * If that fails — rate limit, offline CI, an outage — we fall back to a
+ * If that fails because of a rate limit, offline CI or an outage, we fall back to a
  * committed snapshot so the build is deterministic and never breaks. The client
  * then re-fetches live on the visitor's own IP to keep stars/dates warm.
  *
@@ -88,7 +88,7 @@ async function fetchLive(timeoutMs = 6000): Promise<Snapshot> {
 }
 
 /**
- * Build-time data. Tries live, falls back to the snapshot. Never throws —
+ * Build-time data. Tries live, falls back to the snapshot. Never throws:
  * a portfolio that won't build because GitHub hiccuped is a bad portfolio.
  */
 async function loadSnapshot(): Promise<Snapshot> {

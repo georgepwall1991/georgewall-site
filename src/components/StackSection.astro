@@ -1,8 +1,8 @@
 ---
 // The full-stack proof, shown rather than claimed: three editor panes, one per
-// layer — React/TS at the front, a C# engine in the middle, Kafka plumbing
+// layer: React/TS at the front, a C# engine in the middle and Kafka plumbing
 // underneath. Snippets are hand-tokenised (set:html) against the site palette,
-// and each pane is "signed off" by the relevant toolchain — including George's
+// and each pane is "signed off" by the relevant toolchain, including George's
 // own analysers, which is the whole joke.
 interface Line {
   html: string;
@@ -41,7 +41,7 @@ const PANES: Pane[] = [
     ],
     verdict: 'tsc --strict · 0 errors',
     caption:
-      'Data-dense React + TypeScript — RTK Query, AG-Grid, Recharts. Frontends built from scratch for institutional users who read numbers for a living.',
+      'React and TypeScript for data-heavy UIs, using RTK Query, AG Grid and Recharts.',
   },
   {
     path: 'src/Engine/',
@@ -63,7 +63,7 @@ const PANES: Pane[] = [
     ],
     verdict: 'LinqContraband ✓ · 0 diagnostics',
     caption:
-      'C# calculation engines — liability metrics, discount curves and funding ratios. Right answers, every time, with an audit trail.',
+      'C# calculation engines for liability metrics, discount curves and funding ratios, with repeatable results and an audit trail.',
   },
   {
     path: 'src/Messaging/',
@@ -80,7 +80,7 @@ const PANES: Pane[] = [
     ],
     verdict: 'CancelCop ✓ · token propagated',
     caption:
-      'Event-driven .NET on Kafka — transactional outbox, idempotency keys, schema registry. The plumbing that is not allowed to lose money.',
+      '.NET services on Kafka, using the transactional outbox, idempotency keys and schema validation.',
   },
 ];
 
@@ -90,12 +90,11 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
 <section class="stack" id="stack">
   <div class="wrap">
     <header class="stack__head reveal">
-      <p class="kicker">The range</p>
-      <h2 class="display stack__title">Every layer, one pair of hands.</h2>
+      <p class="kicker">Full stack</p>
+      <h2 class="display stack__title">Across the stack.</h2>
       <p class="stack__intro">
-        Ten years in fintech buys the whole map. The same person tuning the grid render
-        also wrote the calculation engine underneath it — and the Kafka consumer feeding
-        them both.
+        I’ve spent more than ten years building fintech systems across React and
+        TypeScript, C# services and calculation engines, Kafka and SQL.
       </p>
     </header>
 
@@ -248,7 +247,7 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
     box-shadow: 9px 11px 0 var(--accent);
   }
 
-  /* The middle pane sits a beat higher — editorial rhythm, not a grid. */
+  /* The middle pane sits a beat higher for editorial rhythm. */
   .pane--lift {
     margin-top: -1.1rem;
   }

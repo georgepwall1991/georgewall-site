@@ -44,7 +44,7 @@ const year = new Date().getFullYear();
       </div>
       <div class="colophon__col colophon__col--end">
         <p class="label">No.&nbsp;{SITE.issueNo} · {SITE.location}</p>
-        <p class="colophon__sign">George&nbsp;Wall<span class="colophon__reg">®</span></p>
+        <p class="colophon__sign">George&nbsp;Wall</p>
         <p class="colophon__copy">© {year} · georgewall.uk</p>
       </div>
     </div>
@@ -199,7 +199,7 @@ const year = new Date().getFullYear();
           copyLabel.textContent = 'Copy address';
         }, 2000);
       } catch (_) {
-        /* clipboard refused — leave the mailto link as the path */
+        /* Clipboard refused, so leave the mailto link as the path. */
       }
     });
   }

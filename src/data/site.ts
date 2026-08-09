@@ -7,13 +7,13 @@ export const SITE = {
   name: 'George Wall',
   domain: 'georgewall.uk',
   url: 'https://www.georgewall.uk',
-  role: 'Product engineer & toolmaker',
+  role: 'Full-stack engineer and toolmaker',
   location: 'London',
   email: 'georgewall91@gmail.com',
   github: 'https://github.com/georgepwall1991',
   githubUser: 'georgepwall1991',
   avatar: 'https://avatars.githubusercontent.com/u/84231788?v=4',
-  bio: 'London-based product engineer shipping .NET and React systems, App Store products, Roslyn analysers and developer tooling.',
+  bio: 'Full-stack engineer in London building .NET and React systems, Roslyn analysers, developer tools and iOS apps.',
   /** Roman-numeral year for the masthead flourish. */
   issueYear: 'MMXXVI',
   issueNo: '01',
@@ -21,7 +21,7 @@ export const SITE = {
 
 /**
  * Public profiles, emitted as schema.org `sameAs` to disambiguate the person
- * entity for search engines and AI. Add verified URLs only — a 404 here is a
+ * entity for search engines and AI. Add verified URLs only. A 404 here is a
  * worse signal than an omission. To add LinkedIn/X, drop the full URL in below.
  */
 export const SOCIALS: string[] = [

@@ -38,7 +38,7 @@ const shippedApps = PRIVATE_APPS.filter(
 ).length;
 const avatar = snapshot.user.avatar_url;
 
-// Per-project structured data — each featured repo as a SoftwareApplication,
+// Per-project structured data. Each featured repo is a SoftwareApplication,
 // linked back to the Person node so search/AI engines see authorship.
 const SITE_URL = "https://www.georgewall.uk";
 const softwareSchema = featuredEntries

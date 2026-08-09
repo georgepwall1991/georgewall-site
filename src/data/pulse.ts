@@ -20,17 +20,17 @@ export const PULSE: PulseEntry[] = [
     title: "LinqContraband",
     version: "v5.7.52",
     summary:
-      "The LC045 fixer corpus is complete, so more unsafe query shapes now move from a warning to a safe one-click repair.",
+      "Finished the LC045 fix cases. More unsafe query shapes now come with a safe one-click fix.",
     href: "https://www.nuget.org/packages/LinqContraband",
     linkLabel: "NuGet",
   },
   {
     date: "09 Aug 2026",
     channel: "tooling",
-    title: "DI Lifetime Analyzers",
+    title: "DI Lifetime Analysers",
     version: "v3.7.4 live",
     summary:
-      "Mixed event-subscriber lifetimes stay visible instead of collapsing into a false safe result; the next patch is already on main.",
+      "Fixed mixed event-subscriber lifetimes being reported as safe. The follow-up patch is already on main.",
     href: "https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers",
     linkLabel: "NuGet",
   },
@@ -40,7 +40,7 @@ export const PULSE: PulseEntry[] = [
     title: "CPMigrate",
     version: "v3.56.0",
     summary:
-      "Migration verification now proves the restored dependency graph stays equivalent, with filesystem-aware path identity checks.",
+      "CPMigrate now checks that the restored dependency graph is equivalent after migration, including filesystem-aware path checks.",
     href: "https://georgepwall1991.github.io/CPMigrate/",
     linkLabel: "Product site",
   },
@@ -50,7 +50,7 @@ export const PULSE: PulseEntry[] = [
     title: "NotifyGen",
     version: "v1.9.0",
     summary:
-      "Typed post-change hooks and target-side dependencies extend generated MVVM behaviour without adding reflection or runtime weight.",
+      "Added typed post-change hooks and target-side dependencies. It is still generated at compile time, with no reflection.",
     href: "https://www.nuget.org/packages/NotifyGen",
     linkLabel: "NuGet",
   },
@@ -60,7 +60,7 @@ export const PULSE: PulseEntry[] = [
     title: "Fleet Commander",
     version: "151 playability passes",
     summary:
-      "Post-launch main now carries documented passes across onboarding, battle clarity, Dynamic Type, VoiceOver and return flow.",
+      "I’ve made 151 post-launch playability passes, covering onboarding, battle clarity, Dynamic Type, VoiceOver and the return flow.",
     href: "https://apps.apple.com/gb/app/fleet-commander/id6760207805",
     linkLabel: "App Store",
   },
@@ -70,7 +70,7 @@ export const PULSE: PulseEntry[] = [
     title: "NoBooze",
     version: "v1.6.1 · shipped",
     summary:
-      "The sobriety companion is live on the App Store, with a richer progress dashboard, journal and evidence-led accessibility pass.",
+      "Shipped v1.6.1 with the new progress dashboard, journal updates and an accessibility pass.",
     href: "https://apps.apple.com/gb/app/nobooze/id6755612993",
     linkLabel: "App Store",
   },
@@ -80,7 +80,7 @@ export const PULSE: PulseEntry[] = [
     title: "GemGame",
     version: "v2.1.6",
     summary:
-      "Persistent records, milestones, reminder controls and a weekly relic rotation give the live game a stronger long-term loop.",
+      "Shipped persistent records, milestones, reminder controls and a weekly relic rotation in v2.1.6.",
     href: "https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994",
     linkLabel: "App Store",
   },

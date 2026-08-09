@@ -1,10 +1,8 @@
 # georgewall.uk
 
-George Wall's portfolio — a compiler-instrument-inspired site connecting shipped
-products with the tooling that protects them. **Static, frontend-only, zero
-backend.** Repository data is read live from the public GitHub API in the
-visitor's browser, with a committed snapshot as a build-time and no-JavaScript
-fallback.
+George Wall's portfolio. A static Astro site for my work, writing and shipped
+apps. Repository data comes from the public GitHub API, with a committed
+snapshot for builds and visitors without JavaScript.
 
 - **Framework:** [Astro](https://astro.build) (static output)
 - **Type:** Fraunces · Archivo · JetBrains Mono (self-hosted via Fontsource)
@@ -45,14 +43,14 @@ Curated copy and ordering for the featured projects lives in
 
 ## Deploy to Vercel (free)
 
-### Option A — Git + Vercel dashboard (recommended)
+### Option A: Git + Vercel dashboard (recommended)
 
 1. Push this folder to a GitHub repo.
 2. On [vercel.com](https://vercel.com) → **Add New → Project** → import the repo.
 3. Vercel auto-detects Astro. Framework **Astro**, build `npm run build`, output
-   `dist`. Click **Deploy**. Done — you get a `*.vercel.app` URL.
+   `dist`. Click **Deploy**. You get a `*.vercel.app` URL.
 
-### Option B — Vercel CLI
+### Option B: Vercel CLI
 
 ```bash
 npm i -g vercel
@@ -82,7 +80,7 @@ DNS → Records**, add them:
 > conflicts because both try to terminate TLS. Grey-cloud lets Vercel issue and
 > serve its own certificate.
 
-Use the exact values Vercel displays — the apex `A` record IP occasionally
+Use the exact values Vercel displays. The apex `A` record IP occasionally
 changes. After the records propagate (usually minutes), Vercel auto-provisions a
 free SSL certificate and the site is live on `https://georgewall.uk`.
 

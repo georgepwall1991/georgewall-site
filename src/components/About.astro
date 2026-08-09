@@ -9,20 +9,20 @@ const { avatar } = Astro.props;
 const disciplines = [
   {
     no: '01',
-    name: 'Backend & distributed',
-    desc: 'C# calculation engines and Kafka microservices — CQRS, event sourcing, transactional outbox.',
+    name: 'Backend and distributed systems',
+    desc: 'C# calculation engines and Kafka services using CQRS, event sourcing and the transactional outbox.',
   },
   {
     no: '02',
     name: 'Frontend',
-    desc: 'React + TypeScript at production scale: RTK Query, AG-Grid, Recharts — data UIs people trade off.',
+    desc: 'React and TypeScript for data-heavy trading tools, using RTK Query, AG Grid and Recharts.',
   },
   {
     no: '03',
     name: 'Compile-time safety',
-    desc: 'Roslyn analysers and source generators that catch the bug class before it runs.',
+    desc: 'Roslyn analysers and source generators that catch known problems while code is being written.',
   },
-  { no: '04', name: 'Product & iOS', desc: 'SwiftUI apps taken from idea to the App Store.' },
+  { no: '04', name: 'Product and iOS', desc: 'SwiftUI apps taken from the first build through App Store review.' },
 ];
 
 const stack = [
@@ -47,36 +47,29 @@ const stack = [
     <div class="about__main">
       <p class="kicker reveal">About</p>
       <h2 class="display about__title reveal">
-        I ship the product and the guarantees behind it.
+        I like owning the whole thing.
       </h2>
 
       <div class="about__prose reveal">
         <p class="about__lead">
-          I’m George, a full-stack engineer with ten years in {SITE.location} fintech —
-          calculation engines that price pension liabilities, React/TypeScript frontends
-          built from scratch, and the engineering standards that keep big teams shipping.
-          Correctness really matters in that world, and it’s shaped everything I build.
+          I’m George. I’ve spent more than ten years building software in {SITE.location}
+          fintech: C# engines that price pension liabilities, Kafka services, and frontends
+          built from scratch with React and TypeScript. When the numbers involve people’s
+          pensions, correctness is not optional. That has shaped the rest of my work.
         </p>
         <p>
-          I work the whole stack by preference, not necessity: the Kafka consumer, the C#
-          engine it feeds, the React grid that makes the numbers legible — and the SwiftUI
-          product carried through screenshots, review and the App Store. I’m equally drawn
-          to the unglamorous infrastructure of quality: the analyser that flags a captive
-          dependency, the generator that deletes a thousand lines of boilerplate, the CLI
-          that moves a solution without making a mess.
+          I like working across the stack. That might mean the Kafka consumer, the C#
+          calculation engine, the React grid on top, or a SwiftUI app I take all the way
+          through App Store review. I also build the bits that stop mistakes repeating:
+          analysers, source generators and migration tools.
         </p>
 
         <blockquote class="about__quote">
           <p>
-            Good software fails loudly, early, and somewhere cheap to fix. I spend my time
-            moving the failure as close to the keyboard as it’ll go.
+            I’d rather catch a mistake in the editor than explain it in production.
           </p>
         </blockquote>
 
-        <p>
-          Across .NET, TypeScript and Swift, the through-line is the same: move the surprise
-          earlier, make it obvious, and keep production out of it.
-        </p>
       </div>
 
       <div class="about__stack reveal">
@@ -90,7 +83,7 @@ const stack = [
     <aside class="about__aside">
       <figure class="about__portrait reveal">
         <img src={avatar} alt="George Wall" width="320" height="320" loading="lazy" />
-        <figcaption class="about__portrait-cap">George Wall — {SITE.location}</figcaption>
+        <figcaption class="about__portrait-cap">George Wall · {SITE.location}</figcaption>
       </figure>
 
       <ol class="about__disciplines reveal">

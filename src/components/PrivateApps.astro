@@ -25,15 +25,15 @@ const scoreboard = appScoreboard(apps);
       <div class="apps__heading">
         <p class="kicker">iOS products</p>
         <h2 class="display apps__title" id="apps-title">
-          From first tap to App Store.
+          I build and ship iOS apps too.
         </h2>
       </div>
 
       <div class="apps__brief">
         <p class="apps__intro">
-          {scoreboard.live} products live, with {labApps.length} more in TestFlight or
-          private build. I design the systems, build the interfaces, make the
-          store art, and carry each release through the unglamorous final mile.
+          {scoreboard.live} apps are live on the App Store, with {labApps.length} more in
+          TestFlight or private builds. I design them, write the code, make the
+          store art and handle the releases myself.
         </p>
         <dl class="apps__scoreboard" aria-label="iOS product status">
           <div>
@@ -41,7 +41,7 @@ const scoreboard = appScoreboard(apps);
             <dd>{String(scoreboard.live).padStart(2, "0")}</dd>
           </div>
           <div>
-            <dt>In the lab</dt>
+            <dt>In progress</dt>
             <dd>{String(labApps.length).padStart(2, "0")}</dd>
           </div>
         </dl>
@@ -86,7 +86,7 @@ const scoreboard = appScoreboard(apps);
                       <p>Design premise</p>
                       <strong>Progress without punishment.</strong>
                       <span>Private by default</span>
-                      <span>Science-backed milestones</span>
+                      <span>Useful milestones</span>
                       <span>Support after a slip</span>
                     </aside>
                   )}
@@ -142,11 +142,11 @@ const scoreboard = appScoreboard(apps);
       labApps.length > 0 && (
         <section class="apps__lab reveal" aria-labelledby="apps-lab-title">
           <header class="apps__labHead">
-            <p class="apps__labKicker">From the lab</p>
-            <h3 id="apps-lab-title">Products before the press release.</h3>
+            <p class="apps__labKicker">In progress</p>
+            <h3 id="apps-lab-title">TestFlight and private builds.</h3>
             <p>
-              TestFlight builds and private prototypes, shown while the edges are
-              still being found.
+              These are rougher around the edges, but they show what I’m
+              working on.
             </p>
           </header>
 

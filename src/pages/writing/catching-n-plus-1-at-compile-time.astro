@@ -3,12 +3,12 @@ import Article from '../../layouts/Article.astro';
 ---
 
 <Article
-  title="Catching N+1 queries at compile time — George Wall"
-  description="Why N+1 and client-side evaluation survive code review and tests, and how a Roslyn analyser moves the catch from production pain to a red squiggle in your editor."
+  title="Catching N+1 queries at compile time | George Wall"
+  description="Why N+1 queries and client-side evaluation get through review and tests, and how LinqContraband catches them in the editor."
   slug="catching-n-plus-1-at-compile-time"
   kicker="Compile-time safety · EF Core"
   headline="Catching N+1 queries at compile time."
-  standfirst="The most expensive database bug in .NET is not always a missing index. Sometimes it is the loop you did not know you wrote, passing every test you have."
+  standfirst="An N+1 query can pass every test and still make a production page painfully slow. The problem is often a loop hidden behind the ORM."
   published="2026-06-01"
   readingTime="6 min read"
   keywords={['N+1 query', 'Entity Framework Core', 'client-side evaluation', 'Roslyn analyser', 'compile-time safety', '.NET performance']}
@@ -66,10 +66,10 @@ import Article from '../../layouts/Article.astro';
   </p>
 
   <blockquote class="article__quote">
-    <p>Good software fails loudly, early, and somewhere cheap to fix.</p>
+    <p>If a rule can be checked at compile time, do not leave it to memory in code review.</p>
   </blockquote>
 
-  <h2>Moving the catch to the red squiggle</h2>
+  <h2>Checking the query at compile time</h2>
 
   <p>
     This is what a Roslyn analyser is good at. It reads the syntax tree while you type, has

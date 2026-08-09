@@ -3,12 +3,12 @@ import Article from '../../layouts/Article.astro';
 ---
 
 <Article
-  title="Catching broken appsettings before deployment — George Wall"
-  description="How .NET configuration drifts away from its Options types, why startup validation is not always enough, and how to move appsettings failures into the editor."
+  title="Catching broken appsettings before deployment | George Wall"
+  description="How .NET Options and appsettings drift apart, and how ConfigContraband catches missing sections, invalid values and validation gaps."
   slug="catching-broken-appsettings-before-deployment"
   kicker="Compile-time safety · configuration"
   headline="Catching broken appsettings before deployment."
-  standfirst="Configuration is code with none of code’s usual protection. A one-letter section typo can compile cleanly, pass review and wait until startup to introduce itself."
+  standfirst="Options types are checked by the compiler. appsettings.json is not. A misspelt section name can build cleanly and fail at startup."
   published="2026-07-22"
   readingTime="7 min read"
   keywords={['appsettings.json', '.NET Options', 'ValidateOnStart', 'configuration validation', 'Roslyn analyser', 'JSON Schema']}
@@ -102,11 +102,11 @@ configcontraband schema --project src/MyApp/MyApp.csproj`}</code></pre>
     <a class="link link--on" href="https://www.nuget.org/packages/ConfigContraband" target="_blank" rel="noopener">ConfigContraband</a>
     applies both sides of that approach: Roslyn diagnostics for provable configuration drift
     and a companion schema tool for live JSON guidance. The deployment should still validate
-    its real environment. It simply should not be the first place a spelling mistake gets a
-    fair hearing.
+    its real environment. It simply should not be the first place a spelling mistake is
+    discovered.
   </p>
 
   <blockquote class="article__quote">
-    <p>If configuration can stop the application, it deserves feedback before the application starts.</p>
+    <p>If configuration can stop the app, check it before deployment.</p>
   </blockquote>
 </Article>

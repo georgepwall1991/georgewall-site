@@ -15,36 +15,36 @@ const traceStages = [
   {
     code: "days",
     label: "Production",
-    title: "The customer finds it.",
-    copy: "A production failure arrives with the widest blast radius and the least useful context.",
+    title: "A user finds it.",
+    copy: "Worst case: it is live, someone is blocked and the useful context has gone.",
     output: "user report → triage",
   },
   {
     code: "hours",
     label: "Runtime",
-    title: "The system reports it.",
-    copy: "Telemetry shortens the search, but the broken path has still reached a running system.",
+    title: "The system spots it.",
+    copy: "Logs narrow it down, but the broken code is already running.",
     output: "stack trace → isolate",
   },
   {
     code: "minutes",
     label: "Tests",
-    title: "The suite catches it.",
-    copy: "The fault stays off the release path and returns with enough evidence to reproduce it.",
+    title: "A test catches it.",
+    copy: "Better. It is caught before release, with enough evidence to reproduce it.",
     output: "red test → reproduce",
   },
   {
     code: "seconds",
     label: "Build",
-    title: "The compiler refuses it.",
-    copy: "A package guardrail turns a production lesson into a deterministic build failure.",
+    title: "The build rejects it.",
+    copy: "Turn the lesson into a rule and the same mistake stops at build time.",
     output: "LINQ001 → build blocked",
   },
   {
     code: "now",
     label: "Editor",
-    title: "The author fixes it now.",
-    copy: "The analyser underlines the risky line while the reason and quick fix are still obvious.",
+    title: "I fix it as I type.",
+    copy: "The analyser flags the line while I still remember why I wrote it.",
     output: "LINQ001 → quick fix ready",
   },
 ];
@@ -53,8 +53,8 @@ const traceStages = [
 <figure class="console" data-trace-deck aria-labelledby="console-title">
   <header class="console__top">
     <div>
-      <p class="console__eyebrow">Production trace / live system</p>
-      <figcaption id="console-title">One loop. Two kinds of output.</figcaption>
+      <p class="console__eyebrow">Build output</p>
+      <figcaption id="console-title">I ship products. Then I turn the problems I find into tools.</figcaption>
     </div>
     <span class="console__branch"><i aria-hidden="true"></i> main · tracing</span>
   </header>
@@ -67,7 +67,7 @@ const traceStages = [
       <div class="console__lane-head">
         <div>
           <span aria-hidden="true">A</span>
-          <h2 id="product-lane-title">Product surface</h2>
+          <h2 id="product-lane-title">Products I ship</h2>
         </div>
         <small>App Store</small>
       </div>
@@ -86,13 +86,13 @@ const traceStages = [
     </section>
 
     <div class="console__bus" aria-hidden="true">
-      <span class="console__bus-label">feedback</span>
+      <span class="console__bus-label">what broke</span>
       <div class="console__bus-track">
         <i class="console__bus-node console__bus-node--top"></i>
         <i class="console__bus-signal"></i>
         <i class="console__bus-node console__bus-node--bottom"></i>
       </div>
-      <span class="console__bus-turn">lesson → rule</span>
+      <span class="console__bus-turn">fix it once</span>
     </div>
 
     <section
@@ -102,7 +102,7 @@ const traceStages = [
       <div class="console__lane-head">
         <div>
           <span aria-hidden="true">B</span>
-          <h2 id="tooling-lane-title">Release guardrails</h2>
+          <h2 id="tooling-lane-title">Tools I build</h2>
         </div>
         <small>NuGet</small>
       </div>
@@ -123,14 +123,14 @@ const traceStages = [
 
   <section class="trace" aria-labelledby="trace-title">
     <div class="trace__head">
-      <p id="trace-title">Failure distance</p>
+      <p id="trace-title">Where the bug gets caught</p>
       <output data-trace-title aria-live="polite">{traceStages[0].title}</output>
     </div>
 
     <div
       class="trace__controls"
       role="group"
-      aria-label="Inspect the failure distance"
+      aria-label="Choose where the bug gets caught"
     >
       {
         traceStages.map((stage, index) => (
@@ -167,8 +167,8 @@ const traceStages = [
 
   <div class="console__result">
     <span>trace://georgewall/production</span>
-    <code>idea → interface → release → evidence → guardrail</code>
-    <strong>0 failures escaped</strong>
+    <code>idea → build → ship → learn → fix</code>
+    <strong>same bug, caught sooner</strong>
   </div>
 </figure>
 

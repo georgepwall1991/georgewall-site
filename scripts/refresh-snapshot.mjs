@@ -1,5 +1,5 @@
 /**
- * Refresh src/data/fallback.json from live GitHub. Optional housekeeping —
+ * Refresh src/data/fallback.json from live GitHub. Optional housekeeping:
  * the site fetches live anyway, but a fresh snapshot keeps the no-JS / build
  * fallback current. Run with `npm run snapshot`.
  */
@@ -52,4 +52,4 @@ const snapshot = {
 };
 
 await writeFile(out, JSON.stringify(snapshot, null, 2) + '\n');
-console.log(`Wrote ${out} — ${snapshot.repos.length} repos.`);
+console.log(`Wrote ${out}: ${snapshot.repos.length} repos.`);

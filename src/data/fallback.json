@@ -217,7 +217,7 @@
     },
     {
       "name": "georgewall-site",
-      "description": "Personal portfolio — georgewall.uk. Static Astro site, repos fetched live from the GitHub API, deployed on Vercel.",
+      "description": "Personal portfolio at georgewall.uk. Static Astro site with GitHub data, deployed on Vercel.",
       "language": "Astro",
       "stars": 0,
       "forks": 0,
@@ -334,7 +334,7 @@
     },
     {
       "name": "AOEOverlay",
-      "description": "Tauri desktop overlay for live Age of Empires IV match data, built with TypeScript and React.",
+      "description": "Tauri and TypeScript desktop overlay for Age of Empires IV build orders, with imports, hotkeys and voice coaching.",
       "language": "TypeScript",
       "stars": 2,
       "forks": 1,

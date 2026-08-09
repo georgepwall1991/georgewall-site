@@ -27,12 +27,12 @@ export function languageColor(language: string | null | undefined): string {
   return LANGUAGE_COLORS[language] ?? 'var(--ink-faint)';
 }
 
-/** "1,024" — grouped, locale-stable. */
+/** "1,024", grouped and locale-stable. */
 export function formatCount(n: number): string {
   return new Intl.NumberFormat('en-GB').format(n);
 }
 
-/** "May 2026" — month + year is plenty for a portfolio cadence. */
+/** "May 2026". Month and year are enough for a portfolio cadence. */
 export function formatMonthYear(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';

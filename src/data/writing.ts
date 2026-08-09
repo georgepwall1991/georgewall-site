@@ -13,7 +13,7 @@ export const ARTICLES: ArticleMeta[] = [
     title: 'When HTTP retries make failures worse',
     kicker: 'Compile-time safety · HTTP resilience',
     description:
-      'Retries can rescue a transient request—or multiply load, latency and side effects. The difference is a policy the code can explain.',
+      'Retries can recover a transient request, but they can also multiply load, latency and side effects. The policy needs to make that trade-off clear.',
     published: '2026-07-22',
     readingTime: '7 min read',
   },
@@ -31,7 +31,7 @@ export const ARTICLES: ArticleMeta[] = [
     title: 'Catching N+1 queries at compile time',
     kicker: 'Compile-time safety · EF Core',
     description:
-      'Why N+1 and client-side evaluation survive code review and tests—and how a Roslyn analyser moves the catch into the editor.',
+      'Why N+1 queries and client-side evaluation get through review and tests, and how LinqContraband catches them in the editor.',
     published: '2026-06-01',
     readingTime: '6 min read',
   },

@@ -61,7 +61,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     category: "game",
     theme: "gem",
     blurb:
-      "A hand-built match-3 game with big cascades, expressive power gems, ten galaxy worlds, and no ad sludge. Version 2.1 sharpens the jewels and makes every special feel properly explosive.",
+      "My match-3 game with ten galaxy worlds, power gems and no ad sludge. Version 2.1 tightened the boards, sharpened the artwork and made the specials feel properly explosive.",
     stack: ["SpriteKit", "SwiftUI", "Game Center", "StoreKit 2"],
     siteUrl: "https://georgepwall1991.github.io/fleet-commander-site/gemgame/",
     url: "https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994",
@@ -110,7 +110,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     category: "game",
     theme: "fleet",
     blurb:
-      "A compact space strategy game about reading a connected galaxy, choosing where to expand, and holding the frontier. Fleets, tactical gambits, research, offline progress, and prestige all made the launch build.",
+      "A small space strategy game about expanding across a connected galaxy, researching upgrades and choosing the right tactical gambit. Built in Swift and shipped on the App Store.",
     stack: ["Swift", "Game Center", "StoreKit", "iOS 17+"],
     siteUrl: "https://georgepwall1991.github.io/fleet-commander-site/",
     url: "https://apps.apple.com/gb/app/fleet-commander/id6760207805",
@@ -155,7 +155,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     category: "health",
     theme: "wellness",
     blurb:
-      "A private, science-backed sobriety companion that makes progress tangible without turning a difficult day into failure. The live product brings streaks, health milestones, check-ins, a reflection-first journal, and slip support into one calm SwiftUI experience.",
+      "A private sobriety companion built around streaks, health milestones, check-ins and journalling. A slip is handled with support rather than a lecture.",
     stack: ["SwiftUI", "Core Data", "HealthKit", "CloudKit"],
     siteUrl: "https://funny-boba-67508f.netlify.app/",
     url: "https://apps.apple.com/gb/app/nobooze/id6755612993",
@@ -189,7 +189,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     theme: "lumina",
     featured: false,
     blurb:
-      "A calm, privacy-first native iOS companion for eating-disorder recovery. Body scans, mood palettes, on-device chat and a gentle mascot turn daily reflection into something approachable without sending disclosures to a remote service.",
+      "An iOS recovery companion I’m testing in TestFlight. It includes body scans and mood palettes, with chat processed on the device.",
     stack: ["SwiftUI", "SwiftData", "Foundation Models", "CloudKit"],
     screenshots: [
       {
@@ -209,7 +209,7 @@ export const PRIVATE_APPS: PrivateApp[] = [
     theme: "transit",
     featured: false,
     blurb:
-      "A private prototype for the commute-puzzle part of my brain: tap the buses, load the matching passengers, and stop the station seizing up before it all goes sideways.",
+      "A private prototype for the commute-puzzle part of my brain. Load matching passengers onto the right buses before the station fills up.",
     stack: ["SwiftUI", "SpriteKit", "SwiftData", "Fastlane"],
     screenshots: [
       {

@@ -1,8 +1,8 @@
 # George Wall
 
-> London-based product engineer and toolmaker in financial services. I ship React/.NET systems and App Store products, then turn production lessons into analysers, source generators, and CLIs that protect the next release.
+> I am a full-stack engineer in London. I work mainly with React, .NET and C#, and I also ship iOS apps and developer tools.
 
-George Wall (georgewall.uk) is the personal portfolio of a product engineer working across .NET/C#, TypeScript/React, and Swift/SwiftUI. The through-line is end-to-end ownership: build the product, carry it through release, and move the next failure somewhere cheaper to fix.
+This site covers the software I have built: production systems, Roslyn analysers, source generators, CLIs and App Store products. I prefer tools that catch predictable mistakes in the editor or CI.
 
 ## Open-source projects
 
@@ -17,9 +17,9 @@ George Wall (georgewall.uk) is the personal portfolio of a product engineer work
 
 ## Shipped products
 
-- [NoBooze](https://apps.apple.com/gb/app/nobooze/id6755612993): Private, science-backed sobriety companion with progress tracking, health milestones, journalling and slip support.
-- [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Match-3 iOS game with handcrafted goals, power gems, live events and a starlit garden progression loop.
-- [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Compact iOS strategy game spanning a connected galaxy, fleet orders, tactical gambits, research and offline progress.
+- [NoBooze](https://apps.apple.com/gb/app/nobooze/id6755612993): Private-by-default sobriety companion with progress tracking, health milestones, journalling and support after a slip.
+- [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Match-3 iOS game with ten worlds, power gems, Game Center achievements and no ads.
+- [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Small iOS strategy game with a connected galaxy, fleet orders, tactical gambits and research.
 
 ## Writing
 

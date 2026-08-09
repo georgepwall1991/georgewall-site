@@ -23,12 +23,12 @@ interface Props {
 const { entries, showAllLink = false } = Astro.props;
 const heading = showAllLink
   ? {
-      kicker: "Selected interceptions",
-      title: "Three failures that never made it out.",
+      kicker: "Selected tools",
+      title: "Three problems these tools catch at build time.",
     }
   : {
-      kicker: "Flagship work",
-      title: "The analysers behind the promise.",
+      kicker: "Main projects",
+      title: "Roslyn analysers and .NET tools.",
     };
 ---
 
@@ -38,9 +38,8 @@ const heading = showAllLink
       <p class="kicker">{heading.kicker}</p>
       <h2 class="display work__title">{heading.title}</h2>
       <p class="work__intro">
-        Most of the open-source work sits just before the mess: analysers,
-        source generators and CLIs that make bad code complain early, where it
-        is still cheap to fix.
+        Most of my open-source work is developer tooling: analysers, source
+        generators and CLIs that catch common mistakes in the editor or CI.
       </p>
     </header>
 
@@ -65,7 +64,7 @@ const heading = showAllLink
       showAllLink && (
         <div class="work__more reveal">
           <a class="btn btn--ghost" href="/work">
-            Explore every project{" "}
+            See all projects{" "}
             <span class="arrow" aria-hidden="true">
               →
             </span>

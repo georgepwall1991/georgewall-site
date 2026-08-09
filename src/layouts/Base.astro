@@ -20,8 +20,8 @@ interface Props {
 }
 
 const {
-  title = "George Wall — Product engineer and toolmaker",
-  description = "London product engineer with 10+ years in fintech. Shipping React/.NET systems and App Store products, then building the analysers and tools that protect the next release.",
+  title = "George Wall | Full-stack engineer and toolmaker",
+  description = "Full-stack engineer in London building React and .NET systems, developer tools and iOS apps.",
   schema = [],
 } = Astro.props;
 
@@ -34,7 +34,7 @@ const personSchema = {
   name: "George Wall",
   url: SITE_URL,
   image: SITE.avatar,
-  jobTitle: "Product engineer and toolmaker",
+  jobTitle: SITE.role,
   description: SITE.bio,
   address: {
     "@type": "PostalAddress",
@@ -96,7 +96,7 @@ const jsonLd = {
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="George Wall — full-stack developer portfolio"
+      content="Portfolio of George Wall, full-stack engineer and toolmaker."
     />
 
     <!-- Twitter -->
@@ -106,7 +106,7 @@ const jsonLd = {
     <meta name="twitter:image" content={ogImage} />
     <meta
       name="twitter:image:alt"
-      content="George Wall — full-stack developer portfolio"
+      content="Portfolio of George Wall, full-stack engineer and toolmaker."
     />
 
     <link rel="sitemap" href="/sitemap-index.xml" />

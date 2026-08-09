@@ -1,5 +1,5 @@
 /**
- * Pure repo-shaping logic — filtering, sorting, aggregation. No I/O, no JSON
+ * Pure repo-shaping logic for filtering, sorting and aggregation. No I/O or JSON
  * imports, so it can be unit-tested in isolation with `node --test`.
  */
 import type { Repo } from '../data/types';
@@ -7,7 +7,7 @@ import type { Repo } from '../data/types';
 export const GITHUB_USER = 'georgepwall1991';
 
 /**
- * Repos that exist for housekeeping rather than showing off — profile READMEs,
+ * Repos that exist for housekeeping rather than showing off, such as profile READMEs,
  * support-page mirrors, package taps. Hidden from the portfolio by default.
  */
 export const META_REPOS: ReadonlySet<string> = new Set([

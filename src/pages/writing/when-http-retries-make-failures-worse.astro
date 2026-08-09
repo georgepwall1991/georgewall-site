@@ -3,12 +3,12 @@ import Article from '../../layouts/Article.astro';
 ---
 
 <Article
-  title="When HTTP retries make failures worse — George Wall"
-  description="Retries are not resilience by themselves. A practical look at retry storms, unsafe methods, latency budgets and catching fragile HttpClient policies before production."
+  title="When HTTP retries make failures worse | George Wall"
+  description="A practical look at retry storms, unsafe HTTP methods, latency budgets and compile-time checks for risky HttpClient policies."
   slug="when-http-retries-make-failures-worse"
   kicker="Compile-time safety · HTTP resilience"
   headline="When HTTP retries make failures worse."
-  standfirst="A retry can rescue a transient request. It can also multiply load, repeat a payment and turn a small outage into a queue with a postcode."
+  standfirst="A retry can recover a transient request. It can also multiply load or repeat a payment. The policy needs to make that trade-off explicit."
   published="2026-07-22"
   readingTime="7 min read"
   keywords={['HttpClient', 'HTTP retries', 'Polly', 'Microsoft.Extensions.Http.Resilience', 'idempotency', 'Roslyn analyser']}
@@ -110,6 +110,6 @@ await client.PostAsync("/payments", content, cancellationToken);`}</code></pre>
   </p>
 
   <blockquote class="article__quote">
-    <p>Resilience is controlled failure, not repeated optimism.</p>
+    <p>Retry only when the operation is safe to repeat and the retry budget fits within the caller’s deadline.</p>
   </blockquote>
 </Article>

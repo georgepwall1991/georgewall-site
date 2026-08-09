@@ -1,6 +1,6 @@
 ---
 // The site wears its own toolchain: a VS Code-style status bar pinned to the
-// bottom. Decorative-but-true — the analysers listed are real, the clock is
+// bottom. Decorative but true: the analysers listed are real, the clock is
 // live, the breadcrumb tracks the section you're reading, and "0 errors"
 // hides one diagnostic for the curious.
 import { SITE } from '../data/site';
@@ -13,7 +13,7 @@ const ANALYSERS = [
 ];
 
 // Initial crumb comes from the route, so non-index pages (e.g. /writing/*)
-// read correctly even before — or without — the section observer.
+// read correctly before the section observer, or without it.
 const segment = Astro.url.pathname.split('/').filter(Boolean)[0];
 const initialCrumb = segment ?? 'lede';
 ---
@@ -26,7 +26,7 @@ const initialCrumb = segment ?? 'lede';
     <span class="statusbar__dot" aria-hidden="true"></span> 0 errors · 0 warnings
   </button>
   <div class="statusbar__cell statusbar__armed" aria-hidden="true">
-    analysers armed — {ANALYSERS.join(' · ')}
+    analysers armed: {ANALYSERS.join(' · ')}
   </div>
   <div class="statusbar__spacer"></div>
   <div class="statusbar__cell statusbar__crumb" aria-hidden="true">
@@ -42,10 +42,10 @@ const initialCrumb = segment ?? 'lede';
   <div class="gw-toast__body">
     <p class="gw-toast__head"><span class="gw-toast__id">GW001</span> Hidden diagnostic</p>
     <p class="gw-toast__msg">
-      This site builds with 0 errors. The visitor, however, still hasn’t said hello.
+      The build is clean. If you want to talk about the work, send me an email.
     </p>
     <p class="gw-toast__fix">
-      Quick fix: <a class="link link--on" href={`mailto:${SITE.email}`}>email George ⏎</a>
+      Quick fix: <a class="link link--on" href={`mailto:${SITE.email}`}>email me ⏎</a>
     </p>
   </div>
   <button class="gw-toast__close" type="button" aria-label="Dismiss">✕</button>
@@ -251,7 +251,7 @@ const initialCrumb = segment ?? 'lede';
 </style>
 
 <script>
-  // Live local clock — honest chrome.
+  // Live local clock.
   const clock = document.querySelector<HTMLElement>('[data-clock]');
   if (clock) {
     const tick = () => {

@@ -65,7 +65,7 @@
     .theme-toggle__label {
       display: none;
     }
-    /* Label is hidden, so the track alone is only ~18px tall — too small to
+    /* Label is hidden, so the track alone is only ~18px tall, which is too small to
        tap. Expand the button to a 44px minimum hit area (track stays centered). */
     .theme-toggle {
       min-width: 44px;
@@ -109,7 +109,7 @@
     try {
       localStorage.setItem('atlas-theme', next);
     } catch (_) {
-      /* private mode — ignore */
+      /* Private mode. Ignore. */
     }
 
     // Circular wipe from the switch (View Transitions, progressive enhancement).

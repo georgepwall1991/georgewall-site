@@ -55,15 +55,14 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
         </h1>
 
         <p class="hero__standfirst intro" style="--intro-delay: 500ms">
-          I ship <strong>React and .NET systems</strong> and <strong
-            >App Store products</strong
-          > — then turn the production lessons into analysers, source generators
-          and CLIs that make the next release safer.
+          I build <strong>React and .NET systems</strong>, ship my own <strong
+            >iOS apps</strong
+          >, then turn what I learn into analysers, source generators and CLIs.
         </p>
 
         <div class="hero__actions intro" style="--intro-delay: 600ms">
           <a href="#now" class="btn">
-            See what moved
+            See what I’ve shipped
             <span class="arrow" aria-hidden="true">↓</span>
           </a>
           <a
@@ -85,18 +84,18 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
 
     <dl class="hero__stats intro" style="--intro-delay: 700ms">
       <div>
-        <dt>Open-source adoption</dt>
+        <dt>NuGet</dt>
         <dd title={`${downloadLabel} total NuGet downloads`}>
           <strong>{downloadThousands}K+</strong>
-          <span>NuGet downloads</span>
+          <span>downloads</span>
         </dd>
       </div>
       <div>
-        <dt>Products shipped</dt>
-        <dd>{shippedApps} <span>live App Store releases</span></dd>
+        <dt>App Store</dt>
+        <dd>{shippedApps} <span>live releases</span></dd>
       </div>
       <div>
-        <dt>Delivery context</dt>
+        <dt>Experience</dt>
         <dd>10+ <span>years in fintech</span></dd>
       </div>
     </dl>
@@ -199,7 +198,7 @@ const downloadLabel = totalDownloads.toLocaleString("en-GB");
   }
 
   .hero__line--fix::after {
-    content: "production hardened";
+    content: "caught earlier";
     position: absolute;
     left: calc(100% + 1.1rem);
     bottom: 0.12em;

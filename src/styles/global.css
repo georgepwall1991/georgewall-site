@@ -1,5 +1,5 @@
 /* ============================================================================
-   TRACE — design system for georgewall.uk
+   TRACE: design system for georgewall.uk
    A compiler instrument: carbon, chalk, fault orange and fix blue.
    Type: Fraunces (display serif) · Archivo (grotesque) · JetBrains Mono.
    ========================================================================== */
@@ -369,7 +369,7 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   /* Must out-specify `.js .reveal { opacity: 0 }` (0,2,0) or reduced-motion
-     users with JS stay hidden until the observer fires — so include the
+     users with JS stay hidden until the observer fires, so include the
      `.js`-qualified selectors here too. */
   .reveal,
   .reveal-clip,
