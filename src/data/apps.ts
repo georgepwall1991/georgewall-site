@@ -184,12 +184,12 @@ export const PRIVATE_APPS: PrivateApp[] = [
     title: "My Lumina",
     kicker: "TestFlight · Recovery companion",
     status: "TestFlight",
-    release: "v0.4",
+    release: "build 23",
     category: "health",
     theme: "lumina",
     featured: false,
     blurb:
-      "An iOS recovery companion I’m testing in TestFlight. It includes body scans and mood palettes, with chat processed on the device.",
+      "A TestFlight recovery companion built around guided body scans, mood palettes and an on-device chat. Conversations stay on the phone; private progress can sync through the user’s own iCloud account.",
     stack: ["SwiftUI", "SwiftData", "Foundation Models", "CloudKit"],
     screenshots: [
       {
@@ -204,12 +204,12 @@ export const PRIVATE_APPS: PrivateApp[] = [
     title: "Tiny Transit Jam",
     kicker: "Private iOS build · Puzzle",
     status: "Private build",
-    release: "Prototype",
+    release: "Playable build",
     category: "game",
     theme: "transit",
     featured: false,
     blurb:
-      "A private prototype for the commute-puzzle part of my brain. Load matching passengers onto the right buses before the station fills up.",
+      "A one-screen transit puzzle with generated levels, accessible gameplay actions and a heavily tested rules engine. Load matching passengers before the station locks itself solid.",
     stack: ["SwiftUI", "SpriteKit", "SwiftData", "Fastlane"],
     screenshots: [
       {

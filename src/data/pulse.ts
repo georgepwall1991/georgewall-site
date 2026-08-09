@@ -28,7 +28,7 @@ export const PULSE: PulseEntry[] = [
     date: "09 Aug 2026",
     channel: "tooling",
     title: "DI Lifetime Analysers",
-    version: "v3.7.4 live",
+    version: "v3.7.6 live",
     summary:
       "Fixed mixed event-subscriber lifetimes being reported as safe. The follow-up patch is already on main.",
     href: "https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers",
@@ -38,7 +38,7 @@ export const PULSE: PulseEntry[] = [
     date: "09 Aug 2026",
     channel: "tooling",
     title: "CPMigrate",
-    version: "v3.56.0",
+    version: "v3.57.2",
     summary:
       "CPMigrate now checks that the restored dependency graph is equivalent after migration, including filesystem-aware path checks.",
     href: "https://georgepwall1991.github.io/CPMigrate/",

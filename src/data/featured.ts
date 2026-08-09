@@ -11,7 +11,10 @@ import type { PackageId } from './nuget';
 
 export interface ProjectProof {
   diagnostic: string;
+  file: string;
+  line: number;
   problem: string;
+  fix: string;
   before: string[];
   after: string[];
   result: string;
@@ -45,7 +48,10 @@ export const FEATURED: Featured[] = [
     packageId: 'LinqContraband',
     proof: {
       diagnostic: 'LINQ001',
+      file: 'OrdersQuery.cs',
+      line: 42,
       problem: 'Materialising before filtering pulls the whole table into memory.',
+      fix: 'Move materialisation after the predicate',
       before: ['db.Orders', '  .ToList()', '  .Where(o => o.Total > 1_000)'],
       after: ['db.Orders', '  .Where(o => o.Total > 1_000)', '  .ToList()'],
       result: 'The database does the filtering. The editor flags the expensive shape before review.',
@@ -64,7 +70,10 @@ export const FEATURED: Featured[] = [
     packageId: 'DependencyInjection.Lifetime.Analyzers',
     proof: {
       diagnostic: 'DILIFETIME001',
+      file: 'ServiceRegistration.cs',
+      line: 18,
       problem: 'A singleton captures a scoped dependency and quietly extends its lifetime.',
+      fix: 'Align the consumer with the scoped dependency',
       before: ['AddSingleton<ReportService>()', 'AddScoped<AppDbContext>()'],
       after: ['AddScoped<ReportService>()', 'AddScoped<AppDbContext>()'],
       result: 'The lifetime mismatch is flagged in the editor before it reaches production.',
@@ -83,7 +92,10 @@ export const FEATURED: Featured[] = [
     packageId: 'CancelCop.Analyzer',
     proof: {
       diagnostic: 'CANCEL001',
+      file: 'OrderHandler.cs',
+      line: 27,
       problem: 'A cancellation token reaches the handler, then disappears at the database call.',
+      fix: 'Propagate the existing token into the call',
       before: ['Task Handle(CancellationToken ct)', '  => db.SaveChangesAsync();'],
       after: ['Task Handle(CancellationToken ct)', '  => db.SaveChangesAsync(ct);'],
       result: 'The code fix passes the token through the call chain.',

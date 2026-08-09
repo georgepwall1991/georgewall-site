@@ -13,6 +13,8 @@ export const GITHUB_USER = 'georgepwall1991';
 export const META_REPOS: ReadonlySet<string> = new Set([
   'georgepwall1991',
   'georgepwall1991.github.io',
+  'georgewall-site',
+  'fleet-commander-site',
   'homebrew-cpmigrate',
 ]);
 
