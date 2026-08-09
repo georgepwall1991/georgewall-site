@@ -36,7 +36,7 @@ export const NUGET_FALLBACK: Record<PackageId, NuGetPackage> = {
   },
   'DependencyInjection.Lifetime.Analyzers': {
     id: 'DependencyInjection.Lifetime.Analyzers',
-    version: '3.7.4',
+    version: '3.7.6',
     totalDownloads: 32250,
     url: 'https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers',
   },
@@ -66,7 +66,7 @@ export const NUGET_FALLBACK: Record<PackageId, NuGetPackage> = {
   },
   CPMigrate: {
     id: 'CPMigrate',
-    version: '3.56.0',
+    version: '3.57.2',
     totalDownloads: 16850,
     url: 'https://www.nuget.org/packages/CPMigrate',
   },

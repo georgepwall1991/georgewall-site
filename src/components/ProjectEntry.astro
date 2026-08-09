@@ -71,30 +71,109 @@ const now = new Date();
 
     {
       proof && (
-        <div class="entry__proof" aria-label={`${title} diagnostic example`}>
-          <div class="entry__proof-head">
-            <span class="entry__diagnostic">{proof.diagnostic}</span>
-            <p>{proof.problem}</p>
+        <div
+          class="entry__proof"
+          data-code-fix
+          data-fixed="false"
+          aria-label={`${title} interactive diagnostic example`}
+        >
+          <div class="entry__proof-chrome" aria-hidden="true">
+            <span class="entry__window-dots"><i></i><i></i><i></i></span>
+            <code>{proof.file}:{proof.line}</code>
+            <span>Roslyn · live analysis</span>
           </div>
-          <div class="entry__diff">
-            <div>
-              <span class="entry__diff-label">Before</span>
-              <pre>
-                <code>{proof.before.join("\n")}</code>
-              </pre>
-            </div>
-            <div>
-              <span class="entry__diff-label entry__diff-label--fixed">
-                Quick fix
+
+          <div class="entry__proof-alert">
+            <span class="entry__severity entry__severity--fault">
+              <i aria-hidden="true">×</i> error
+            </span>
+            <span class="entry__severity entry__severity--fixed">
+              <i aria-hidden="true">✓</i> fixed
+            </span>
+            <strong>{proof.diagnostic}</strong>
+            <span class="entry__proof-message entry__proof-message--fault">
+              {proof.problem}
+            </span>
+            <span class="entry__proof-message entry__proof-message--fixed">
+              {proof.result}
+            </span>
+            <span class="entry__proof-available">1 quick fix available</span>
+          </div>
+
+          <div class="entry__proof-workspace">
+            <section class="entry__editor" aria-label={`${proof.file} code preview`}>
+              <header class="entry__editor-head">
+                <span><i aria-hidden="true"></i>{proof.file}</span>
+                <code>Ln {proof.line}</code>
+              </header>
+
+              <div class="entry__code-window">
+                <div class="entry__code-state entry__code-state--fault">
+                  {proof.before.map((codeLine, lineIndex) => (
+                    <span class="entry__code-row">
+                      <b aria-hidden="true">{proof.line + lineIndex}</b>
+                      <code>{codeLine || " "}</code>
+                    </span>
+                  ))}
+                  <span class="entry__squiggle" aria-hidden="true"></span>
+                </div>
+
+                <div class="entry__code-state entry__code-state--fixed">
+                  {proof.after.map((codeLine, lineIndex) => (
+                    <span class="entry__code-row">
+                      <b aria-hidden="true">{proof.line + lineIndex}</b>
+                      <code>{codeLine || " "}</code>
+                    </span>
+                  ))}
+                  <span class="entry__clean-line" aria-hidden="true">
+                    build clean
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <aside class="entry__fix-panel">
+              <p>Automatic code fix</p>
+              <strong>{proof.fix}</strong>
+              <span>
+                Preview the compiler-safe rewrite, then keep it or switch back.
               </span>
-              <pre>
-                <code>{proof.after.join("\n")}</code>
-              </pre>
-            </div>
+              <button
+                type="button"
+                class="entry__fix-button"
+                data-code-fix-toggle
+                aria-pressed="false"
+                aria-label={`Apply quick fix for ${proof.diagnostic}`}
+              >
+                <span class="entry__fix-button-label entry__fix-button-label--apply">
+                  Apply quick fix
+                </span>
+                <span class="entry__fix-button-label entry__fix-button-label--revert">
+                  Revert preview
+                </span>
+                <i aria-hidden="true">→</i>
+              </button>
+
+              <div class="entry__fix-route" aria-hidden="true">
+                <span>fault</span>
+                <i><b></b></i>
+                <strong>protected</strong>
+              </div>
+            </aside>
           </div>
-          <p class="entry__result">
-            <span aria-hidden="true">✓</span> {proof.result}
-          </p>
+
+          <footer class="entry__proof-result">
+            <p>
+              <span aria-hidden="true">✓</span>
+              <strong>Caught before the build.</strong>
+              {proof.result}
+            </p>
+            <span class="entry__proof-state">
+              <i aria-hidden="true"></i>
+              <span class="entry__proof-state-fault">diagnostic active</span>
+              <span class="entry__proof-state-fixed">0 errors</span>
+            </span>
+          </footer>
         </div>
       )
     }
@@ -249,75 +328,574 @@ const now = new Date();
   }
 
   .entry__proof {
-    max-width: 52rem;
-    margin: 0 0 1.7rem;
+    --proof-bg: #080b10;
+    --proof-panel: #101720;
+    --proof-panel-raised: #151f2b;
+    --proof-ink: #f3efe7;
+    --proof-soft: #aeb8c6;
+    --proof-faint: #68768a;
+    --proof-rule: #29374a;
+    --proof-fault: #ff6542;
+    --proof-fix: #62c4ff;
+    max-width: 61rem;
+    margin: 0 0 1.8rem;
     overflow: hidden;
-    border: 1px solid var(--rule-strong);
-    border-radius: 6px;
-    background: var(--paper-raised);
+    border: 1px solid #36465c;
+    border-radius: 13px;
+    color: var(--proof-ink);
+    background: var(--proof-bg);
+    box-shadow:
+      0 1.6rem 4rem rgb(0 0 0 / 0.24),
+      inset 0 1px 0 rgb(255 255 255 / 0.06);
+    isolation: isolate;
   }
-  .entry__proof-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.8rem;
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid var(--rule);
-    border-left: 3px solid var(--fault);
-    font-size: 0.86rem;
-    color: var(--ink-soft);
-  }
-  .entry__diagnostic,
-  .entry__diff-label {
-    flex: none;
+
+  .entry__proof-chrome {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    min-height: 2.7rem;
+    padding-inline: 0.9rem;
+    border-bottom: 1px solid var(--proof-rule);
+    color: var(--proof-faint);
+    background: rgb(255 255 255 / 0.025);
     font-family: var(--font-mono);
-    font-size: 0.68rem;
+    font-size: 0.54rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .entry__proof-chrome > span:last-child {
+    justify-self: end;
+  }
+
+  .entry__window-dots {
+    display: flex;
+    gap: 0.34rem;
+  }
+
+  .entry__window-dots i {
+    width: 0.4rem;
+    height: 0.4rem;
+    border: 1px solid var(--proof-rule);
+    border-radius: 50%;
+  }
+
+  .entry__window-dots i:first-child {
+    border-color: var(--proof-fault);
+    background: rgb(255 101 66 / 0.18);
+  }
+
+  .entry__proof-alert {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3.3rem;
+    padding: 0.68rem 0.9rem;
+    border-bottom: 1px solid var(--proof-rule);
+    background: linear-gradient(90deg, rgb(255 101 66 / 0.1), transparent 48%);
+    transition: background 0.5s ease;
+  }
+
+  .entry__severity {
+    grid-column: 1;
+    grid-row: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--proof-fault);
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--accent-text);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s var(--ease);
   }
-  .entry__diagnostic {
-    padding: 0.12em 0.45em;
-    border: 1px solid currentColor;
-    border-radius: 4px;
-    color: var(--fault);
-  }
-  .entry__diff {
+
+  .entry__severity i {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    place-items: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    font-style: normal;
   }
-  .entry__diff > div {
+
+  .entry__severity--fixed {
+    color: var(--proof-fix);
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+
+  .entry__proof-alert > strong {
+    grid-column: 2;
+    flex: none;
+    padding: 0.18rem 0.4rem;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    color: var(--proof-fault);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 580;
+    letter-spacing: 0.08em;
+    transition: color 0.4s ease;
+  }
+
+  .entry__proof-message {
+    grid-column: 3;
+    grid-row: 1;
     min-width: 0;
-    padding: 1rem;
+    color: var(--proof-soft);
+    font-size: clamp(0.66rem, 1.1vw, 0.78rem);
+    line-height: 1.35;
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s var(--ease);
   }
-  .entry__diff > div + div {
-    border-left: 1px solid var(--rule);
-    background: var(--fix-wash);
+
+  .entry__proof-message--fixed {
+    opacity: 0;
+    transform: translateY(0.4rem);
   }
-  .entry__diff-label {
-    display: block;
-    margin-bottom: 0.55rem;
-    color: var(--ink-faint);
+
+  .entry__proof-available {
+    grid-column: 4;
+    color: var(--proof-fix);
+    font-family: var(--font-mono);
+    font-size: 0.52rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
   }
-  .entry__diff-label--fixed {
-    color: var(--fix);
+
+  .entry__proof-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(13rem, 0.72fr);
+    min-height: 14.5rem;
+    background:
+      linear-gradient(var(--proof-rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--proof-rule) 1px, transparent 1px),
+      var(--proof-bg);
+    background-size: 2.4rem 2.4rem;
   }
-  .entry__diff pre {
+
+  .entry__editor {
+    min-width: 0;
+    border-right: 1px solid var(--proof-rule);
+    background: rgb(8 11 16 / 0.86);
+  }
+
+  .entry__editor-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 2.55rem;
+    padding-inline: 0.9rem;
+    border-bottom: 1px solid var(--proof-rule);
+    color: var(--proof-faint);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+  }
+
+  .entry__editor-head span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .entry__editor-head span i {
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 50%;
+    background: var(--proof-fault);
+    box-shadow: 0 0 0.65rem rgb(255 101 66 / 0.65);
+    transition:
+      background 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+
+  .entry__code-window {
+    position: relative;
+    min-height: 11.9rem;
     overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: clamp(0.68rem, 1.4vw, 0.8rem);
-    line-height: 1.7;
-    color: var(--ink);
+    overflow-y: hidden;
+    padding-block: 1.35rem;
   }
-  .entry__result {
-    padding: 0.75rem 1rem;
-    border-top: 1px solid var(--rule);
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    line-height: 1.5;
-    color: var(--ink-soft);
+
+  .entry__code-state {
+    position: relative;
+    min-width: max-content;
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s var(--ease),
+      filter 0.45s ease;
   }
-  .entry__result span {
-    color: var(--fix);
+
+  .entry__code-state--fixed {
+    position: absolute;
+    inset: 1.35rem 0 auto;
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(1rem);
+  }
+
+  .entry__code-row {
+    display: grid;
+    grid-template-columns: 3rem minmax(max-content, 1fr);
+    min-height: 2.1rem;
+    padding-right: 1.25rem;
+    align-items: center;
+    border-left: 2px solid transparent;
+    font-family: var(--font-mono);
+    font-size: clamp(0.69rem, 1.15vw, 0.82rem);
+    transition:
+      border-color 0.4s ease,
+      background 0.4s ease;
+  }
+
+  .entry__code-state--fault .entry__code-row:nth-child(n + 2) {
+    border-left-color: var(--proof-fault);
+    background: linear-gradient(90deg, rgb(255 101 66 / 0.13), transparent 72%);
+  }
+
+  .entry__code-state--fixed .entry__code-row:nth-child(n + 2) {
+    border-left-color: var(--proof-fix);
+    background: linear-gradient(90deg, rgb(98 196 255 / 0.13), transparent 72%);
+  }
+
+  .entry__code-row b {
+    padding-right: 0.8rem;
+    color: var(--proof-faint);
+    font-weight: 420;
+    text-align: right;
+    user-select: none;
+  }
+
+  .entry__code-row code {
+    color: var(--proof-ink);
+    white-space: pre;
+  }
+
+  .entry__squiggle {
+    position: absolute;
+    bottom: -0.08rem;
+    left: 4rem;
+    width: min(47%, 12rem);
+    height: 0.35rem;
+    background: var(--proof-fault);
+    mask: var(--wave) 0 50% / 1rem 0.4rem repeat-x;
+    opacity: 0.88;
+  }
+
+  .entry__clean-line {
+    position: absolute;
+    top: -0.75rem;
+    right: 1rem;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid rgb(98 196 255 / 0.48);
+    border-radius: 3px;
+    color: var(--proof-fix);
+    background: rgb(98 196 255 / 0.08);
+    font-family: var(--font-mono);
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .entry__fix-panel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(1rem, 2.2vw, 1.35rem);
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 92% 10%, rgb(98 196 255 / 0.15), transparent 36%),
+      linear-gradient(145deg, var(--proof-panel-raised), var(--proof-panel));
+  }
+
+  .entry__fix-panel::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    content: "";
+    background: linear-gradient(var(--proof-fault), var(--proof-fix));
+  }
+
+  .entry__fix-panel > p {
+    color: var(--proof-fix);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+
+  .entry__fix-panel > strong {
+    max-width: 19ch;
+    margin-top: 0.6rem;
+    color: var(--proof-ink);
+    font-family: var(--font-sans);
+    font-size: clamp(0.92rem, 1.6vw, 1.12rem);
+    font-variation-settings: "wght" 630;
+    line-height: 1.2;
+  }
+
+  .entry__fix-panel > span {
+    max-width: 29ch;
+    margin-top: 0.6rem;
+    color: var(--proof-soft);
+    font-size: 0.67rem;
+    line-height: 1.45;
+  }
+
+  .entry__fix-button {
+    display: none;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.8rem;
+    width: 100%;
+    min-height: 2.75rem;
+    margin-top: 1rem;
+    padding: 0.65rem 0.78rem;
+    overflow: hidden;
+    border: 1px solid var(--proof-fix);
+    border-radius: 5px;
+    color: #061019;
+    background: var(--proof-fix);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-weight: 620;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition:
+      color 0.3s ease,
+      background 0.3s ease,
+      transform 0.3s var(--ease);
+  }
+
+  :global(.js) .entry__fix-button {
+    display: grid;
+  }
+
+  .entry__fix-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .entry__fix-button-label {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s var(--ease);
+  }
+
+  .entry__fix-button-label--revert {
+    opacity: 0;
+    transform: translateY(0.6rem);
+  }
+
+  .entry__fix-button > i {
+    grid-column: 2;
+    grid-row: 1;
+    font-style: normal;
+    transition: transform 0.35s var(--ease);
+  }
+
+  .entry__fix-route {
+    display: grid;
+    grid-template-columns: auto minmax(1rem, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 1.05rem;
+    color: var(--proof-faint);
+    font-family: var(--font-mono);
+    font-size: 0.46rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .entry__fix-route strong {
+    color: var(--proof-fix);
+    font-weight: 520;
+  }
+
+  .entry__fix-route i {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(90deg, var(--proof-fault), var(--proof-fix));
+  }
+
+  .entry__fix-route b {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: var(--proof-fault);
+    box-shadow: 0 0 0.55rem var(--proof-fault);
+    transform: translateY(-50%);
+    animation: proof-route 3s var(--ease) infinite;
+  }
+
+  .entry__proof-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.5rem;
+    padding: 0.72rem 0.9rem;
+    border-top: 1px solid var(--proof-rule);
+    color: var(--proof-soft);
+    background: var(--proof-panel);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    line-height: 1.45;
+  }
+
+  .entry__proof-result p > span {
+    margin-right: 0.3rem;
+    color: var(--proof-fix);
+  }
+
+  .entry__proof-result p > strong {
+    margin-right: 0.25rem;
+    color: var(--proof-ink);
+    font-weight: 580;
+  }
+
+  .entry__proof-state {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 0.42rem;
+    min-width: 7.7rem;
+    padding: 0.32rem 0.48rem;
+    border: 1px solid rgb(255 101 66 / 0.42);
+    border-radius: 999px;
+    color: var(--proof-fault);
+    font-size: 0.5rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition:
+      color 0.4s ease,
+      border-color 0.4s ease;
+  }
+
+  .entry__proof-state > i {
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0.5rem currentColor;
+  }
+
+  .entry__proof-state-fault,
+  .entry__proof-state-fixed {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .entry__proof-state-fixed {
+    display: none;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-alert {
+    background: linear-gradient(90deg, rgb(98 196 255 / 0.1), transparent 48%);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__severity--fault,
+  .entry__proof[data-fixed="true"] .entry__proof-message--fault {
+    opacity: 0;
+    transform: translateY(-0.4rem);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__severity--fixed,
+  .entry__proof[data-fixed="true"] .entry__proof-message--fixed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-alert > strong {
+    color: var(--proof-fix);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-available {
+    opacity: 0;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__editor-head span i {
+    background: var(--proof-fix);
+    box-shadow: 0 0 0.65rem rgb(98 196 255 / 0.65);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__code-state--fault {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(-1rem);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__code-state--fixed {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__fix-button {
+    border-color: var(--proof-rule);
+    color: var(--proof-soft);
+    background: transparent;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__fix-button-label--apply {
+    opacity: 0;
+    transform: translateY(-0.6rem);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__fix-button-label--revert {
+    opacity: 1;
+    transform: none;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__fix-button > i {
+    transform: rotate(180deg);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-state {
+    border-color: rgb(98 196 255 / 0.42);
+    color: var(--proof-fix);
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-state-fault {
+    display: none;
+  }
+
+  .entry__proof[data-fixed="true"] .entry__proof-state-fixed {
+    display: inline;
+  }
+
+  @keyframes proof-route {
+    0%,
+    14% {
+      left: 0;
+      background: var(--proof-fault);
+      box-shadow: 0 0 0.55rem var(--proof-fault);
+    }
+    84%,
+    100% {
+      left: calc(100% - 0.34rem);
+      background: var(--proof-fix);
+      box-shadow: 0 0 0.55rem var(--proof-fix);
+    }
   }
 
   .entry__meta {
@@ -368,6 +946,71 @@ const now = new Date();
     min-height: 44px;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .entry__severity,
+    .entry__proof-message,
+    .entry__proof-alert,
+    .entry__editor-head span i,
+    .entry__code-state,
+    .entry__code-row,
+    .entry__fix-button,
+    .entry__fix-button-label,
+    .entry__fix-button > i,
+    .entry__proof-state {
+      transition: none;
+    }
+
+    .entry__fix-route b {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 780px) {
+    .entry__proof-alert {
+      grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .entry__proof-available {
+      grid-column: 2 / -1;
+      grid-row: 2;
+    }
+
+    .entry__proof-workspace {
+      grid-template-columns: 1fr;
+    }
+
+    .entry__editor {
+      border-right: 0;
+      border-bottom: 1px solid var(--proof-rule);
+    }
+
+    .entry__fix-panel {
+      min-height: 12.5rem;
+    }
+
+    .entry__fix-panel::before {
+      top: 0;
+      right: 0;
+      bottom: auto;
+      width: auto;
+      height: 2px;
+      background: linear-gradient(90deg, var(--proof-fault), var(--proof-fix));
+    }
+
+    .entry__fix-panel > strong,
+    .entry__fix-panel > span {
+      max-width: 36ch;
+    }
+
+    .entry__fix-button {
+      max-width: 21rem;
+    }
+
+    .entry__fix-route {
+      max-width: 28rem;
+    }
+  }
+
   @media (max-width: 620px) {
     .entry {
       grid-template-columns: 1fr;
@@ -383,12 +1026,82 @@ const now = new Date();
     .entry__rail-signal {
       margin: 0 0.2rem 0 0;
     }
-    .entry__diff {
-      grid-template-columns: 1fr;
+
+    .entry__proof {
+      margin-inline: -0.15rem;
+      border-radius: 10px;
     }
-    .entry__diff > div + div {
-      border-left: 0;
-      border-top: 1px solid var(--rule);
+
+    .entry__proof-chrome {
+      grid-template-columns: 1fr auto;
+    }
+
+    .entry__proof-chrome > code {
+      display: none;
+    }
+
+    .entry__proof-alert {
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.5rem;
+    }
+
+    .entry__proof-alert > strong {
+      grid-column: 2;
+    }
+
+    .entry__proof-message {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+
+    .entry__proof-available {
+      grid-column: 1 / -1;
+      grid-row: 3;
+    }
+
+    .entry__code-row {
+      grid-template-columns: 2.35rem minmax(max-content, 1fr);
+      font-size: 0.66rem;
+    }
+
+    .entry__code-row b {
+      padding-right: 0.55rem;
+    }
+
+    .entry__squiggle {
+      left: 3.1rem;
+    }
+
+    .entry__proof-result {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .entry__proof-state {
+      width: fit-content;
     }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-code-fix]").forEach((proof) => {
+    const button = proof.querySelector<HTMLButtonElement>("[data-code-fix-toggle]");
+    if (!button) return;
+
+    button.addEventListener("click", () => {
+      const fixed = proof.dataset.fixed !== "true";
+      proof.dataset.fixed = String(fixed);
+      button.setAttribute("aria-pressed", String(fixed));
+      const diagnostic = proof
+        .closest<HTMLElement>(".entry")
+        ?.querySelector<HTMLElement>(".entry__rail > span:not(.entry__rail-signal)")
+        ?.textContent?.trim();
+      button.setAttribute(
+        "aria-label",
+        fixed
+          ? `Revert quick-fix preview for ${diagnostic ?? "diagnostic"}`
+          : `Apply quick fix for ${diagnostic ?? "diagnostic"}`,
+      );
+    });
+  });
+</script>
