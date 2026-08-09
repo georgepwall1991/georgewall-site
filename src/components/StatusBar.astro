@@ -18,11 +18,11 @@ const segment = Astro.url.pathname.split('/').filter(Boolean)[0];
 const initialCrumb = segment ?? 'lede';
 ---
 
-<footer class="statusbar" aria-label="Status">
+<div class="statusbar">
   <div class="statusbar__cell statusbar__branch">
     <span class="statusbar__glyph" aria-hidden="true">⎇</span> main
   </div>
-  <button class="statusbar__cell statusbar__ok" type="button" aria-describedby="gw-toast" title="Run diagnostics">
+  <button class="statusbar__cell statusbar__ok" type="button" aria-controls="gw-toast" aria-expanded="false" title="Run diagnostics">
     <span class="statusbar__dot" aria-hidden="true"></span> 0 errors · 0 warnings
   </button>
   <div class="statusbar__cell statusbar__armed" aria-hidden="true">
@@ -34,10 +34,10 @@ const initialCrumb = segment ?? 'lede';
   </div>
   <div class="statusbar__cell statusbar__loc">London · 51.5°N</div>
   <div class="statusbar__cell statusbar__time" data-clock>--:--</div>
-</footer>
+</div>
 
 <!-- The one diagnostic this site does report. -->
-<aside class="gw-toast" id="gw-toast" hidden>
+<aside class="gw-toast" id="gw-toast" role="status" aria-live="polite" hidden>
   <span class="gw-toast__dot" aria-hidden="true"></span>
   <div class="gw-toast__body">
     <p class="gw-toast__head"><span class="gw-toast__id">GW001</span> Hidden diagnostic</p>
@@ -115,7 +115,7 @@ const initialCrumb = segment ?? 'lede';
     width: 0.55em;
     height: 0.55em;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--fix);
     animation: status-pulse 2.6s ease-in-out infinite;
   }
 
@@ -264,7 +264,7 @@ const initialCrumb = segment ?? 'lede';
   // Breadcrumb follows the section being read.
   const crumb = document.querySelector<HTMLElement>('[data-crumb]');
   if (crumb && 'IntersectionObserver' in window) {
-    const sections = ['lede', 'now', 'work', 'stack', 'apps', 'archive', 'about', 'contact']
+    const sections = ['lede', 'now', 'work', 'writing', 'stack', 'apps', 'archive', 'about', 'contact']
       .map((id) => document.getElementById(id))
       .filter((s): s is HTMLElement => Boolean(s));
     const io = new IntersectionObserver(
@@ -287,6 +287,7 @@ const initialCrumb = segment ?? 'lede';
   const setToast = (open: boolean) => {
     if (!toast) return;
     toast.hidden = !open;
+    okBtn?.setAttribute('aria-expanded', String(open));
     clearTimeout(timer);
     if (open) timer = setTimeout(() => setToast(false), 10_000);
   };

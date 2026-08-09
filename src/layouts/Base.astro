@@ -1,6 +1,9 @@
 ---
 // Self-hosted variable fonts (no external requests, no Google Fonts beacon).
-import "@fontsource-variable/fraunces";
+// The full Fraunces builds carry the optical-size, softness and wonk axes the
+// design actually uses, plus a real italic instead of browser synthesis.
+import "@fontsource-variable/fraunces/full.css";
+import "@fontsource-variable/fraunces/full-italic.css";
 import "@fontsource-variable/archivo";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
@@ -80,7 +83,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="George Wall" />
-    <meta name="theme-color" content="#0b0d10" />
+    <meta name="theme-color" content="#0b0d10" data-theme-colour />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />

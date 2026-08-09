@@ -1,5 +1,12 @@
 ---
 import { PULSE } from "../data/pulse";
+
+const productCount = PULSE.filter(
+  (entry) => entry.channel === "product",
+).length;
+const toolingCount = PULSE.filter(
+  (entry) => entry.channel === "tooling",
+).length;
 ---
 
 <section class="ledger" id="now" aria-labelledby="ledger-title">
@@ -16,9 +23,15 @@ import { PULSE } from "../data/pulse";
       </p>
 
       <div class="ledger__filters" role="group" aria-label="Filter release ledger">
-        <button type="button" data-ledger-filter="all" aria-pressed="true">All</button>
-        <button type="button" data-ledger-filter="product" aria-pressed="false">Products</button>
-        <button type="button" data-ledger-filter="tooling" aria-pressed="false">Tooling</button>
+        <button type="button" data-ledger-filter="all" aria-pressed="true">
+          All <span>{PULSE.length}</span>
+        </button>
+        <button type="button" data-ledger-filter="product" aria-pressed="false">
+          Products <span>{productCount}</span>
+        </button>
+        <button type="button" data-ledger-filter="tooling" aria-pressed="false">
+          Tooling <span>{toolingCount}</span>
+        </button>
       </div>
 
       <p class="ledger__stamp">
@@ -27,35 +40,47 @@ import { PULSE } from "../data/pulse";
       </p>
     </header>
 
-    <ol class="ledger__list" data-ledger-list>
-      {
-        PULSE.map((entry, index) => (
-          <li
-            class={`ledger__entry ledger__entry--${entry.channel} reveal`}
-            data-ledger-channel={entry.channel}
-            style={`--reveal-delay:${Math.min(index, 5) * 55}ms`}
-          >
-            <div class="ledger__rail" aria-hidden="true">
-              <span></span>
-            </div>
-            <div class="ledger__meta">
-              <span>{entry.date}</span>
-              <span>{entry.channel}</span>
-            </div>
-            <div class="ledger__body">
-              <div class="ledger__name">
-                <h3>{entry.title}</h3>
-                <span>{entry.version}</span>
+    <div class="ledger__records">
+      <ol class="ledger__list" id="release-ledger-list" data-ledger-list>
+        {
+          PULSE.map((entry, index) => (
+            <li
+              class={`ledger__entry ledger__entry--${entry.channel} reveal`}
+              data-ledger-channel={entry.channel}
+              style={`--reveal-delay:${Math.min(index, 5) * 55}ms`}
+            >
+              <div class="ledger__rail" aria-hidden="true">
+                <span></span>
               </div>
-              <p>{entry.summary}</p>
-            </div>
-            <a href={entry.href} target="_blank" rel="noopener">
-              {entry.linkLabel}<span aria-hidden="true">↗</span>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+              <div class="ledger__meta">
+                <span>{entry.date}</span>
+                <span>{entry.channel}</span>
+              </div>
+              <div class="ledger__body">
+                <div class="ledger__name">
+                  <h3>{entry.title}</h3>
+                  <span>{entry.version}</span>
+                </div>
+                <p>{entry.summary}</p>
+              </div>
+              <a href={entry.href} target="_blank" rel="noopener">
+                {entry.linkLabel}<span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="ledger__more" data-ledger-more-wrap hidden>
+        <button
+          type="button"
+          data-ledger-more
+          aria-expanded="false"
+          aria-controls="release-ledger-list"
+        >
+          Show all releases <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -66,19 +91,55 @@ import { PULSE } from "../data/pulse";
   const entries = document.querySelectorAll<HTMLElement>(
     "[data-ledger-channel]",
   );
+  const moreButton = document.querySelector<HTMLButtonElement>(
+    "[data-ledger-more]",
+  );
+  const moreWrap = document.querySelector<HTMLElement>(
+    "[data-ledger-more-wrap]",
+  );
+  const initialVisible = 4;
+  let activeFilter = "all";
+  let expanded = false;
+
+  const renderLedger = () => {
+    const matches = [...entries].filter(
+      (entry) =>
+        activeFilter === "all" || entry.dataset.ledgerChannel === activeFilter,
+    );
+
+    entries.forEach((entry) => {
+      const matchIndex = matches.indexOf(entry);
+      entry.hidden =
+        matchIndex < 0 || (!expanded && matchIndex >= initialVisible);
+    });
+
+    if (moreButton && moreWrap) {
+      const hasOverflow = matches.length > initialVisible;
+      moreWrap.hidden = !hasOverflow;
+      moreButton.setAttribute("aria-expanded", String(expanded));
+      moreButton.innerHTML = expanded
+        ? 'Show fewer releases <span aria-hidden="true">↑</span>'
+        : `Show all ${matches.length} releases <span aria-hidden="true">↓</span>`;
+    }
+  };
 
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
-      const filter = button.dataset.ledgerFilter ?? "all";
+      activeFilter = button.dataset.ledgerFilter ?? "all";
+      expanded = false;
       buttons.forEach((candidate) =>
         candidate.setAttribute("aria-pressed", String(candidate === button)),
       );
-      entries.forEach((entry) => {
-        entry.hidden =
-          filter !== "all" && entry.dataset.ledgerChannel !== filter;
-      });
+      renderLedger();
     });
   });
+
+  moreButton?.addEventListener("click", () => {
+    expanded = !expanded;
+    renderLedger();
+  });
+
+  renderLedger();
 </script>
 
 <style>
@@ -115,7 +176,7 @@ import { PULSE } from "../data/pulse";
   .ledger__title {
     max-width: 10ch;
     margin-top: 0.9rem;
-    font-size: clamp(2.7rem, 5.6vw, 5.6rem);
+    font-size: clamp(2.7rem, 5vw, 4.65rem);
   }
 
   .ledger__standfirst {
@@ -157,6 +218,12 @@ import { PULSE } from "../data/pulse";
     background: var(--ink);
   }
 
+  .ledger__filters button span {
+    margin-left: 0.28rem;
+    color: inherit;
+    opacity: 0.62;
+  }
+
   .ledger__stamp {
     display: flex;
     align-items: center;
@@ -180,6 +247,10 @@ import { PULSE } from "../data/pulse";
   .ledger__list {
     border-top: 1.5px solid var(--ink);
     list-style: none;
+  }
+
+  .ledger__records {
+    min-width: 0;
   }
 
   .ledger__entry {
@@ -330,6 +401,42 @@ import { PULSE } from "../data/pulse";
 
   .ledger__entry > a:hover span {
     transform: translate(2px, -2px);
+  }
+
+  .ledger__more {
+    padding-top: 1rem;
+  }
+
+  .ledger__more[hidden] {
+    display: none;
+  }
+
+  .ledger__more button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 42px;
+    padding: 0.55rem 0;
+    border: 0;
+    color: var(--ink-soft);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+
+  .ledger__more button span {
+    color: var(--fix);
+    transition: transform 0.25s var(--ease);
+  }
+
+  .ledger__more button:hover {
+    color: var(--ink);
+  }
+
+  .ledger__more button:hover span {
+    transform: translateY(2px);
   }
 
   @media (max-width: 900px) {

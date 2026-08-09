@@ -4,8 +4,8 @@ import sitemap from '@astrojs/sitemap';
 
 // Honest content dates: deployments no longer make every page look freshly edited.
 const LAST_MODIFIED = new Map([
-  ['https://www.georgewall.uk', '2026-07-22'],
-  ['https://www.georgewall.uk/work', '2026-07-22'],
+  ['https://www.georgewall.uk', '2026-08-09'],
+  ['https://www.georgewall.uk/work', '2026-08-09'],
   ['https://www.georgewall.uk/writing', '2026-07-22'],
   ['https://www.georgewall.uk/writing/catching-n-plus-1-at-compile-time', '2026-06-01'],
   ['https://www.georgewall.uk/writing/when-http-retries-make-failures-worse', '2026-07-22'],

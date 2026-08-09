@@ -222,7 +222,7 @@ const scoreboard = appScoreboard(apps);
   .apps__title {
     max-width: 11ch;
     margin-top: 0.72rem;
-    font-size: clamp(2.6rem, 6vw, 5.7rem);
+    font-size: clamp(2.6rem, 5vw, 4.65rem);
   }
 
   .apps__brief {
@@ -349,6 +349,23 @@ const scoreboard = appScoreboard(apps);
     mask-image: linear-gradient(to bottom, black, transparent 76%);
   }
 
+  .app--fleet .app__media::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    width: min(68%, 28rem);
+    aspect-ratio: 1;
+    content: "";
+    pointer-events: none;
+    border: 1px solid color-mix(in srgb, var(--scene) 36%, transparent);
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 2.8rem color-mix(in srgb, var(--scene) 5%, transparent),
+      0 0 0 5.8rem color-mix(in srgb, var(--scene-soft) 4%, transparent);
+    transform: translate(-50%, -50%);
+  }
+
   .app__number {
     position: absolute;
     top: 0.9rem;
@@ -386,6 +403,42 @@ const scoreboard = appScoreboard(apps);
 
   .app__media:hover .app__poster:nth-child(2) {
     transform: translateY(1.05rem);
+  }
+
+  .app--gem .app__poster:first-child {
+    transform: translate(-0.35rem, -0.85rem) rotate(-2.4deg);
+  }
+
+  .app--gem .app__poster:nth-child(2) {
+    transform: translate(0.35rem, 1.15rem) rotate(2.6deg);
+  }
+
+  .app--gem .app__media:hover .app__poster:first-child {
+    transform: translate(-0.55rem, -1.2rem) rotate(-3deg);
+  }
+
+  .app--gem .app__media:hover .app__poster:nth-child(2) {
+    transform: translate(0.55rem, 0.8rem) rotate(3.2deg);
+  }
+
+  .app--fleet .app__poster:first-child {
+    transform: translateY(0.65rem) rotate(1.5deg);
+  }
+
+  .app--fleet .app__poster:nth-child(2) {
+    transform: translateY(-0.65rem) rotate(-1.5deg);
+  }
+
+  .app--fleet .app__media:hover .app__poster:first-child {
+    transform: translateY(0.25rem) rotate(0.8deg);
+  }
+
+  .app--fleet .app__media:hover .app__poster:nth-child(2) {
+    transform: translateY(-1rem) rotate(-2deg);
+  }
+
+  .app--wellness .app__poster {
+    width: min(43%, 15rem);
   }
 
   .app__poster img {
@@ -633,11 +686,14 @@ const scoreboard = appScoreboard(apps);
 
   .apps__labCard {
     --lab-accent: #49c8ff;
+    --lab-ink: #f4f1e9;
+    --lab-muted: rgb(244 241 233 / 0.72);
     display: grid;
     grid-template-columns: minmax(10rem, 0.72fr) minmax(0, 1.28fr);
     min-height: 23rem;
     overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
+    color: var(--lab-ink);
+    border: 1px solid rgb(244 241 233 / 0.24);
     border-radius: 5px;
     background:
       radial-gradient(circle at 8% 8%, color-mix(in srgb, var(--lab-accent) 18%, transparent), transparent 34%),
@@ -709,7 +765,7 @@ const scoreboard = appScoreboard(apps);
 
   .apps__labCopy > p {
     margin-top: 0.8rem;
-    color: color-mix(in srgb, var(--paper) 72%, transparent);
+    color: var(--lab-muted);
     font-size: 0.84rem;
     line-height: 1.55;
   }
@@ -719,8 +775,8 @@ const scoreboard = appScoreboard(apps);
   }
 
   .apps__lab .app__stack li {
-    color: color-mix(in srgb, var(--paper) 76%, transparent);
-    border-color: color-mix(in srgb, var(--paper) 26%, transparent);
+    color: rgb(244 241 233 / 0.76);
+    border-color: rgb(244 241 233 / 0.26);
     background: transparent;
   }
 
@@ -729,14 +785,18 @@ const scoreboard = appScoreboard(apps);
   }
 
   .apps__lab .app__cta--secondary {
-    color: var(--paper);
+    color: var(--lab-ink);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .app__poster,
     .app__poster:nth-child(2),
     .app__media:hover .app__poster:first-child,
-    .app__media:hover .app__poster:nth-child(2) {
+    .app__media:hover .app__poster:nth-child(2),
+    .app--gem .app__poster,
+    .app--gem .app__media:hover .app__poster,
+    .app--fleet .app__poster,
+    .app--fleet .app__media:hover .app__poster {
       transition: none;
       transform: none;
     }
@@ -781,11 +841,21 @@ const scoreboard = appScoreboard(apps);
     }
 
     .app__posterRail {
-      gap: 0.5rem;
+      justify-content: flex-start;
+      gap: 0.7rem;
+      overflow-x: auto;
+      padding: 0.35rem 0.45rem 0.9rem;
+      scroll-padding-inline: 0.45rem;
+      scroll-snap-type: x mandatory;
+      scrollbar-color: var(--scene) transparent;
+      scrollbar-width: thin;
     }
 
     .app__poster {
-      width: min(49%, 14rem);
+      width: min(74%, 15rem);
+      flex: 0 0 min(74%, 15rem);
+      scroll-snap-align: center;
+      transform: none !important;
     }
 
     .app__poster figcaption {
@@ -794,11 +864,14 @@ const scoreboard = appScoreboard(apps);
     }
 
     .app__media--single .app__poster {
-      width: min(66%, 15rem);
+      width: min(74%, 15rem);
+      flex-basis: min(74%, 15rem);
     }
 
     .app__buildNote {
-      width: min(30%, 8rem);
+      width: min(64%, 13rem);
+      flex: 0 0 min(64%, 13rem);
+      scroll-snap-align: center;
     }
 
     .app__buildNote strong {

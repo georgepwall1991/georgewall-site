@@ -3,7 +3,7 @@
 // and persists the choice.
 ---
 
-<button class="theme-toggle" type="button" aria-label="Switch to light colour theme" aria-pressed="false" title="Switch to light colour theme">
+<button class="theme-toggle" type="button" aria-label="Dark colour theme" aria-pressed="true" title="Switch to light colour theme">
   <span class="theme-toggle__track">
     <span class="theme-toggle__thumb"></span>
   </span>
@@ -74,11 +74,19 @@
       padding: 0.5em;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-toggle__track,
+    .theme-toggle__thumb {
+      transition: none;
+    }
+  }
 </style>
 
 <script>
   const btn = document.querySelector<HTMLButtonElement>('.theme-toggle');
   const label = btn?.querySelector<HTMLElement>('.theme-toggle__label');
+  const themeColour = document.querySelector<HTMLMetaElement>('[data-theme-colour]');
 
   function syncLabel() {
     const theme = document.documentElement.dataset.theme ?? 'light';
@@ -86,10 +94,10 @@
     if (label) label.textContent = isDark ? label.dataset.labelDark! : label.dataset.labelLight!;
     if (btn) {
       const action = isDark ? 'Switch to light colour theme' : 'Switch to dark colour theme';
-      btn.setAttribute('aria-label', action);
       btn.setAttribute('title', action);
       btn.setAttribute('aria-pressed', String(isDark));
     }
+    themeColour?.setAttribute('content', isDark ? '#0b0d10' : '#f3f1eb');
   }
 
   btn?.addEventListener('click', () => {

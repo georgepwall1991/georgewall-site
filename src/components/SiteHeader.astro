@@ -240,6 +240,7 @@ const NAV = [
     display: flex;
     flex-direction: column;
     justify-content: center;
+    overflow-y: auto;
     background: var(--paper);
     padding: clamp(5rem, 16vw, 7rem) var(--gutter) 2rem;
   }
@@ -309,6 +310,10 @@ const NAV = [
       animation: none;
       transform: none;
     }
+
+    .masthead__burger-line {
+      transition: none;
+    }
   }
 
   @media (max-width: 760px) {
@@ -317,6 +322,25 @@ const NAV = [
     }
     .masthead__burger {
       display: flex;
+    }
+  }
+
+  @media (max-height: 680px) and (max-width: 760px) {
+    .menu {
+      justify-content: flex-start;
+      padding-top: 4.75rem;
+    }
+
+    .menu__link {
+      padding-block: 0.68rem;
+    }
+
+    .menu__label {
+      font-size: clamp(2rem, 8vh, 2.8rem);
+    }
+
+    .menu__foot {
+      margin-block: 1.2rem;
     }
   }
 
@@ -396,10 +420,14 @@ const NAV = [
       // Next frame so the entrance animation runs after unhiding.
       requestAnimationFrame(() => menu.setAttribute("data-open", ""));
       document.body.style.overflow = "hidden";
+      menu.querySelector<HTMLAnchorElement>("a")?.focus();
     } else {
       menu.removeAttribute("data-open");
       menu.hidden = true;
       document.body.style.overflow = "";
+      if (document.activeElement && menu.contains(document.activeElement)) {
+        burger.focus();
+      }
     }
   };
 
@@ -410,8 +438,26 @@ const NAV = [
     ?.querySelectorAll("a")
     .forEach((a) => a.addEventListener("click", () => setMenu(false)));
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && burger?.getAttribute("aria-expanded") === "true")
+    const open = burger?.getAttribute("aria-expanded") === "true";
+    if (e.key === "Escape" && open) {
       setMenu(false);
+      return;
+    }
+    if (e.key === "Tab" && open && menu) {
+      const focusable = [
+        ...(burger ? [burger] : []),
+        ...menu.querySelectorAll<HTMLAnchorElement>("a[href]"),
+      ];
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last?.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    }
   });
 
   // Crossing into desktop hides the menu via CSS; close it for real too, or

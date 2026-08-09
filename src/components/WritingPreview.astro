@@ -62,6 +62,9 @@ const formatDate = (iso: string) =>
   .writing-preview {
     padding-top: var(--section-gap);
   }
+  .writing-preview--compact {
+    padding-top: clamp(4.5rem, 9vw, 7.5rem);
+  }
   .writing-preview__head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(17rem, 0.55fr);
@@ -73,6 +76,10 @@ const formatDate = (iso: string) =>
     max-width: 14ch;
     margin-top: 0.9rem;
     font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+  }
+  .writing-preview--compact .writing-preview__title {
+    max-width: 16ch;
+    font-size: clamp(2.35rem, 4.7vw, 4.15rem);
   }
   .writing-preview__intro {
     max-width: 39ch;
@@ -137,6 +144,20 @@ const formatDate = (iso: string) =>
   .writing-card__link:hover .writing-card__arrow,
   .writing-card__link:focus-visible .writing-card__arrow {
     transform: translate(4px, -4px);
+  }
+  .writing-preview--compact .writing-card:not(:first-child) .writing-card__link {
+    min-height: 7.2rem;
+    padding-block: 1.15rem;
+  }
+  .writing-preview--compact .writing-card:not(:first-child) .writing-card__title {
+    max-width: 26ch;
+    font-size: clamp(1.45rem, 2.8vw, 2.35rem);
+  }
+  .writing-preview--compact .writing-card:not(:first-child) .writing-card__description {
+    display: none;
+  }
+  .writing-preview--compact .writing-card:not(:first-child) .writing-card__kicker {
+    margin-bottom: 0.5rem;
   }
   .writing-preview__more {
     display: flex;

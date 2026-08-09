@@ -10,29 +10,72 @@ const toolingLane = [
   { name: "DI Lifetimes", version: "3.7.4", state: "armed" },
   { name: "CPMigrate", version: "3.56.0", state: "ready" },
 ];
+
+const traceStages = [
+  {
+    code: "days",
+    label: "Production",
+    title: "The customer finds it.",
+    copy: "A production failure arrives with the widest blast radius and the least useful context.",
+    output: "user report → triage",
+  },
+  {
+    code: "hours",
+    label: "Runtime",
+    title: "The system reports it.",
+    copy: "Telemetry shortens the search, but the broken path has still reached a running system.",
+    output: "stack trace → isolate",
+  },
+  {
+    code: "minutes",
+    label: "Tests",
+    title: "The suite catches it.",
+    copy: "The fault stays off the release path and returns with enough evidence to reproduce it.",
+    output: "red test → reproduce",
+  },
+  {
+    code: "seconds",
+    label: "Build",
+    title: "The compiler refuses it.",
+    copy: "A package guardrail turns a production lesson into a deterministic build failure.",
+    output: "LINQ001 → build blocked",
+  },
+  {
+    code: "now",
+    label: "Editor",
+    title: "The author fixes it now.",
+    copy: "The analyser underlines the risky line while the reason and quick fix are still obvious.",
+    output: "LINQ001 → quick fix ready",
+  },
+];
 ---
 
-<figure class="console" aria-labelledby="console-title">
+<figure class="console" data-trace-deck aria-labelledby="console-title">
   <header class="console__top">
     <div>
-      <p class="console__eyebrow">Build output</p>
-      <figcaption id="console-title">Both sides of production.</figcaption>
+      <p class="console__eyebrow">Production trace / live system</p>
+      <figcaption id="console-title">One loop. Two kinds of output.</figcaption>
     </div>
-    <span class="console__branch"><i aria-hidden="true"></i> main · current</span>
+    <span class="console__branch"><i aria-hidden="true"></i> main · tracing</span>
   </header>
 
-  <div class="console__lanes">
-    <section class="lane lane--product" aria-labelledby="product-lane-title">
-      <div class="lane__head">
-        <span class="lane__command" aria-hidden="true">01</span>
-        <h2 id="product-lane-title">Ship the product</h2>
-        <span class="lane__signal">App Store</span>
+  <div class="console__matrix">
+    <section
+      class="console__lane console__lane--product"
+      aria-labelledby="product-lane-title"
+    >
+      <div class="console__lane-head">
+        <div>
+          <span aria-hidden="true">A</span>
+          <h2 id="product-lane-title">Product surface</h2>
+        </div>
+        <small>App Store</small>
       </div>
-      <ul class="lane__list">
+      <ul>
         {
           productLane.map((item) => (
             <li>
-              <span class="lane__node" aria-hidden="true"></span>
+              <span class="console__node" aria-hidden="true"></span>
               <strong>{item.name}</strong>
               <span>v{item.version}</span>
               <small>{item.state}</small>
@@ -42,22 +85,32 @@ const toolingLane = [
       </ul>
     </section>
 
-    <div class="console__handoff" aria-hidden="true">
-      <span>production lessons</span>
-      <i></i>
+    <div class="console__bus" aria-hidden="true">
+      <span class="console__bus-label">feedback</span>
+      <div class="console__bus-track">
+        <i class="console__bus-node console__bus-node--top"></i>
+        <i class="console__bus-signal"></i>
+        <i class="console__bus-node console__bus-node--bottom"></i>
+      </div>
+      <span class="console__bus-turn">lesson → rule</span>
     </div>
 
-    <section class="lane lane--tooling" aria-labelledby="tooling-lane-title">
-      <div class="lane__head">
-        <span class="lane__command" aria-hidden="true">02</span>
-        <h2 id="tooling-lane-title">Protect the next release</h2>
-        <span class="lane__signal">NuGet</span>
+    <section
+      class="console__lane console__lane--tooling"
+      aria-labelledby="tooling-lane-title"
+    >
+      <div class="console__lane-head">
+        <div>
+          <span aria-hidden="true">B</span>
+          <h2 id="tooling-lane-title">Release guardrails</h2>
+        </div>
+        <small>NuGet</small>
       </div>
-      <ul class="lane__list">
+      <ul>
         {
           toolingLane.map((item) => (
             <li>
-              <span class="lane__node" aria-hidden="true"></span>
+              <span class="console__node" aria-hidden="true"></span>
               <strong>{item.name}</strong>
               <span>v{item.version}</span>
               <small>{item.state}</small>
@@ -68,26 +121,105 @@ const toolingLane = [
     </section>
   </div>
 
+  <section class="trace" aria-labelledby="trace-title">
+    <div class="trace__head">
+      <p id="trace-title">Failure distance</p>
+      <output data-trace-title aria-live="polite">{traceStages[0].title}</output>
+    </div>
+
+    <div
+      class="trace__controls"
+      role="group"
+      aria-label="Inspect the failure distance"
+    >
+      {
+        traceStages.map((stage, index) => (
+          <button
+            type="button"
+            data-trace-step
+            data-trace-index={index}
+            data-trace-title={stage.title}
+            data-trace-copy={stage.copy}
+            data-trace-output={stage.output}
+            aria-pressed={index === 0 ? "true" : "false"}
+          >
+            <span>{stage.code}</span>
+            {stage.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="trace__rail" aria-hidden="true">
+      <i></i>
+      <span></span>
+    </div>
+
+    <div class="trace__readout">
+      <p data-trace-copy>{traceStages[0].copy}</p>
+      <code>
+        <span aria-hidden="true">$</span>
+        <span data-trace-output>{traceStages[0].output}</span>
+        <strong>✓</strong>
+      </code>
+    </div>
+  </section>
+
   <div class="console__result">
-    <span class="console__prompt" aria-hidden="true">$</span>
-    <code>idea → interface → release → feedback → guardrail</code>
-    <span class="console__ok">0 failures escaped</span>
+    <span>trace://georgewall/production</span>
+    <code>idea → interface → release → evidence → guardrail</code>
+    <strong>0 failures escaped</strong>
   </div>
 </figure>
 
+<script>
+  document
+    .querySelectorAll<HTMLElement>("[data-trace-deck]")
+    .forEach((deck) => {
+      const buttons = [
+        ...deck.querySelectorAll<HTMLButtonElement>("[data-trace-step]"),
+      ];
+      const title = deck.querySelector<HTMLOutputElement>(
+        "[data-trace-title]",
+      );
+      const copy = deck.querySelector<HTMLElement>("[data-trace-copy]");
+      const output = deck.querySelector<HTMLElement>("[data-trace-output]");
+
+      const select = (button: HTMLButtonElement) => {
+        buttons.forEach((candidate) =>
+          candidate.setAttribute("aria-pressed", String(candidate === button)),
+        );
+        const index = Number(button.dataset.traceIndex) || 0;
+        deck.style.setProperty("--trace-offset", `${index * 100}%`);
+        deck.style.setProperty("--trace-position", `${index * 20 + 10}%`);
+        if (title) title.textContent = button.dataset.traceTitle ?? "";
+        if (copy) copy.textContent = button.dataset.traceCopy ?? "";
+        if (output) output.textContent = button.dataset.traceOutput ?? "";
+      };
+
+      buttons.forEach((button) =>
+        button.addEventListener("click", () => select(button)),
+      );
+    });
+</script>
+
 <style>
   .console {
+    --trace-offset: 0%;
+    --trace-position: 10%;
     position: relative;
     margin: 0;
     overflow: hidden;
     padding: clamp(1rem, 2.2vw, 1.55rem);
     border: 1px solid var(--rule-strong);
-    border-radius: 9px;
+    border-radius: 10px;
     background:
-      linear-gradient(150deg, var(--fix-wash), transparent 34%),
-      linear-gradient(330deg, var(--fault-wash), transparent 32%),
+      linear-gradient(145deg, var(--fix-wash), transparent 32%),
+      linear-gradient(325deg, var(--fault-wash), transparent 30%),
       var(--paper-raised);
-    box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 0.28);
+    box-shadow:
+      0 1.8rem 5.5rem rgb(0 0 0 / 0.34),
+      inset 0 1px 0 rgb(255 255 255 / 0.035);
     isolation: isolate;
   }
 
@@ -96,17 +228,29 @@ const toolingLane = [
     inset: 0;
     z-index: -1;
     content: "";
-    opacity: 0.3;
+    opacity: 0.34;
     background-image:
       linear-gradient(var(--rule) 1px, transparent 1px),
       linear-gradient(90deg, var(--rule) 1px, transparent 1px);
-    background-size: 2.4rem 2.4rem;
-    mask-image: linear-gradient(to bottom, black, transparent 86%);
+    background-size: 2.2rem 2.2rem;
+    mask-image: linear-gradient(to bottom, black, transparent 91%);
+  }
+
+  .console::after {
+    position: absolute;
+    inset: -30% 52% 35% -18%;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    background: radial-gradient(circle, var(--fault-wash), transparent 68%);
+    filter: blur(14px);
   }
 
   .console__top,
-  .lane__head,
-  .lane__list li,
+  .console__lane-head,
+  .console__lane-head > div,
+  .console__lane li,
+  .trace__head,
   .console__result {
     display: flex;
     align-items: center;
@@ -121,201 +265,386 @@ const toolingLane = [
 
   .console__eyebrow,
   .console__branch,
-  .lane__command,
-  .lane__signal,
-  .lane__list,
-  .console__handoff,
+  .console__lane,
+  .trace,
   .console__result {
     font-family: var(--font-mono);
   }
 
   .console__eyebrow {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.28rem;
     color: var(--fix);
-    font-size: 0.6rem;
+    font-size: 0.62rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
   .console figcaption {
     font-family: var(--font-display);
-    font-size: clamp(1.25rem, 2vw, 1.6rem);
-    font-variation-settings: "opsz" 48, "WONK" 0, "wght" 490;
-    line-height: 1.1;
+    font-size: clamp(1.3rem, 2vw, 1.72rem);
+    font-variation-settings: "opsz" 48, "WONK" 0, "wght" 500;
+    line-height: 1.08;
   }
 
   .console__branch {
     display: inline-flex;
     align-items: center;
+    flex: none;
     gap: 0.45rem;
     color: var(--ink-soft);
-    font-size: 0.58rem;
-    letter-spacing: 0.08em;
+    font-size: 0.6rem;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
   }
 
   .console__branch i {
-    width: 0.48rem;
-    height: 0.48rem;
+    width: 0.5rem;
+    height: 0.5rem;
     border-radius: 50%;
     background: var(--fix);
     box-shadow: 0 0 0 0 var(--fix);
     animation: console-pulse 2.4s ease-out infinite;
   }
 
-  .console__lanes {
-    padding-block: clamp(1.15rem, 2.6vw, 1.8rem);
+  .console__matrix {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4.5rem minmax(0, 1fr);
+    gap: 0.65rem;
+    align-items: stretch;
+    padding-block: clamp(1rem, 2.5vw, 1.45rem);
   }
 
-  .lane {
-    padding: 0.85rem;
+  .console__lane {
+    min-width: 0;
+    padding: 0.78rem;
     border: 1px solid var(--rule-strong);
     border-radius: 5px;
-    background: color-mix(in srgb, var(--paper-sunk) 88%, transparent);
+    background: color-mix(in srgb, var(--paper-sunk) 89%, transparent);
   }
 
-  .lane__head {
-    gap: 0.65rem;
-    padding-bottom: 0.72rem;
+  .console__lane--product {
+    box-shadow: inset -3px 0 0 color-mix(in srgb, var(--fault) 72%, transparent);
+  }
+
+  .console__lane--tooling {
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--fix) 72%, transparent);
+  }
+
+  .console__lane-head {
+    justify-content: space-between;
+    gap: 0.55rem;
+    padding-bottom: 0.65rem;
     border-bottom: 1px solid var(--rule);
   }
 
-  .lane__command {
-    color: var(--fault);
-    font-size: 0.58rem;
+  .console__lane-head > div {
+    min-width: 0;
+    gap: 0.5rem;
   }
 
-  .lane--tooling .lane__command {
+  .console__lane-head span {
+    color: var(--fault);
+    font-size: 0.57rem;
+  }
+
+  .console__lane--tooling .console__lane-head span {
     color: var(--fix);
   }
 
-  .lane__head h2 {
-    color: var(--ink);
-    font-size: 0.78rem;
-    font-weight: 610;
-    letter-spacing: 0.01em;
-  }
-
-  .lane__signal {
-    margin-left: auto;
-    color: var(--ink-faint);
-    font-size: 0.55rem;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-  }
-
-  .lane__list {
-    list-style: none;
-  }
-
-  .lane__list li {
-    position: relative;
-    display: grid;
-    grid-template-columns: 0.7rem minmax(0, 1fr) auto auto;
-    gap: 0.55rem;
-    padding: 0.62rem 0;
-    color: var(--ink-soft);
-    font-size: 0.62rem;
-  }
-
-  .lane__list li + li {
-    border-top: 1px solid var(--rule);
-  }
-
-  .lane__list strong {
+  .console__lane-head h2 {
     overflow: hidden;
     color: var(--ink);
-    font-weight: 520;
+    font-size: 0.7rem;
+    font-weight: 610;
+    letter-spacing: 0.01em;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .lane__list small {
-    min-width: 3.4rem;
+  .console__lane-head small {
+    flex: none;
     color: var(--ink-faint);
-    font-size: inherit;
-    text-align: right;
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .lane__node {
+  .console__lane ul {
+    list-style: none;
+  }
+
+  .console__lane li {
+    display: grid;
+    grid-template-columns: 0.62rem minmax(0, 1fr) auto;
+    gap: 0.45rem;
+    padding: 0.57rem 0;
+    color: var(--ink-soft);
+    font-size: 0.62rem;
+  }
+
+  .console__lane li + li {
+    border-top: 1px solid var(--rule);
+  }
+
+  .console__lane li strong {
+    overflow: hidden;
+    color: var(--ink);
+    font-weight: 530;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .console__lane li > span:not(.console__node) {
+    color: var(--ink-faint);
+  }
+
+  .console__lane li small {
+    display: none;
+  }
+
+  .console__node {
     align-self: center;
-    width: 0.48rem;
-    height: 0.48rem;
+    width: 0.45rem;
+    height: 0.45rem;
     border: 1px solid var(--fault);
     border-radius: 50%;
     background: var(--fault-wash);
   }
 
-  .lane--tooling .lane__node {
+  .console__lane--tooling .console__node {
     border-color: var(--fix);
     background: var(--fix-wash);
   }
 
-  .console__handoff {
+  .console__bus {
     position: relative;
-    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    min-width: 0;
+  }
+
+  .console__bus-track {
+    position: absolute;
+    top: 1rem;
+    bottom: 1rem;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(var(--fault), var(--rule-strong) 48%, var(--fix));
+  }
+
+  .console__bus-node,
+  .console__bus-signal {
+    position: absolute;
+    left: 50%;
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .console__bus-node--top {
+    top: 0;
+    border: 1px solid var(--fault);
+    background: var(--paper-sunk);
+  }
+
+  .console__bus-node--bottom {
+    top: 100%;
+    border: 1px solid var(--fix);
+    background: var(--paper-sunk);
+  }
+
+  .console__bus-signal {
+    top: 0;
+    background: var(--ink);
+    box-shadow: 0 0 0.7rem var(--fix);
+    animation: trace-route 3.8s var(--ease) infinite;
+  }
+
+  .console__bus-label,
+  .console__bus-turn {
+    position: absolute;
+    left: 50%;
+    width: max-content;
     color: var(--ink-faint);
+    font-family: var(--font-mono);
     font-size: 0.52rem;
-    letter-spacing: 0.09em;
-    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transform: translateX(-50%) rotate(-90deg);
+  }
+
+  .console__bus-label {
+    top: 24%;
+  }
+
+  .console__bus-turn {
+    bottom: 28%;
+  }
+
+  .trace {
+    padding: 0.85rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 5px;
+    background: color-mix(in srgb, var(--paper-sunk) 92%, transparent);
+  }
+
+  .trace__head {
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.72rem;
+  }
+
+  .trace__head p {
+    flex: none;
+    color: var(--ink-faint);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
-  .console__handoff::before,
-  .console__handoff::after {
-    position: absolute;
-    left: 50%;
-    width: 1px;
-    height: 0.72rem;
-    content: "";
-    background: linear-gradient(var(--fault), var(--fix));
+  .trace__head output {
+    overflow: hidden;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: clamp(0.95rem, 1.65vw, 1.18rem);
+    font-variation-settings: "opsz" 42, "WONK" 0, "wght" 500;
+    line-height: 1.15;
+    text-align: right;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  .console__handoff::before {
-    top: 0;
+  .trace__controls {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
-  .console__handoff::after {
-    bottom: 0;
+  .trace__controls button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+    min-height: 38px;
+    padding: 0.45rem;
+    border: 0;
+    color: var(--ink-faint);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.25s ease;
   }
 
-  .console__handoff span {
+  .trace__controls button + button {
+    border-left: 1px solid var(--rule);
+  }
+
+  .trace__controls button span {
+    color: var(--ink-faint);
+    font-size: 0.46rem;
+  }
+
+  .trace__controls button:hover,
+  .trace__controls button[aria-pressed="true"] {
+    color: var(--ink);
+  }
+
+  .trace__controls button[aria-pressed="true"] span {
+    color: var(--fault);
+  }
+
+  .trace__controls button:nth-child(n + 4)[aria-pressed="true"] span {
+    color: var(--fix);
+  }
+
+  .trace__rail {
     position: relative;
-    top: 0.72rem;
-    padding-inline: 0.5rem;
-    background: var(--paper-raised);
+    height: 3px;
+    background: var(--rule);
+  }
+
+  .trace__rail i {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(100% / 5);
+    background: linear-gradient(90deg, var(--fault), var(--fix));
+    transform: translateX(var(--trace-offset));
+    transition: transform 0.5s var(--ease);
+  }
+
+  .trace__rail span {
+    position: absolute;
+    top: 50%;
+    left: var(--trace-position);
+    width: 0.48rem;
+    height: 0.48rem;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--paper-sunk);
+    transform: translate(-50%, -50%);
+    transition: left 0.5s var(--ease);
+  }
+
+  .trace__readout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: end;
+    padding-top: 0.78rem;
+  }
+
+  .trace__readout p {
+    max-width: 49ch;
+    color: var(--ink-soft);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    line-height: 1.48;
+  }
+
+  .trace__readout code {
+    color: var(--ink-soft);
+    font-size: 0.58rem;
+    white-space: nowrap;
+  }
+
+  .trace__readout code > span:first-child {
+    color: var(--fault);
+  }
+
+  .trace__readout strong {
+    color: var(--fix);
+    font-weight: 500;
   }
 
   .console__result {
-    gap: 0.5rem;
-    padding: 0.75rem 0.82rem;
-    border: 1px solid var(--rule-strong);
-    border-radius: 4px;
-    background: var(--paper-sunk);
-    color: var(--ink-soft);
-    font-size: 0.58rem;
+    gap: 0.65rem;
+    padding-top: 0.8rem;
+    color: var(--ink-faint);
+    font-size: 0.56rem;
+    letter-spacing: 0.04em;
   }
 
-  .console__prompt,
-  .console__ok {
-    flex: none;
-  }
-
-  .console__prompt {
-    color: var(--fault);
+  .console__result > span {
+    color: var(--fix);
   }
 
   .console__result code {
     min-width: 0;
     overflow: hidden;
-    color: var(--ink);
+    color: var(--ink-soft);
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .console__ok {
+  .console__result strong {
     margin-left: auto;
     color: var(--fix);
+    font-weight: 500;
+    white-space: nowrap;
   }
 
   @keyframes console-pulse {
@@ -324,27 +653,136 @@ const toolingLane = [
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .console__branch i {
-      animation: none;
+  @keyframes trace-route {
+    0%,
+    14% {
+      top: 0;
+      background: var(--fault);
+      box-shadow: 0 0 0.7rem var(--fault);
+    }
+    48%,
+    62% {
+      top: 50%;
+      background: var(--ink);
+      box-shadow: 0 0 0.7rem var(--ink);
+    }
+    92%,
+    100% {
+      top: 100%;
+      background: var(--fix);
+      box-shadow: 0 0 0.7rem var(--fix);
     }
   }
 
-  @media (max-width: 470px) {
+  @media (prefers-reduced-motion: reduce) {
+    .console__branch i,
+    .console__bus-signal {
+      animation: none;
+    }
+
+    .console__bus-signal {
+      top: 50%;
+    }
+
+    .trace__rail i,
+    .trace__rail span {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 560px) {
     .console {
       padding: 0.9rem;
     }
 
     .console__branch,
-    .console__ok {
+    .console__result strong {
       display: none;
     }
 
-    .lane__list li {
-      grid-template-columns: 0.65rem minmax(0, 1fr) auto;
+    .console__matrix {
+      grid-template-columns: 1fr;
+      gap: 0.55rem;
     }
 
-    .lane__list small {
+    .console__bus {
+      min-height: 2.8rem;
+    }
+
+    .console__bus-track {
+      top: 50%;
+      right: 1.2rem;
+      bottom: auto;
+      left: 1.2rem;
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--fault), var(--rule-strong), var(--fix));
+    }
+
+    .console__bus-node,
+    .console__bus-signal {
+      top: 50%;
+    }
+
+    .console__bus-node--top {
+      left: 0;
+    }
+
+    .console__bus-node--bottom {
+      left: 100%;
+    }
+
+    .console__bus-signal {
+      left: 50%;
+      animation: none;
+    }
+
+    .console__bus-label,
+    .console__bus-turn {
+      top: auto;
+      bottom: 0;
+      transform: translateX(-50%);
+    }
+
+    .console__bus-label {
+      left: 28%;
+    }
+
+    .console__bus-turn {
+      left: 72%;
+    }
+
+    .trace__head {
+      display: block;
+    }
+
+    .trace__head output {
+      display: block;
+      margin-top: 0.4rem;
+      text-align: left;
+      white-space: normal;
+    }
+
+    .trace__controls button {
+      min-height: 44px;
+      padding-inline: 0.2rem;
+      font-size: 0.49rem;
+    }
+
+    .trace__controls button span {
+      display: none;
+    }
+
+    .trace__readout {
+      grid-template-columns: 1fr;
+      gap: 0.6rem;
+    }
+
+    .trace__readout code {
+      white-space: normal;
+    }
+
+    .console__result > span {
       display: none;
     }
   }
