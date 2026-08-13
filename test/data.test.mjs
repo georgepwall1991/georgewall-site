@@ -190,6 +190,10 @@ test('COLLABS points at the live product sites with dofollow-safe rels', () => {
   assert.equal(collabLinkRel(), 'noopener');
   assert.equal(isDofollowRel(collabLinkRel()), true);
   assert.doesNotMatch(collabLinkRel(), /nofollow|sponsored|ugc/i);
+  assert.match(COLLABS[0].anchor, /fashion intelligence/i);
+  assert.match(COLLABS[1].anchor, /quick-dry towels/i);
+  assert.equal(COLLABS[0].cta, 'Visit influ.site');
+  assert.equal(COLLABS[1].cta, 'Visit dansu.co.uk');
 });
 
 test('collabWebsiteSchema marks George as a contributor, not sameAs', () => {
@@ -197,6 +201,7 @@ test('collabWebsiteSchema marks George as a contributor, not sameAs', () => {
   const influ = collabWebsiteSchema(COLLABS[0], personId);
   assert.equal(influ['@type'], 'WebSite');
   assert.equal(influ.name, 'INFLU');
+  assert.equal(influ.alternateName, 'influ.site');
   assert.equal(influ.url, 'https://influ.site');
   assert.equal(influ['@id'], 'https://influ.site/#website');
   assert.deepEqual(influ.contributor, { '@id': personId });

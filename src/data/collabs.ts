@@ -2,8 +2,9 @@
  * Live products George collaborates on. These are not GitHub repos: they are
  * editorial entries with explicit outbound URLs for the homepage chapter.
  *
- * The hrefs are dofollow by design (rel is `noopener` only). Do not add
- * nofollow, sponsored, or ugc — and do not put these URLs on Person `sameAs`.
+ * The hrefs exist to pass SEO value to the live products. They are dofollow
+ * by design (rel is `noopener` only). Do not add nofollow, sponsored, or ugc —
+ * and do not put these URLs on Person `sameAs`.
  */
 
 export type CollabTheme = "influ" | "dansu";
@@ -29,6 +30,9 @@ export interface Collaboration {
   title: string;
   blurb: string;
   href: string;
+  /** Keyword-rich prose anchor for contextual backlinks. */
+  anchor: string;
+  /** Exact-domain CTA label (brand URL match). */
   cta: string;
   theme: CollabTheme;
   tags: string[];
@@ -61,6 +65,7 @@ export function collabWebsiteSchema(
     "@type": "WebSite",
     "@id": `${collab.href.replace(/\/$/, "")}/#website`,
     name: collab.title,
+    alternateName: new URL(collab.href).hostname,
     url: collab.href,
     description: collab.schemaDescription,
     contributor: { "@id": personId },
@@ -79,6 +84,7 @@ export const COLLABS: Collaboration[] = [
     blurb:
       "INFLU is a fashion intelligence terminal: it scores looks as they rise, not after they’ve peaked. I collaborate on the live product — the Style Index, the scoring surface, and the editorial UX that makes telemetry feel like a magazine.",
     href: "https://influ.site",
+    anchor: "INFLU, a fashion intelligence platform",
     cta: "Visit influ.site",
     theme: "influ",
     tags: ["Product", "Editorial UX", "Live platform"],
@@ -105,6 +111,7 @@ export const COLLABS: Collaboration[] = [
     blurb:
       "Dansu makes premium quick-dry towels for raves, gym and travel, with a storefront built around terrace energy and national colours. I collaborate on the brand site — the kind of product page that should feel like a night out, not a catalogue.",
     href: "https://dansu.co.uk",
+    anchor: "Dansu, premium quick-dry towels for raves, gym and travel",
     cta: "Visit dansu.co.uk",
     theme: "dansu",
     tags: ["Brand site", "Storefront", "Product"],

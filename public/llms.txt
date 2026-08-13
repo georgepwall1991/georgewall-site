@@ -23,8 +23,8 @@ This site covers the software I have built: production systems, Roslyn analysers
 
 ## Collaborations
 
-- [INFLU](https://influ.site): Fashion intelligence platform that scores rising looks before they peak. I collaborate on the live product and editorial UX.
-- [Dansu](https://dansu.co.uk): Premium quick-dry towels for raves, gym and travel. I collaborate on the brand site and storefront.
+- [INFLU, a fashion intelligence platform](https://influ.site): Scores rising looks before they peak. I collaborate on the live product and editorial UX.
+- [Dansu, premium quick-dry towels](https://dansu.co.uk): London towels for raves, gym and travel. I collaborate on the brand site and storefront.
 
 ## Writing
 

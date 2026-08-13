@@ -1,11 +1,14 @@
 ---
 import { COLLABS, collabLinkRel } from "../data/collabs";
+
+const influ = COLLABS[0];
+const dansu = COLLABS[1];
 ---
 
 <section class="collabs" id="collab" aria-labelledby="collab-title">
   <div class="wrap">
-    <header class="collabs__head reveal">
-      <div class="collabs__heading">
+    <header class="collabs__head">
+      <div class="collabs__heading reveal">
         <p class="kicker">Collaborations</p>
         <h2 class="display collabs__title" id="collab-title">
           I also collaborate.
@@ -13,7 +16,10 @@ import { COLLABS, collabLinkRel } from "../data/collabs";
       </div>
       <p class="collabs__intro">
         Two live products I help shape and ship, outside the analyser and iOS
-        work. Same instinct: own the whole thing, and make it feel considered.
+        work. I collaborate on
+        <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.anchor}</a>
+        and on
+        <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.anchor}</a>.
       </p>
     </header>
 
@@ -68,7 +74,11 @@ import { COLLABS, collabLinkRel } from "../data/collabs";
 
               <div class="spread__body">
                 <p class="spread__kicker">{collab.kicker}</p>
-                <h3 class="spread__title">{collab.title}</h3>
+                <h3 class="spread__title">
+                  <a href={collab.href} target="_blank" rel={collabLinkRel()}>
+                    {collab.title}
+                  </a>
+                </h3>
 
                 <p class="spread__role" aria-label={`${collab.title} role`}>
                   <span>Role</span>
@@ -126,6 +136,10 @@ import { COLLABS, collabLinkRel } from "../data/collabs";
     color: var(--ink-soft);
     font-size: clamp(1rem, 1.2vw, 1.14rem);
     line-height: 1.58;
+  }
+
+  .collabs__intro :global(.link) {
+    white-space: normal;
   }
 
   .spread {
@@ -377,6 +391,16 @@ import { COLLABS, collabLinkRel } from "../data/collabs";
       "wght" 560;
     line-height: 0.88;
     letter-spacing: -0.04em;
+  }
+
+  .spread__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .spread__title a:hover,
+  .spread__title a:focus-visible {
+    color: var(--accent-text);
   }
 
   .spread__role {

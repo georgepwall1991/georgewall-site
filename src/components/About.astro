@@ -2,8 +2,8 @@
 import { SITE } from '../data/site';
 import { COLLABS, collabLinkRel } from '../data/collabs';
 
-const influ = COLLABS.find((c) => c.slug === 'influ')!;
-const dansu = COLLABS.find((c) => c.slug === 'dansu')!;
+const influ = COLLABS[0];
+const dansu = COLLABS[1];
 
 interface Props {
   avatar: string;
@@ -69,11 +69,11 @@ const stack = [
         </p>
         <p>
           I also collaborate on live products outside the tooling work:
-          <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.title}</a>,
-          a fashion intelligence platform, and
-          <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.title}</a>,
-          a London quick-dry towel brand. Same instinct as the rest of the site:
-          own the whole thing, make it feel considered.
+          <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.anchor}</a>
+          and
+          <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.anchor}</a>.
+          Same instinct as the rest of the site: own the whole thing, make it
+          feel considered.
         </p>
 
         <blockquote class="about__quote">
@@ -152,6 +152,10 @@ const stack = [
   }
   .about__lead {
     color: var(--ink);
+  }
+
+  .about__prose :global(.link) {
+    white-space: normal;
   }
 
   .about__quote {
