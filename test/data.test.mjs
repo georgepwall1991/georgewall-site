@@ -6,6 +6,13 @@ import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
 import { pad2, relativeTime, languageColor, linkLabel } from '../src/lib/format.ts';
 import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
 import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
+import {
+  COLLABS,
+  collabLinkRel,
+  collabSchemas,
+  collabWebsiteSchema,
+  isDofollowRel,
+} from '../src/data/collabs.ts';
 
 /** Build a Repo with sensible defaults; override what a test cares about. */
 function repo(overrides = {}) {
@@ -172,4 +179,31 @@ test('appScoreboard matches the real showcase data', () => {
   const board = appScoreboard(PRIVATE_APPS);
   assert.equal(board.live, 3);
   assert.equal(board.pending, 0);
+});
+
+test('COLLABS points at the live product sites with dofollow-safe rels', () => {
+  assert.deepEqual(
+    COLLABS.map((collab) => collab.href),
+    ['https://influ.site', 'https://dansu.co.uk'],
+  );
+  assert.ok(COLLABS.every((collab) => collab.href.startsWith('https://')));
+  assert.equal(collabLinkRel(), 'noopener');
+  assert.equal(isDofollowRel(collabLinkRel()), true);
+  assert.doesNotMatch(collabLinkRel(), /nofollow|sponsored|ugc/i);
+});
+
+test('collabWebsiteSchema marks George as a contributor, not sameAs', () => {
+  const personId = 'https://www.georgewall.uk/#person';
+  const influ = collabWebsiteSchema(COLLABS[0], personId);
+  assert.equal(influ['@type'], 'WebSite');
+  assert.equal(influ.name, 'INFLU');
+  assert.equal(influ.url, 'https://influ.site');
+  assert.equal(influ['@id'], 'https://influ.site/#website');
+  assert.deepEqual(influ.contributor, { '@id': personId });
+  assert.equal('sameAs' in influ, false);
+
+  const nodes = collabSchemas(personId);
+  assert.equal(nodes.length, 2);
+  assert.equal(nodes[1].url, 'https://dansu.co.uk');
+  assert.equal(nodes[1]['@id'], 'https://dansu.co.uk/#website');
 });
