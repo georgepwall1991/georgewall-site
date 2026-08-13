@@ -5,6 +5,7 @@ import Hero from "../components/Hero.astro";
 import ReleaseLedger from "../components/ReleaseLedger.astro";
 import FeaturedWork from "../components/FeaturedWork.astro";
 import PrivateApps from "../components/PrivateApps.astro";
+import Collaborations from "../components/Collaborations.astro";
 import WritingPreview from "../components/WritingPreview.astro";
 import About from "../components/About.astro";
 import Colophon from "../components/Colophon.astro";
@@ -12,6 +13,7 @@ import { getSnapshot, type Repo } from "../data/github";
 import { getNuGetPackages, totalNuGetDownloads } from "../data/nuget";
 import { FEATURED } from "../data/featured";
 import { PRIVATE_APPS } from "../data/apps";
+import { collabSchemas } from "../data/collabs";
 
 // Build-time data: live GitHub if reachable, committed snapshot otherwise.
 const snapshot = await getSnapshot();
@@ -69,9 +71,10 @@ const appSchema = PRIVATE_APPS.map((app) => ({
     : {}),
   screenshot: app.screenshots.map((shot) => new URL(shot.src, SITE_URL).href),
 }));
+const collabSchema = collabSchemas(`${SITE_URL}/#person`);
 ---
 
-<Base schema={[...softwareSchema, ...appSchema]}>
+<Base schema={[...softwareSchema, ...appSchema, ...collabSchema]}>
   <SiteHeader />
   <main id="main-content">
     <Hero totalDownloads={downloads} shippedApps={shippedApps} />
@@ -79,6 +82,7 @@ const appSchema = PRIVATE_APPS.map((app) => ({
     <FeaturedWork entries={featuredEntries.slice(0, 3)} showAllLink />
     <WritingPreview compact />
     <PrivateApps apps={PRIVATE_APPS} />
+    <Collaborations />
     <About avatar={avatar} />
   </main>
   <Colophon />

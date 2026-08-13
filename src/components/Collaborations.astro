@@ -1,0 +1,542 @@
+---
+import { COLLABS, collabLinkRel } from "../data/collabs";
+
+const influ = COLLABS[0];
+const dansu = COLLABS[1];
+---
+
+<section class="collabs" id="collab" aria-labelledby="collab-title">
+  <div class="wrap">
+    <header class="collabs__head">
+      <div class="collabs__heading reveal">
+        <p class="kicker">Collaborations</p>
+        <h2 class="display collabs__title" id="collab-title">
+          I also collaborate.
+        </h2>
+      </div>
+      <p class="collabs__intro">
+        Two live products I help shape and ship, outside the analyser and iOS
+        work. I collaborate on
+        <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.anchor}</a>
+        and on
+        <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.anchor}</a>.
+      </p>
+    </header>
+
+    <div class="collabs__list">
+      {
+        COLLABS.map((collab, index) => {
+          const number = String(index + 1).padStart(2, "0");
+          return (
+            <article
+              id={`collab-${collab.slug}`}
+              class={`spread spread--${collab.theme} reveal`}
+              style={`--reveal-delay:${index * 90}ms`}
+            >
+              <div class="spread__media">
+                <span class="spread__no" aria-hidden="true">
+                  /{number}
+                </span>
+
+                <div class="spread__chrome">
+                  <p class="spread__edition">{collab.scene.edition}</p>
+                  <p class="spread__figure">{collab.scene.figure}</p>
+                </div>
+
+                <figure class="spread__poster">
+                  <img
+                    src={collab.poster.src}
+                    alt={collab.poster.alt}
+                    width="1200"
+                    height="750"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+
+                <aside
+                  class="spread__chip"
+                  aria-label={`${collab.title} live readout`}
+                >
+                  <span>{collab.scene.metricLabel}</span>
+                  <strong>{collab.scene.metricValue}</strong>
+                  <em>{collab.scene.status}</em>
+                </aside>
+
+                <ul class="spread__notes">
+                  {collab.scene.notes.map((note) => (
+                    <li>{note}</li>
+                  ))}
+                </ul>
+
+                <p class="spread__caption">{collab.scene.caption}</p>
+              </div>
+
+              <div class="spread__body">
+                <p class="spread__kicker">{collab.kicker}</p>
+                <h3 class="spread__title">
+                  <a href={collab.href} target="_blank" rel={collabLinkRel()}>
+                    {collab.title}
+                  </a>
+                </h3>
+
+                <p class="spread__role" aria-label={`${collab.title} role`}>
+                  <span>Role</span>
+                  <span>Collaborator</span>
+                </p>
+
+                <p class="spread__blurb">{collab.blurb}</p>
+
+                <ul class="spread__tags" aria-label={`${collab.title} tags`}>
+                  {collab.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+
+                <a
+                  class="spread__cta"
+                  href={collab.href}
+                  target="_blank"
+                  rel={collabLinkRel()}
+                >
+                  {collab.cta}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .collabs {
+    padding-top: clamp(4.5rem, 9vw, 8rem);
+  }
+
+  .collabs__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.62fr);
+    gap: clamp(2rem, 7vw, 6rem);
+    align-items: end;
+    padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .collabs__title {
+    max-width: 10ch;
+    margin-top: 0.72rem;
+    font-size: clamp(2.6rem, 5vw, 4.65rem);
+  }
+
+  .collabs__intro {
+    max-width: 38ch;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.2vw, 1.14rem);
+    line-height: 1.58;
+  }
+
+  .collabs__intro :global(.link) {
+    white-space: normal;
+  }
+
+  .spread {
+    --scene: #c8f04d;
+    --scene-soft: #f1eee6;
+    display: grid;
+    grid-template-columns: minmax(0, 1.18fr) minmax(20rem, 0.82fr);
+    gap: clamp(1.75rem, 5vw, 5rem);
+    align-items: center;
+    padding-block: clamp(2rem, 6vw, 5rem);
+    border-bottom: 1.5px solid var(--ink);
+  }
+
+  .spread:nth-child(even) {
+    grid-template-columns: minmax(20rem, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .spread:nth-child(even) .spread__media {
+    order: 2;
+  }
+
+  .spread--influ {
+    --scene: #c8f04d;
+    --scene-soft: #e9e4d6;
+  }
+
+  .spread--dansu {
+    --scene: #e23b2a;
+    --scene-soft: #f4c430;
+  }
+
+  .spread__media {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: clamp(28rem, 48vw, 38rem);
+    overflow: hidden;
+    padding: clamp(1rem, 3vw, 1.8rem);
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    isolation: isolate;
+    background:
+      radial-gradient(
+        circle at 12% 10%,
+        color-mix(in srgb, var(--scene) 34%, transparent),
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at 88% 88%,
+        color-mix(in srgb, var(--scene-soft) 22%, transparent),
+        transparent 40%
+      ),
+      #090b12;
+    box-shadow: 6px 7px 0 var(--ink);
+  }
+
+  .spread__media::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    opacity: 0.28;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 2.5rem 2.5rem;
+    mask-image: linear-gradient(to bottom, black, transparent 78%);
+  }
+
+  .spread--dansu .spread__media::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    height: 7px;
+    content: "";
+    background: linear-gradient(
+      90deg,
+      #c8102e 0 14%,
+      #f4f1e9 14% 20%,
+      #009c3b 20% 34%,
+      #ffdf00 34% 48%,
+      #002654 48% 62%,
+      #ed2939 62% 76%,
+      #f4c430 76% 88%,
+      #e23b2a 88% 100%
+    );
+  }
+
+  .spread__no,
+  .spread__chrome,
+  .spread__caption,
+  .spread__notes {
+    position: relative;
+    z-index: 3;
+  }
+
+  .spread__no {
+    color: rgb(255 255 255 / 0.62);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+  }
+
+  .spread__chrome {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.55rem;
+    color: rgb(255 255 255 / 0.78);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .spread__figure {
+    color: var(--scene);
+  }
+
+  .spread__poster {
+    width: min(86%, 34rem);
+    align-self: center;
+    margin-top: clamp(1.1rem, 3vw, 2rem);
+    transform: rotate(-2.2deg) translateY(0.2rem);
+    transition: transform 0.45s var(--ease);
+  }
+
+  .spread:nth-child(even) .spread__poster {
+    transform: rotate(2.1deg) translateY(0.2rem);
+  }
+
+  .spread__media:hover .spread__poster {
+    transform: rotate(-1.2deg) translateY(-0.35rem);
+  }
+
+  .spread:nth-child(even) .spread__media:hover .spread__poster {
+    transform: rotate(1.1deg) translateY(-0.35rem);
+  }
+
+  .spread__poster img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 8 / 5;
+    object-fit: cover;
+    object-position: top center;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    border-radius: 3px;
+    box-shadow: 0 1.2rem 2.8rem rgb(0 0 0 / 0.55);
+    background: #111;
+  }
+
+  .spread__chip {
+    position: absolute;
+    right: 1.1rem;
+    bottom: 4.4rem;
+    z-index: 4;
+    display: grid;
+    gap: 0.15rem;
+    min-width: 7.2rem;
+    padding: 0.7rem 0.8rem 0.75rem;
+    color: #f7f4ed;
+    background: color-mix(in srgb, #090b12 78%, transparent);
+    border: 1px solid color-mix(in srgb, var(--scene) 55%, transparent);
+    border-radius: 4px;
+    backdrop-filter: blur(8px);
+  }
+
+  .spread__chip span,
+  .spread__chip em {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .spread__chip span {
+    color: rgb(255 255 255 / 0.62);
+  }
+
+  .spread__chip strong {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-variation-settings:
+      "opsz" 72,
+      "WONK" 1,
+      "wght" 560;
+    line-height: 0.9;
+    color: var(--scene);
+  }
+
+  .spread__chip em {
+    color: var(--scene);
+    font-style: normal;
+  }
+
+  .spread__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 1.1rem;
+    list-style: none;
+  }
+
+  .spread__notes li {
+    padding: 0.22rem 0.48rem;
+    color: rgb(255 255 255 / 0.72);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 999px;
+  }
+
+  .spread__caption {
+    margin-top: 0.7rem;
+    color: rgb(255 255 255 / 0.58);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .spread__body {
+    display: grid;
+    align-content: center;
+    min-width: 0;
+  }
+
+  .spread__kicker {
+    color: var(--accent-text);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .spread__title {
+    max-width: 10ch;
+    margin-top: 0.85rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 5.4vw, 5.2rem);
+    font-variation-settings:
+      "opsz" 80,
+      "WONK" 1,
+      "wght" 560;
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+  }
+
+  .spread__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .spread__title a:hover,
+  .spread__title a:focus-visible {
+    color: var(--accent-text);
+  }
+
+  .spread__role {
+    display: flex;
+    width: fit-content;
+    margin-top: 1.35rem;
+    overflow: hidden;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+  }
+
+  .spread__role span {
+    padding: 0.44rem 0.72rem;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  .spread__role span:last-child {
+    color: var(--paper);
+    background: var(--ink);
+    border-left: 1px solid var(--rule-strong);
+  }
+
+  .spread__blurb {
+    max-width: 51ch;
+    margin-top: 1.35rem;
+    color: var(--ink-soft);
+    font-size: clamp(1rem, 1.35vw, 1.16rem);
+    line-height: 1.6;
+  }
+
+  .spread__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.25rem;
+    list-style: none;
+  }
+
+  .spread__tags li {
+    padding: 0.31rem 0.58rem;
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--paper-raised) 74%, transparent);
+  }
+
+  .spread__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    width: fit-content;
+    min-height: 44px;
+    margin-top: 1.55rem;
+    padding: 0.62em 0.95em;
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    background: var(--accent-text);
+    border: 1.5px solid var(--accent-text);
+    border-radius: 999px;
+    box-shadow: 3px 3px 0 var(--ink);
+    transition:
+      transform 0.18s var(--ease),
+      box-shadow 0.18s var(--ease),
+      background 0.18s ease;
+  }
+
+  .spread__cta:hover {
+    color: var(--paper);
+    background: var(--ink);
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0 var(--accent);
+    transform: translate(-1px, -1px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spread__poster,
+    .spread:nth-child(even) .spread__poster,
+    .spread__media:hover .spread__poster,
+    .spread:nth-child(even) .spread__media:hover .spread__poster,
+    .spread__cta {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .collabs__head,
+    .spread,
+    .spread:nth-child(even) {
+      grid-template-columns: 1fr;
+    }
+
+    .spread:nth-child(even) .spread__media {
+      order: 0;
+    }
+
+    .spread__body {
+      max-width: 44rem;
+    }
+
+    .spread__chip {
+      right: 0.9rem;
+      bottom: 4.1rem;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .spread__media {
+      min-height: 24rem;
+      padding: 0.9rem 0.75rem 1rem;
+    }
+
+    .spread__poster {
+      width: 100%;
+      transform: none;
+    }
+
+    .spread:nth-child(even) .spread__poster,
+    .spread__media:hover .spread__poster,
+    .spread:nth-child(even) .spread__media:hover .spread__poster {
+      transform: none;
+    }
+
+    .spread__chip {
+      position: static;
+      margin-top: 0.9rem;
+      width: fit-content;
+    }
+  }
+</style>

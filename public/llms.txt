@@ -21,6 +21,11 @@ This site covers the software I have built: production systems, Roslyn analysers
 - [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Match-3 iOS game with ten worlds, power gems, Game Center achievements and no ads.
 - [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Small iOS strategy game with a connected galaxy, fleet orders, tactical gambits and research.
 
+## Collaborations
+
+- [INFLU, a fashion intelligence platform](https://influ.site): Scores rising looks before they peak. I collaborate on the live product and editorial UX.
+- [Dansu, premium quick-dry towels](https://dansu.co.uk): London towels for raves, gym and travel. I collaborate on the brand site and storefront.
+
 ## Writing
 
 - [When HTTP retries make failures worse](https://www.georgewall.uk/writing/when-http-retries-make-failures-worse): Retry storms, unsafe methods, latency budgets, idempotency and compile-time checks for fragile outbound HTTP policies.
