@@ -110,7 +110,7 @@ export const COLLABS: Collaboration[] = [
     tags: ["Brand site", "Storefront", "Product"],
     poster: {
       src: "/collab/dansu.webp",
-      alt: "Dansu homepage: national-colour towel drops with terrace copy",
+      alt: "Dansu homepage: a dark storefront hero with the brand mark and a shop-now cue",
     },
     schemaDescription:
       "Premium quick-dry towels for raves, gym and travel, with a brand storefront built around terrace energy.",
