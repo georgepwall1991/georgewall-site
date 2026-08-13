@@ -3,7 +3,7 @@
  * editorial entries with explicit outbound URLs for the homepage chapter.
  *
  * The hrefs exist to pass SEO value to the live products. They are dofollow
- * by design (rel is `noopener` only). Do not add nofollow, sponsored, or ugc —
+ * by design (rel is `noopener` only). Do not add nofollow, sponsored, or ugc,
  * and do not put these URLs on Person `sameAs`.
  */
 
@@ -82,18 +82,18 @@ export const COLLABS: Collaboration[] = [
     kicker: "Collaboration · Fashion intelligence",
     title: "INFLU",
     blurb:
-      "INFLU is a fashion intelligence terminal: it scores looks as they rise, not after they’ve peaked. I collaborate on the live product — the Style Index, the scoring surface, and the editorial UX that makes telemetry feel like a magazine.",
+      "INFLU is a fashion intelligence platform. It scores looks as they start to rise, so you can see what is about to take off. I collaborate on the live product, including the Style Index and the scoring UI.",
     href: "https://influ.site",
     anchor: "INFLU, a fashion intelligence platform",
     cta: "Visit influ.site",
     theme: "influ",
-    tags: ["Product", "Editorial UX", "Live platform"],
+    tags: ["Product", "Web", "Fashion"],
     poster: {
       src: "/collab/influ.webp",
-      alt: "INFLU homepage: a fashion intelligence terminal scoring rising looks",
+      alt: "INFLU homepage, with the fashion intelligence feed and look scores",
     },
     schemaDescription:
-      "Fashion intelligence platform that scores rising looks before they peak.",
+      "Fashion intelligence platform that scores looks as they start to rise.",
     scene: {
       edition: "Sect. I",
       figure: "The Fashion Issue",
@@ -109,7 +109,7 @@ export const COLLABS: Collaboration[] = [
     kicker: "Collaboration · Brand and storefront",
     title: "Dansu",
     blurb:
-      "Dansu makes premium quick-dry towels for raves, gym and travel, with a storefront built around terrace energy and national colours. I collaborate on the brand site — the kind of product page that should feel like a night out, not a catalogue.",
+      "Dansu sells premium quick-dry towels for raves, gym and travel. I collaborate on the brand site and the storefront.",
     href: "https://dansu.co.uk",
     anchor: "Dansu, premium quick-dry towels for raves, gym and travel",
     cta: "Visit dansu.co.uk",
@@ -117,10 +117,10 @@ export const COLLABS: Collaboration[] = [
     tags: ["Brand site", "Storefront", "Product"],
     poster: {
       src: "/collab/dansu.webp",
-      alt: "Dansu homepage: a dark storefront hero with the brand mark and a shop-now cue",
+      alt: "Dansu homepage, with the brand mark and a shop now link",
     },
     schemaDescription:
-      "Premium quick-dry towels for raves, gym and travel, with a brand storefront built around terrace energy.",
+      "Premium quick-dry towels for raves, gym and travel, sold from a London brand site.",
     scene: {
       edition: "England",
       figure: "Terrace issue",
