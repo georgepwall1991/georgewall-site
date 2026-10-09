@@ -4,13 +4,12 @@
 // design actually uses, plus a real italic instead of browser synthesis.
 import "@fontsource-variable/fraunces/full.css";
 import "@fontsource-variable/fraunces/full-italic.css";
-import "@fontsource-variable/archivo";
+import "@fontsource-variable/archivo/wdth.css";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import Analytics from "@vercel/analytics/astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import { SITE, SOCIALS } from "../data/site";
-import StatusBar from "../components/StatusBar.astro";
 
 interface Props {
   title?: string;
@@ -20,8 +19,8 @@ interface Props {
 }
 
 const {
-  title = "George Wall | Full-stack engineer and toolmaker",
-  description = "Full-stack engineer in London building React and .NET systems, developer tools and iOS apps.",
+  title = "George Wall | Full-stack engineer, founder and app maker",
+  description = "George Wall is a London full-stack engineer and co-founder of Dansu. He ships iOS apps, builds INFLU's fashion intelligence platform and writes .NET analysers with 185K+ downloads.",
   schema = [],
 } = Astro.props;
 
@@ -83,7 +82,7 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="George Wall" />
-    <meta name="theme-color" content="#0b0d10" data-theme-colour />
+    <meta name="theme-color" content="#08090b" data-theme-colour />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -131,7 +130,6 @@ const jsonLd = {
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
     <slot />
-    <StatusBar />
     <Analytics />
     <SpeedInsights />
   </body>

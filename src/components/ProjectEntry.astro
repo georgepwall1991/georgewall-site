@@ -292,14 +292,13 @@ const now = new Date();
   }
 
   .entry__title {
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     font-variation-settings:
-      "opsz" 144,
-      "WONK" 1,
-      "wght" 540;
+      "wght" 680,
+      "wdth" 108;
     font-size: clamp(2.3rem, 6.5vw, 4.6rem);
     line-height: 0.98;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.045em;
     margin-bottom: 1.1rem;
     /* Long compound titles (e.g. "LinqContraband") must break rather than
        force horizontal scroll on narrow phones. overflow-wrap has to sit on
@@ -315,12 +314,7 @@ const now = new Date();
   }
 
   .entry__blurb {
-    font-family: var(--font-display);
-    font-variation-settings:
-      "opsz" 32,
-      "WONK" 0,
-      "wght" 400;
-    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
     line-height: 1.42;
     color: var(--ink-soft);
     max-width: 46ch;

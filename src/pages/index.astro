@@ -1,17 +1,16 @@
 ---
 import Base from "../layouts/Base.astro";
 import SiteHeader from "../components/SiteHeader.astro";
-import Hero from "../components/Hero.astro";
-import ReleaseLedger from "../components/ReleaseLedger.astro";
-import FeaturedWork from "../components/FeaturedWork.astro";
-import PrivateApps from "../components/PrivateApps.astro";
-import Collaborations from "../components/Collaborations.astro";
-import WritingPreview from "../components/WritingPreview.astro";
+import HomeHero from "../components/home/HomeHero.astro";
+import Ventures from "../components/home/Ventures.astro";
+import AppShowcase from "../components/home/AppShowcase.astro";
+import ToolsSection from "../components/home/ToolsSection.astro";
+import WritingList from "../components/home/WritingList.astro";
 import About from "../components/About.astro";
 import Colophon from "../components/Colophon.astro";
 import { getSnapshot, type Repo } from "../data/github";
 import { getNuGetPackages, totalNuGetDownloads } from "../data/nuget";
-import { FEATURED } from "../data/featured";
+import { FEATURED, SECONDARY } from "../data/featured";
 import { PRIVATE_APPS } from "../data/apps";
 import { collabSchemas } from "../data/collabs";
 
@@ -34,6 +33,9 @@ const featuredEntries = FEATURED.map((f) => ({
   package: f.packageId ? packages[f.packageId] : undefined,
   anchor: `work-${slug(f.name)}`,
 }));
+const toolEntries = [...FEATURED, ...SECONDARY]
+  .filter((f) => f.packageId)
+  .map((f) => ({ ...f, package: packages[f.packageId!] }));
 const downloads = totalNuGetDownloads(Object.values(packages));
 const shippedApps = PRIVATE_APPS.filter(
   (app) => app.status === "App Store",
@@ -77,12 +79,11 @@ const collabSchema = collabSchemas(`${SITE_URL}/#person`);
 <Base schema={[...softwareSchema, ...appSchema, ...collabSchema]}>
   <SiteHeader />
   <main id="main-content">
-    <Hero totalDownloads={downloads} shippedApps={shippedApps} />
-    <ReleaseLedger />
-    <FeaturedWork entries={featuredEntries.slice(0, 3)} showAllLink />
-    <WritingPreview compact />
-    <PrivateApps apps={PRIVATE_APPS} />
-    <Collaborations />
+    <HomeHero totalDownloads={downloads} shippedApps={shippedApps} />
+    <Ventures />
+    <AppShowcase apps={PRIVATE_APPS} />
+    <ToolsSection entries={toolEntries} totalDownloads={downloads} />
+    <WritingList />
     <About avatar={avatar} />
   </main>
   <Colophon />
