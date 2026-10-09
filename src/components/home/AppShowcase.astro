@@ -1,0 +1,565 @@
+---
+import { appScoreboard, LIVE_STATUS, type PrivateApp } from "../../data/apps";
+
+interface Props {
+  apps: PrivateApp[];
+}
+
+const { apps } = Astro.props;
+const storefront = apps.filter((app) => app.featured !== false);
+const lab = apps.filter((app) => app.featured === false);
+const board = appScoreboard(apps);
+---
+
+<section class="apps" id="apps" aria-labelledby="apps-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <div>
+        <p class="kicker">iOS apps</p>
+        <h2 class="display section-head__title" id="apps-title">
+          Shipped to the <em>App Store</em>.
+        </h2>
+      </div>
+      <p class="section-head__lede">
+        {board.live} apps live, {lab.length} more in TestFlight or private builds. I design
+        them, write every line, make the store art and handle the releases myself.
+      </p>
+    </header>
+
+    <div class="apps__list">
+      {
+        storefront.map((app, i) => (
+          <article
+            class={`app app--${app.theme} reveal`}
+            id={`app-${app.theme}`}
+            aria-labelledby={`app-${app.theme}-title`}
+          >
+            {app.backdrop && (
+              <img
+                class="app__backdrop"
+                src={app.backdrop}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                aria-hidden="true"
+              />
+            )}
+
+            <div class="app__info">
+              <div class="app__id">
+                {app.icon && (
+                  <img
+                    class="app__icon"
+                    src={app.icon}
+                    alt=""
+                    width="64"
+                    height="64"
+                    loading="lazy"
+                  />
+                )}
+                <div>
+                  <p class="app__kicker">{app.kicker}</p>
+                  <p class="app__status">
+                    <span class="app__dot" aria-hidden="true" />
+                    {app.status === LIVE_STATUS ? "Live on the App Store" : app.status}
+                    {app.release && <span class="app__release">{app.release}</span>}
+                  </p>
+                </div>
+              </div>
+
+              <h3 class="display app__title" id={`app-${app.theme}-title`}>
+                {app.name}
+              </h3>
+              <p class="app__blurb">{app.blurb}</p>
+
+              <ul class="app__stack" aria-label="Built with">
+                {app.stack.map((s) => (
+                  <li>{s}</li>
+                ))}
+              </ul>
+
+              <div class="app__actions">
+                {app.url && (
+                  <a class="btn app__store" href={app.url} target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                      <path
+                        fill="currentColor"
+                        d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.4.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.7-1-2.7-4.1zM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.6-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.5z"
+                      />
+                    </svg>
+                    Download on the App Store
+                  </a>
+                )}
+                {app.links?.slice(0, 2).map((link) => (
+                  <a class="app__link" href={link.url} target="_blank" rel="noopener">
+                    {link.label}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div
+              class="app__devices"
+              style={`--shots: ${Math.min(app.screenshots.length, 3)}`}
+            >
+              {app.screenshots.slice(0, 3).map((shot, s) => (
+                <figure class={`app__shot app__shot--${s + 1}`}>
+                  <div class="phone">
+                    <img
+                      src={shot.src}
+                      alt={shot.alt}
+                      width="600"
+                      height="1300"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  {shot.caption && <figcaption>{shot.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+
+            <span class="app__index" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      lab.length > 0 && (
+        <section class="lab reveal" aria-labelledby="lab-title">
+          <div class="lab__head">
+            <p class="kicker">In the lab</p>
+            <h3 class="lab__title" id="lab-title">
+              TestFlight and private builds
+            </h3>
+          </div>
+          <div class="lab__grid">
+            {lab.map((app) => (
+              <article class={`lab-card lab-card--${app.theme}`}>
+                <div class="lab-card__shot">
+                  <div class="phone">
+                    <img
+                      src={app.screenshots[0].src}
+                      alt={app.screenshots[0].alt}
+                      width="600"
+                      height="1300"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+                <div class="lab-card__body">
+                  <p class="app__status">
+                    <span class="app__dot app__dot--pending" aria-hidden="true" />
+                    {app.status}
+                    {app.release && <span class="app__release">{app.release}</span>}
+                  </p>
+                  <h4 class="lab-card__title">{app.title}</h4>
+                  <p class="lab-card__blurb">{app.blurb}</p>
+                  <ul class="app__stack" aria-label="Built with">
+                    {app.stack.map((s) => (
+                      <li>{s}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .apps {
+    padding-top: var(--section-gap);
+  }
+
+  .apps__list {
+    display: grid;
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .app {
+    --app-a: #1c1440;
+    --app-b: #0b0a1a;
+    --app-glow: rgba(140, 110, 255, 0.35);
+    --app-accent: #b9a6ff;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    padding: clamp(1.75rem, 4.5vw, 4rem);
+    border-radius: calc(var(--radius) + 6px);
+    overflow: hidden;
+    isolation: isolate;
+    color: #f3efe6;
+    background:
+      radial-gradient(circle at 78% 30%, var(--app-glow), transparent 55%),
+      linear-gradient(160deg, var(--app-a), var(--app-b));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .app--gem {
+    --app-a: #0d3b33;
+    --app-b: #061714;
+    --app-glow: rgba(70, 230, 180, 0.3);
+    --app-accent: #6ff2c8;
+  }
+
+  .app--fleet {
+    --app-a: #1d1450;
+    --app-b: #07061a;
+    --app-glow: rgba(120, 90, 255, 0.35);
+    --app-accent: #8fd8ff;
+  }
+
+  .app--wellness {
+    --app-a: #2a1630;
+    --app-b: #0a0812;
+    --app-glow: rgba(255, 140, 90, 0.28);
+    --app-accent: #ffb38a;
+  }
+
+  .app:nth-child(even) .app__info {
+    order: 2;
+  }
+
+  .app__backdrop {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.55;
+    mask-image: linear-gradient(90deg, transparent 5%, #000 60%);
+  }
+
+  .app:nth-child(even) .app__backdrop {
+    mask-image: linear-gradient(270deg, transparent 5%, #000 60%);
+  }
+
+  .app__info {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .app__id {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .app__icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 22%;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 12px 30px -10px rgba(0, 0, 0, 0.7);
+  }
+
+  .app__kicker {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--app-accent, var(--accent-text));
+  }
+
+  .app__status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+    font-size: 0.86rem;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  .app__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34d399;
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
+  }
+
+  .app__dot--pending {
+    background: #fbbf24;
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+  }
+
+  .app__release {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.15em 0.55em;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    opacity: 0.7;
+  }
+
+  .app__title {
+    font-size: clamp(2.8rem, 6vw, 5.4rem);
+  }
+
+  .app__blurb {
+    font-size: clamp(1rem, 0.96rem + 0.3vw, 1.15rem);
+    line-height: 1.6;
+    color: rgba(243, 239, 230, 0.78);
+    max-width: 42ch;
+  }
+
+  .app__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+  }
+
+  .app__stack li {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.35em 0.75em;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(243, 239, 230, 0.85);
+  }
+
+  .app__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.2rem;
+    margin-top: 0.4rem;
+  }
+
+  .app__store {
+    background: #f3efe6;
+    color: #0b0b0c;
+    border-color: #f3efe6;
+  }
+
+  .app__link {
+    color: rgba(243, 239, 230, 0.8);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(243, 239, 230, 0.25);
+    padding-bottom: 0.1em;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .app__link:hover {
+    color: #fff;
+    border-color: var(--app-accent);
+  }
+
+  /* ----- Device row ----- */
+  .app__devices {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(var(--shots, 3), minmax(0, 1fr));
+    gap: clamp(0.6rem, 1.6vw, 1.2rem);
+    align-items: center;
+    max-width: calc(var(--shots, 3) * 13.5rem);
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .app__shot {
+    transition: transform 0.9s var(--ease);
+  }
+
+  .app__shot--1 {
+    transform: translateY(6%);
+  }
+
+  .app__shot--3 {
+    transform: translateY(-6%);
+  }
+
+  .app:hover .app__shot--1 {
+    transform: translateY(3%);
+  }
+
+  .app:hover .app__shot--3 {
+    transform: translateY(-3%);
+  }
+
+  .app__shot figcaption {
+    margin-top: 0.9rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(243, 239, 230, 0.6);
+  }
+
+  .app__index {
+    position: absolute;
+    top: clamp(1rem, 2.5vw, 1.8rem);
+    right: clamp(1.2rem, 3vw, 2.2rem);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: rgba(243, 239, 230, 0.4);
+  }
+
+  .app:nth-child(even) .app__index {
+    right: auto;
+    left: clamp(1.2rem, 3vw, 2.2rem);
+  }
+
+  /* ----- Lab ----- */
+  .lab {
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .lab__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .lab__title {
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    font-variation-settings:
+      "wght" 650,
+      "wdth" 106;
+    letter-spacing: -0.035em;
+  }
+
+  .lab__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  .lab-card {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.42fr) minmax(0, 1fr);
+    gap: clamp(1.2rem, 3vw, 2rem);
+    align-items: center;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: var(--radius);
+    border: 1px solid var(--rule);
+    background: var(--paper-raised);
+    transition:
+      border-color 0.3s ease,
+      transform 0.4s var(--ease);
+  }
+
+  .lab-card:hover {
+    border-color: var(--rule-strong);
+    transform: translateY(-3px);
+  }
+
+  .lab-card__shot {
+    padding: 0.75rem;
+    border-radius: 18px;
+    background: linear-gradient(160deg, #3a2f12, #15120a);
+  }
+
+  .lab-card--transit .lab-card__shot {
+    background: linear-gradient(160deg, #123a52, #08151d);
+  }
+
+  .lab-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .lab-card__body .app__status {
+    color: var(--ink-soft);
+    margin-top: 0;
+  }
+
+  .lab-card__title {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    font-variation-settings:
+      "wght" 680,
+      "wdth" 106;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .lab-card__blurb {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .lab-card .app__stack li {
+    background: var(--glass);
+    border-color: var(--rule);
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 980px) {
+    .app {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .app:nth-child(even) .app__info {
+      order: 0;
+    }
+
+    .app__backdrop,
+    .app:nth-child(even) .app__backdrop {
+      mask-image: linear-gradient(180deg, transparent 10%, #000 70%);
+    }
+
+    .lab__grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 520px) {
+    .app__devices {
+      grid-template-columns: repeat(var(--shots, 3), 62%);
+      max-width: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      margin-inline: calc(-1 * clamp(1.75rem, 4.5vw, 4rem));
+      padding-inline: clamp(1.75rem, 4.5vw, 4rem);
+      padding-block: 1rem;
+      scrollbar-width: none;
+    }
+
+    .app__shot {
+      scroll-snap-align: center;
+      transform: none !important;
+    }
+
+    .lab-card {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .lab-card__shot {
+      max-width: 180px;
+    }
+  }
+</style>

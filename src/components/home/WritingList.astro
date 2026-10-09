@@ -1,0 +1,146 @@
+---
+import { ARTICLES } from "../../data/writing";
+
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+---
+
+<section class="notes" id="writing" aria-labelledby="writing-title">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <div>
+        <p class="kicker">Writing</p>
+        <h2 class="display section-head__title" id="writing-title">
+          Things I learnt the <em>hard way</em>.
+        </h2>
+      </div>
+      <p class="section-head__lede">
+        Short, practical notes on production bugs: why tests miss them, and the tools I
+        build to catch them earlier.
+      </p>
+    </header>
+
+    <ol class="notes__list">
+      {
+        ARTICLES.map((a, i) => (
+          <li class="reveal" style={`--reveal-delay: ${i * 70}ms`}>
+            <a class="note" href={`/writing/${a.slug}`}>
+              <span class="note__meta">
+                <time datetime={a.published}>{fmt(a.published)}</time>
+                <span>{a.readingTime}</span>
+              </span>
+              <span class="note__main">
+                <span class="note__title">{a.title}</span>
+                <span class="note__desc">{a.description}</span>
+              </span>
+              <span class="note__arrow" aria-hidden="true">
+                ↗
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .notes {
+    padding-top: var(--section-gap);
+  }
+
+  .notes__list {
+    list-style: none;
+    border-top: 1px solid var(--rule);
+  }
+
+  .note {
+    display: grid;
+    grid-template-columns: minmax(150px, 0.3fr) minmax(0, 1fr) auto;
+    gap: 1.5rem;
+    align-items: start;
+    padding: clamp(1.5rem, 3vw, 2.2rem) 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    transition: padding 0.4s var(--ease);
+  }
+
+  .note__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    padding-top: 0.5rem;
+  }
+
+  .note__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .note__title {
+    font-size: clamp(1.5rem, 3vw, 2.4rem);
+    font-variation-settings:
+      "wght" 640,
+      "wdth" 104;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    transition: color 0.25s ease;
+  }
+
+  .note__desc {
+    color: var(--ink-soft);
+    max-width: 60ch;
+    line-height: 1.55;
+  }
+
+  .note__arrow {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid var(--rule-strong);
+    transition:
+      background 0.25s ease,
+      color 0.25s ease,
+      transform 0.4s var(--ease);
+  }
+
+  .note:hover {
+    padding-left: 0.6rem;
+  }
+
+  .note:hover .note__title {
+    color: var(--accent-text);
+  }
+
+  .note:hover .note__arrow {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 720px) {
+    .note {
+      grid-template-columns: 1fr auto;
+    }
+
+    .note__meta {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      gap: 1rem;
+      padding-top: 0;
+    }
+  }
+</style>

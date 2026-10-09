@@ -27,6 +27,7 @@ const disciplines = [
     desc: 'Roslyn analysers and source generators that catch known problems while code is being written.',
   },
   { no: '04', name: 'Product and iOS', desc: 'SwiftUI apps taken from the first build through App Store review.' },
+  { no: '05', name: 'Founder', desc: 'Co-founder of Dansu: brand site, Shopify storefront and the systems behind its growth.' },
 ];
 
 const stack = [
@@ -51,7 +52,7 @@ const stack = [
     <div class="about__main">
       <p class="kicker reveal">About</p>
       <h2 class="display about__title reveal">
-        I like owning the whole thing.
+        I like owning the <em>whole</em> thing.
       </h2>
 
       <div class="about__prose reveal">
@@ -68,10 +69,10 @@ const stack = [
           analysers, source generators and migration tools.
         </p>
         <p>
-          I also collaborate on a couple of live products:
-          <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.anchor}</a>
-          and
-          <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.anchor}</a>.
+          These days I also build companies. I co-founded
+          <a class="link link--on" href={dansu.href} target="_blank" rel={collabLinkRel()}>{dansu.anchor}</a>,
+          and I build the product at
+          <a class="link link--on" href={influ.href} target="_blank" rel={collabLinkRel()}>{influ.anchor}</a>.
         </p>
 
         <blockquote class="about__quote">
@@ -125,7 +126,7 @@ const stack = [
   }
 
   .about__title {
-    font-size: clamp(2.4rem, 4.8vw, 4.3rem);
+    font-size: clamp(2.5rem, 6vw, 5.2rem);
     margin: 1rem 0 2rem;
     max-width: 15ch;
   }
@@ -138,15 +139,6 @@ const stack = [
   }
   .about__prose p + p {
     margin-top: 1.2rem;
-  }
-  .about__lead::first-letter {
-    initial-letter: 3 2;
-    -webkit-initial-letter: 3 2;
-    font-family: var(--font-display);
-    font-weight: 600;
-    color: var(--accent-text);
-    margin-right: 0.6rem;
-    font-variation-settings: 'opsz' 144, 'WONK' 1;
   }
   .about__lead {
     color: var(--ink);
@@ -190,14 +182,9 @@ const stack = [
     width: 100%;
     aspect-ratio: 1;
     object-fit: cover;
-    border: 1.5px solid var(--ink);
-    border-radius: 8px;
-    filter: grayscale(1) contrast(1.1) brightness(1.1);
-    mix-blend-mode: screen;
-  }
-  :global(:root[data-theme='light']) .about__portrait img {
-    mix-blend-mode: multiply;
-    filter: grayscale(1) contrast(1.05);
+    border-radius: var(--radius);
+    border: 1px solid var(--rule-strong);
+    box-shadow: var(--shadow-lg);
   }
   .about__portrait-cap {
     margin-top: 0.7rem;

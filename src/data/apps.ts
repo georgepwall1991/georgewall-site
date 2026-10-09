@@ -16,6 +16,10 @@ export interface PrivateApp {
     label: string;
     url: string;
   }[];
+  /** Square app icon, shown beside the title. */
+  icon?: string;
+  /** Full-bleed artwork behind the device stack. */
+  backdrop?: string;
   screenshots: {
     src: string;
     alt: string;
@@ -55,13 +59,13 @@ export const PRIVATE_APPS: PrivateApp[] = [
   {
     name: "GemGame",
     title: "GemGame: Cosy Match 3 Puzzle",
-    kicker: "Shipped iOS game · Match-3",
+    kicker: "iOS game · Match-3 puzzle",
     status: "App Store",
     release: "v2.1.6",
     category: "game",
     theme: "gem",
     blurb:
-      "My match-3 game with ten galaxy worlds, power gems and no ad sludge. Version 2.1 tightened the boards, sharpened the artwork and made the specials feel properly explosive.",
+      "My cosy match-3 game. Five magical worlds, a garden to bring back to life, a daily star board and power gems that properly go off. No ads, and the core puzzles play offline.",
     stack: ["SpriteKit", "SwiftUI", "Game Center", "StoreKit 2"],
     siteUrl: "https://georgepwall1991.github.io/fleet-commander-site/gemgame/",
     url: "https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994",
@@ -88,29 +92,35 @@ export const PRIVATE_APPS: PrivateApp[] = [
         url: "https://georgepwall1991.github.io/fleet-commander-site/gemgame/terms/",
       },
     ],
+    icon: "/apps/gemgame/icon.webp",
     screenshots: [
       {
-        src: "/apps/gemgame-gameplay.webp",
-        alt: "GemGame App Store artwork showing a large cascade on the redesigned jewel board",
-        caption: "Cascade system",
+        src: "/apps/gemgame/gameplay.webp",
+        alt: "GemGame App Store screenshot: a rainbow combo clearing the jewel board, captioned Match gems. Make magic.",
+        caption: "Match gems",
       },
       {
-        src: "/apps/gemgame-specials.webp",
-        alt: "GemGame App Store artwork showing striped, wrapped, seeker, and rainbow power gems",
-        caption: "Power gems · v2.1",
+        src: "/apps/gemgame/garden.webp",
+        alt: "GemGame App Store screenshot: restoring the magical garden with fountains and flower beds",
+        caption: "Restore the garden",
+      },
+      {
+        src: "/apps/gemgame/boss.webp",
+        alt: "GemGame App Store screenshot: a guardian boss level above the jewel board",
+        caption: "Outsmart the guardian",
       },
     ],
   },
   {
     name: "Fleet Commander",
     title: "Fleet Commander",
-    kicker: "Shipped iOS game · Strategy",
+    kicker: "iOS game · Space roguelite",
     status: "App Store",
     release: "v1.0.5",
     category: "game",
     theme: "fleet",
     blurb:
-      "A small space strategy game about expanding across a connected galaxy, researching upgrades and choosing the right tactical gambit. Built in Swift and shipped on the App Store.",
+      "A solo tactical space roguelite for iPhone and iPad. Read the frontier, pick a rule-breaker, then push on or bank it. The upcoming Frontier Runs update adds fleet builds, rival commanders and extraction.",
     stack: ["Swift", "Game Center", "StoreKit", "iOS 17+"],
     siteUrl: "https://georgepwall1991.github.io/fleet-commander-site/",
     url: "https://apps.apple.com/gb/app/fleet-commander/id6760207805",
@@ -133,23 +143,30 @@ export const PRIVATE_APPS: PrivateApp[] = [
         url: "https://georgepwall1991.github.io/fleet-commander-site/terms/",
       },
     ],
+    icon: "/apps/fleet-commander-icon.webp",
+    backdrop: "/apps/fleet/nebula.webp",
     screenshots: [
       {
-        src: "/apps/fleet-commander-galaxy.webp",
-        alt: "Fleet Commander App Store artwork showing the connected galaxy frontier map",
-        caption: "Connected galaxy",
+        src: "/apps/fleet/route.webp",
+        alt: "Fleet Commander screenshot: reading the frontier route across the Orion Verge star map",
+        caption: "Read the frontier",
       },
       {
-        src: "/apps/fleet-commander-battle.webp",
-        alt: "Fleet Commander App Store artwork showing tactical gambits before a border battle",
-        caption: "Tactical gambits",
+        src: "/apps/fleet/tactics.webp",
+        alt: "Fleet Commander screenshot: choosing one rule-breaker before a run",
+        caption: "Choose a rule-breaker",
+      },
+      {
+        src: "/apps/fleet/showdown.webp",
+        alt: "Fleet Commander screenshot: a rival commander showdown with win odds for each tactic",
+        caption: "Rival showdown",
       },
     ],
   },
   {
     name: "NoBooze",
     title: "NoBooze",
-    kicker: "Shipped iOS product · Health & Fitness",
+    kicker: "iOS app · Health and fitness",
     status: "App Store",
     release: "v1.6.1",
     category: "health",
@@ -159,6 +176,8 @@ export const PRIVATE_APPS: PrivateApp[] = [
     stack: ["SwiftUI", "Core Data", "HealthKit", "CloudKit"],
     siteUrl: "https://funny-boba-67508f.netlify.app/",
     url: "https://apps.apple.com/gb/app/nobooze/id6755612993",
+    icon: "/apps/nobooze/icon.webp",
+    backdrop: "/apps/nobooze/dusk.webp",
     cta: "App Store",
     links: [
       {

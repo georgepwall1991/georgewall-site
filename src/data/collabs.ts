@@ -26,6 +26,8 @@ export interface CollabScene {
 
 export interface Collaboration {
   slug: string;
+  /** George's role, shown as the headline badge. */
+  role: string;
   kicker: string;
   title: string;
   blurb: string;
@@ -37,6 +39,10 @@ export interface Collaboration {
   theme: CollabTheme;
   tags: string[];
   poster: CollabPoster;
+  /** Product imagery for the ventures spread. The first image leads. */
+  gallery: CollabPoster[];
+  /** Proof points shown under the copy. */
+  facts: { label: string; value: string }[];
   schemaDescription: string;
   scene: CollabScene;
 }
@@ -79,7 +85,8 @@ export function collabSchemas(personId: string): Record<string, unknown>[] {
 export const COLLABS: Collaboration[] = [
   {
     slug: "influ",
-    kicker: "Collaboration · Fashion intelligence",
+    role: "Product engineer",
+    kicker: "Fashion intelligence platform",
     title: "INFLU",
     blurb:
       "INFLU is a fashion intelligence platform. It scores looks as they start to rise, so you can see what is about to take off. I collaborate on the live product, including the Style Index and the scoring UI.",
@@ -92,6 +99,19 @@ export const COLLABS: Collaboration[] = [
       src: "/collab/influ.webp",
       alt: "INFLU homepage, with the fashion intelligence feed and look scores",
     },
+    gallery: [
+      { src: "/ventures/influ/look-01.webp", alt: "Street style look tracked on INFLU" },
+      { src: "/ventures/influ/look-02.webp", alt: "Couture gown look tracked on INFLU" },
+      { src: "/ventures/influ/look-12.webp", alt: "Editorial look tracked on INFLU" },
+      { src: "/ventures/influ/look-04.webp", alt: "Tailoring look tracked on INFLU" },
+      { src: "/ventures/influ/look-09.webp", alt: "Statement look tracked on INFLU" },
+      { src: "/ventures/influ/look-07.webp", alt: "Monochrome look tracked on INFLU" },
+    ],
+    facts: [
+      { label: "Built", value: "Style Index" },
+      { label: "Surface", value: "Web terminal" },
+      { label: "Signal", value: "Virality · velocity" },
+    ],
     schemaDescription:
       "Fashion intelligence platform that scores looks as they start to rise.",
     scene: {
@@ -106,10 +126,11 @@ export const COLLABS: Collaboration[] = [
   },
   {
     slug: "dansu",
-    kicker: "Collaboration · Brand and storefront",
+    role: "Co-founder",
+    kicker: "Premium quick-dry towels",
     title: "Dansu",
     blurb:
-      "Dansu sells premium quick-dry towels for raves, gym and travel. I collaborate on the brand site and the storefront.",
+      "Dansu makes premium quick-dry towels for raves, gym and travel. I co-founded it, built the brand site and Shopify storefront, and run the engineering behind our growth.",
     href: "https://dansu.co.uk",
     anchor: "Dansu, premium quick-dry towels for raves, gym and travel",
     cta: "Visit dansu.co.uk",
@@ -119,6 +140,21 @@ export const COLLABS: Collaboration[] = [
       src: "/collab/dansu.webp",
       alt: "Dansu homepage, with the brand mark and a shop now link",
     },
+    gallery: [
+      {
+        src: "/ventures/dansu/towels.webp",
+        alt: "Dansu quick-dry towels fanned out in England, Netherlands, France, Brazil, Spain and Germany colourways",
+      },
+      {
+        src: "/ventures/dansu/world-cup.webp",
+        alt: "Dansu World Cup 26 campaign artwork over a fan wearing a Dansu towel",
+      },
+    ],
+    facts: [
+      { label: "Role", value: "Co-founder" },
+      { label: "Stack", value: "Shopify · automation" },
+      { label: "Range", value: "Raves · gym · travel" },
+    ],
     schemaDescription:
       "Premium quick-dry towels for raves, gym and travel, sold from a London brand site.",
     scene: {
