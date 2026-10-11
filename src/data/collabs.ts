@@ -85,11 +85,11 @@ export function collabSchemas(personId: string): Record<string, unknown>[] {
 export const COLLABS: Collaboration[] = [
   {
     slug: "influ",
-    role: "Product engineer",
+    role: "Co-founder",
     kicker: "Fashion intelligence platform",
     title: "INFLU",
     blurb:
-      "INFLU is a fashion intelligence platform. It scores looks as they start to rise, so you can see what is about to take off. I collaborate on the live product, including the Style Index and the scoring UI.",
+      "INFLU is a fashion intelligence platform. It scores looks as they start to rise, so you can see what is about to take off. I co-founded it and build the live product, including the Style Index and the scoring UI.",
     href: "https://influ.site",
     anchor: "INFLU, a fashion intelligence platform",
     cta: "Visit influ.site",
@@ -108,7 +108,7 @@ export const COLLABS: Collaboration[] = [
       { src: "/ventures/influ/look-07.webp", alt: "Monochrome look tracked on INFLU" },
     ],
     facts: [
-      { label: "Built", value: "Style Index" },
+      { label: "Role", value: "Co-founder" },
       { label: "Surface", value: "Web terminal" },
       { label: "Signal", value: "Virality · velocity" },
     ],
@@ -126,11 +126,11 @@ export const COLLABS: Collaboration[] = [
   },
   {
     slug: "dansu",
-    role: "Co-founder",
+    role: "Collaborator",
     kicker: "Premium quick-dry towels",
     title: "Dansu",
     blurb:
-      "Dansu makes premium quick-dry towels for raves, gym and travel. I co-founded it, built the brand site and Shopify storefront, and run the engineering behind our growth.",
+      "Dansu makes premium quick-dry towels for raves, gym and travel. I helped collaborate on the brand site and Shopify storefront.",
     href: "https://dansu.co.uk",
     anchor: "Dansu, premium quick-dry towels for raves, gym and travel",
     cta: "Visit dansu.co.uk",
@@ -151,7 +151,7 @@ export const COLLABS: Collaboration[] = [
       },
     ],
     facts: [
-      { label: "Role", value: "Co-founder" },
+      { label: "Role", value: "Collaborator" },
       { label: "Stack", value: "Shopify · automation" },
       { label: "Range", value: "Raves · gym · travel" },
     ],
