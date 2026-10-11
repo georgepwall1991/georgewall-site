@@ -17,65 +17,18 @@ const rel = collabLinkRel();
         </h2>
       </div>
       <p class="section-head__lede">
-        I co-founded <a class="link link--on" href={dansu.href} target="_blank" rel={rel}
-          >{dansu.anchor}</a
-        >, and I build the product at <a
+        I co-founded <a class="link link--on" href={influ.href} target="_blank" rel={rel}
+          >{influ.anchor}</a
+        >, and I helped collaborate on <a
           class="link link--on"
-          href={influ.href}
+          href={dansu.href}
           target="_blank"
-          rel={rel}>{influ.anchor}</a
+          rel={rel}>{dansu.anchor}</a
         >. Both are live, and I work on them end to end.
       </p>
     </header>
 
-    <!-- Dansu: the co-founder story leads, with real product photography. -->
-    <article class="venture venture--dansu reveal" aria-labelledby="venture-dansu">
-      <div class="venture__media">
-        <img
-          src={dansu.gallery[0].src}
-          alt={dansu.gallery[0].alt}
-          width="1800"
-          height="1200"
-          loading="lazy"
-          decoding="async"
-        />
-        <figure class="venture__inset">
-          <img
-            src={dansu.gallery[1].src}
-            alt={dansu.gallery[1].alt}
-            width="1600"
-            height="900"
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>World Cup 26 campaign</figcaption>
-        </figure>
-      </div>
-
-      <div class="venture__body">
-        <div class="venture__meta">
-          <span class="venture__role">{dansu.role}</span>
-          <span class="venture__kicker">{dansu.kicker}</span>
-        </div>
-        <h3 class="display venture__title" id="venture-dansu">{dansu.title}</h3>
-        <p class="venture__blurb">{dansu.blurb}</p>
-        <dl class="venture__facts">
-          {
-            dansu.facts.map((fact) => (
-              <div>
-                <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-        <a class="btn venture__cta" href={dansu.href} target="_blank" rel={rel}>
-          {dansu.cta}<span class="arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </article>
-
-    <!-- INFLU: an editorial look grid with the live Style Index read-out. -->
+    <!-- INFLU: the co-founder story leads, with an editorial look grid and the live Style Index read-out. -->
     <article class="venture venture--influ reveal" aria-labelledby="venture-influ">
       <div class="venture__body">
         <div class="venture__meta">
@@ -124,6 +77,53 @@ const rel = collabLinkRel();
           <span class="venture__index-v">{influ.scene.metricValue}</span>
           <span class="venture__index-s">{influ.scene.status}</span>
         </div>
+      </div>
+    </article>
+
+    <!-- Dansu: a collaboration, with real product photography. -->
+    <article class="venture venture--dansu reveal" aria-labelledby="venture-dansu">
+      <div class="venture__media">
+        <img
+          src={dansu.gallery[0].src}
+          alt={dansu.gallery[0].alt}
+          width="1800"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+        />
+        <figure class="venture__inset">
+          <img
+            src={dansu.gallery[1].src}
+            alt={dansu.gallery[1].alt}
+            width="1600"
+            height="900"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>World Cup 26 campaign</figcaption>
+        </figure>
+      </div>
+
+      <div class="venture__body">
+        <div class="venture__meta">
+          <span class="venture__role">{dansu.role}</span>
+          <span class="venture__kicker">{dansu.kicker}</span>
+        </div>
+        <h3 class="display venture__title" id="venture-dansu">{dansu.title}</h3>
+        <p class="venture__blurb">{dansu.blurb}</p>
+        <dl class="venture__facts">
+          {
+            dansu.facts.map((fact) => (
+              <div>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <a class="btn venture__cta" href={dansu.href} target="_blank" rel={rel}>
+          {dansu.cta}<span class="arrow" aria-hidden="true">↗</span>
+        </a>
       </div>
     </article>
   </div>

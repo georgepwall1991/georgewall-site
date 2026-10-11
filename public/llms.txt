@@ -1,6 +1,6 @@
 # George Wall
 
-> I am a full-stack engineer in London and co-founder of Dansu. I work mainly with React, .NET and C#, build the product at INFLU, and ship iOS apps and developer tools.
+> I am a full-stack engineer in London and co-founder of INFLU. I work mainly with React, .NET and C#, helped collaborate on Dansu, and ship iOS apps and developer tools.
 
 This site covers the software I have built: production systems, Roslyn analysers, source generators, CLIs and App Store products. I prefer tools that catch predictable mistakes in the editor or CI.
 
@@ -23,8 +23,8 @@ This site covers the software I have built: production systems, Roslyn analysers
 
 ## Ventures
 
-- [Dansu, premium quick-dry towels](https://dansu.co.uk): Quick-dry towels for raves, gym and travel. I co-founded Dansu and built the brand site and Shopify storefront.
-- [INFLU, a fashion intelligence platform](https://influ.site): Scores looks as they start to rise. I build the live product, including the Style Index and scoring UI.
+- [Dansu, premium quick-dry towels](https://dansu.co.uk): Quick-dry towels for raves, gym and travel. I helped collaborate on the Dansu brand site and Shopify storefront.
+- [INFLU, a fashion intelligence platform](https://influ.site): Scores looks as they start to rise. I co-founded INFLU and build the live product, including the Style Index and scoring UI.
 
 ## Writing
 
