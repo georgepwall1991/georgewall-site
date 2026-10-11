@@ -2,7 +2,7 @@
 import type { Repo } from '../data/github';
 import { repoDescription } from '../data/repoCopy';
 import { categoryOf, categoriesIn } from '../lib/categorize';
-import { languageColor, formatCount, relativeTime, formatMonthYear } from '../lib/format';
+import { languageColor, formatCount, relativeTime, formatMonthYear, breakableName } from '../lib/format';
 
 interface Props {
   /** Portfolio repos (no forks/meta), pre-sorted. Server-rendered as the no-JS baseline. */
@@ -57,7 +57,7 @@ const now = new Date();
             data-pushed={r.pushed_at}
             data-fork="false"
           >
-            <span class="arc-name">{r.name}</span>
+            <span class="arc-name" set:html={breakableName(r.name)} />
             <span class="arc-desc">{repoDescription(r)}</span>
             <span class="arc-lang">
               {r.language && <span class="lang-dot" style={`--dot:${languageColor(r.language)}`} />}
@@ -259,7 +259,7 @@ const now = new Date();
     font-weight: 600;
     color: var(--ink);
     min-width: 0;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
   .arc-row:hover .arc-name {
     color: var(--accent-text);

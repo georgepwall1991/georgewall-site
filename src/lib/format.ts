@@ -73,3 +73,16 @@ export function linkLabel(url: string): string {
     return 'Link';
   }
 }
+
+/**
+ * HTML for a repo name that may wrap after its dots, so a long name such as
+ * HttpClient.Resilience.Analyzers breaks between words rather than mid-word.
+ */
+export function breakableName(name: string): string {
+  const escaped = name
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+  return escaped.replace(/\.(?=.)/g, '.<wbr>');
+}

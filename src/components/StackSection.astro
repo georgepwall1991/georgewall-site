@@ -315,6 +315,9 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
      current-line wash and an accent gutter bar. */
   .pane__code .ln {
     display: block;
+    /* Lines wider than a phone scroll inside the pane; max-content keeps the
+       current-line wash running under the whole line while they do. */
+    min-width: max-content;
     white-space: pre;
     counter-increment: ln;
     padding-right: 1rem;
@@ -454,6 +457,13 @@ const RAIL = ['React/TS UI', 'ASP.NET API', 'Kafka events', 'SQL · Redis'];
     }
     .pane--lift {
       margin-top: 0;
+    }
+  }
+
+  /* Phones: a touch smaller so most lines fit without a sideways scroll. */
+  @media (max-width: 480px) {
+    .pane__code {
+      font-size: 0.68rem;
     }
   }
 </style>

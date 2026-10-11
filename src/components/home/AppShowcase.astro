@@ -65,7 +65,9 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
       }
     </div>
     <p class="wall__tag">
-      <span>{totalShots}</span> store frames · designed and shipped by me
+      <span class="wall__count">{totalShots}</span> store frames<span class="wall__tail"
+        >&nbsp;· designed and shipped by me</span
+      >
     </p>
   </div>
 
@@ -320,14 +322,19 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
     color: var(--ink-soft);
     width: max-content;
     max-width: calc(100% - 2.5rem);
-    text-align: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    white-space: nowrap;
   }
 
-  .wall__tag span {
+  .wall__count {
     color: var(--accent-text);
     font-weight: 600;
+  }
+
+  /* On a phone the full line wraps into a ragged pill, so keep just the count. */
+  @media (max-width: 520px) {
+    .wall__tail {
+      display: none;
+    }
   }
 
   .apps__list {
@@ -371,11 +378,12 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
     --app-accent: #8fd8ff;
   }
 
+  /* NoBooze 1.9's warm horizon: near-black with an ember glow. */
   .app--wellness {
-    --app-a: #2a1630;
-    --app-b: #0a0812;
-    --app-glow: rgba(255, 140, 90, 0.28);
-    --app-accent: #ffb38a;
+    --app-a: #2b1509;
+    --app-b: #0a0706;
+    --app-glow: rgba(255, 138, 61, 0.3);
+    --app-accent: #ffb27a;
   }
 
   .app--lumina {

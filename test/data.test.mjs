@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import { isPortfolioRepo, sortForArchive, portfolioRepos, totalStars } from '../src/lib/repos.ts';
 import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
-import { pad2, relativeTime, languageColor, linkLabel } from '../src/lib/format.ts';
+import { pad2, relativeTime, languageColor, linkLabel, breakableName } from '../src/lib/format.ts';
 import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
 import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
 import {
@@ -232,4 +232,20 @@ test('every app screenshot exists on disk and is ready for a store frame', async
       }
     }
   }
+});
+
+test('every app screenshot declares its real pixel size', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const app of PRIVATE_APPS) {
+    for (const shot of app.screenshots) {
+      const meta = await sharp(new URL(`../public${shot.src}`, import.meta.url).pathname).metadata();
+      assert.deepEqual([shot.width, shot.height], [meta.width, meta.height], `${shot.src} size is stale`);
+    }
+  }
+});
+
+test('breakableName wraps repo names at dots and escapes HTML', () => {
+  assert.equal(breakableName('HttpClient.Resilience.Analyzers'), 'HttpClient.<wbr>Resilience.<wbr>Analyzers');
+  assert.equal(breakableName('georgewall-site'), 'georgewall-site');
+  assert.equal(breakableName('a<b>.'), 'a&lt;b&gt;.');
 });
