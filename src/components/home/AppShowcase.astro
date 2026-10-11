@@ -1,6 +1,7 @@
 ---
 import { appScoreboard, LIVE_STATUS, type AppShot, type PrivateApp } from "../../data/apps";
 import StoreFrame from "../apps/StoreFrame.astro";
+import { dealWall } from "../../lib/wall";
 
 interface Props {
   apps: PrivateApp[];
@@ -14,22 +15,18 @@ const board = appScoreboard(apps);
 /** Fan slots for the first three store frames; DOM order stays hero-first. */
 const SLOTS = ["hero", "left", "right"] as const;
 
-// The screen wall: every store frame, interleaved app by app so neighbouring
-// tiles never share a palette, dealt round-robin into columns. Each column is
-// rendered twice over so its scroll loop has no seam.
+// The screen wall: every store frame, dealt so neighbouring tiles never share
+// a palette. Each column is rendered twice over so its scroll loop has no seam.
 const WALL_COLS = 7;
 const WALL_ROWS = 4;
 type WallTile = { shot: AppShot; theme: PrivateApp["theme"] };
-const pool: WallTile[] = [];
-const longest = Math.max(...apps.map((a) => a.screenshots.length));
-for (let i = 0; i < longest; i++) {
-  for (const app of apps) {
-    const shot = app.screenshots[i];
-    if (shot) pool.push({ shot, theme: app.theme });
-  }
-}
-const wall = Array.from({ length: WALL_COLS }, (_, c) =>
-  Array.from({ length: WALL_ROWS }, (_, r) => pool[(c + r * WALL_COLS + r * 3) % pool.length]),
+const wall = dealWall<WallTile>(
+  apps.map((app) => ({
+    key: app.theme,
+    items: app.screenshots.map((shot) => ({ shot, theme: app.theme })),
+  })),
+  WALL_COLS,
+  WALL_ROWS,
 );
 const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
 ---

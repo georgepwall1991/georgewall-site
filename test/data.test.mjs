@@ -6,6 +6,7 @@ import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
 import { pad2, relativeTime, languageColor, linkLabel, breakableName } from '../src/lib/format.ts';
 import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
 import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
+import { dealWall } from '../src/lib/wall.ts';
 import {
   COLLABS,
   collabLinkRel,
@@ -248,4 +249,24 @@ test('breakableName wraps repo names at dots and escapes HTML', () => {
   assert.equal(breakableName('HttpClient.Resilience.Analyzers'), 'HttpClient.<wbr>Resilience.<wbr>Analyzers');
   assert.equal(breakableName('georgewall-site'), 'georgewall-site');
   assert.equal(breakableName('a<b>.'), 'a&lt;b&gt;.');
+});
+
+test('the screen wall shows every store frame without same-app neighbours', () => {
+  const cols = 7;
+  const rows = 4;
+  const groups = PRIVATE_APPS.map((app) => ({
+    key: app.theme,
+    items: app.screenshots.map((shot) => ({ src: shot.src, key: app.theme })),
+  }));
+  const grid = dealWall(groups, cols, rows);
+  const shown = new Set(grid.flat().map((t) => t.src));
+  const all = PRIVATE_APPS.flatMap((app) => app.screenshots.map((s) => s.src));
+  assert.ok(all.length <= cols * rows, 'more frames than wall slots');
+  assert.equal(shown.size, all.length, 'a frame is missing from the wall');
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++) {
+      if (r > 0) assert.notEqual(grid[c][r].key, grid[c][r - 1].key, `column ${c} repeats an app`);
+      if (c > 0) assert.notEqual(grid[c][r].key, grid[c - 1][r].key, `row ${r} repeats an app`);
+    }
+  }
 });
