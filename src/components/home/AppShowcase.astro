@@ -1,5 +1,6 @@
 ---
-import { appScoreboard, LIVE_STATUS, type PrivateApp } from "../../data/apps";
+import { appScoreboard, LIVE_STATUS, type AppShot, type PrivateApp } from "../../data/apps";
+import StoreFrame from "../apps/StoreFrame.astro";
 
 interface Props {
   apps: PrivateApp[];
@@ -9,6 +10,28 @@ const { apps } = Astro.props;
 const storefront = apps.filter((app) => app.featured !== false);
 const lab = apps.filter((app) => app.featured === false);
 const board = appScoreboard(apps);
+
+/** Fan slots for the first three store frames; DOM order stays hero-first. */
+const SLOTS = ["hero", "left", "right"] as const;
+
+// The screen wall: every store frame, interleaved app by app so neighbouring
+// tiles never share a palette, dealt round-robin into columns. Each column is
+// rendered twice over so its scroll loop has no seam.
+const WALL_COLS = 7;
+const WALL_ROWS = 4;
+type WallTile = { shot: AppShot; theme: PrivateApp["theme"] };
+const pool: WallTile[] = [];
+const longest = Math.max(...apps.map((a) => a.screenshots.length));
+for (let i = 0; i < longest; i++) {
+  for (const app of apps) {
+    const shot = app.screenshots[i];
+    if (shot) pool.push({ shot, theme: app.theme });
+  }
+}
+const wall = Array.from({ length: WALL_COLS }, (_, c) =>
+  Array.from({ length: WALL_ROWS }, (_, r) => pool[(c + r * WALL_COLS + r * 3) % pool.length]),
+);
+const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
 ---
 
 <section class="apps" id="apps" aria-labelledby="apps-title">
@@ -25,6 +48,28 @@ const board = appScoreboard(apps);
         them, write every line, make the store art and handle the releases myself.
       </p>
     </header>
+  </div>
+
+  <div class="wall" aria-hidden="true">
+    <div class="wall__plane">
+      {
+        wall.map((col, c) => (
+          <div class="wall__col" style={`--wall-speed: ${46 + ((c * 7) % 5) * 9}s`}>
+            {[...col, ...col].map((tile) => (
+              <div class={`wall__tile app--${tile.theme}`}>
+                <StoreFrame shot={tile.shot} decorative />
+              </div>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+    <p class="wall__tag">
+      <span>{totalShots}</span> store frames · designed and shipped by me
+    </p>
+  </div>
+
+  <div class="wrap">
 
     <div class="apps__list">
       {
@@ -99,26 +144,20 @@ const board = appScoreboard(apps);
               </div>
             </div>
 
-            <div
-              class="app__devices"
-              style={`--shots: ${Math.min(app.screenshots.length, 3)}`}
-            >
-              {app.screenshots.slice(0, 3).map((shot, s) => (
-                <figure class={`app__shot app__shot--${s + 1}`}>
-                  <div class="phone">
-                    <img
-                      src={shot.src}
-                      alt={shot.alt}
-                      width="600"
-                      height="1300"
-                      loading="lazy"
-                      decoding="async"
-                    />
+            <div class="app__stage" data-tilt>
+              <div class="app__rig">
+                {app.screenshots.slice(0, SLOTS.length).map((shot, s) => (
+                  <div class={`app__frame app__frame--${SLOTS[s]}`}>
+                    <StoreFrame shot={shot} />
                   </div>
-                  {shot.caption && <figcaption>{shot.caption}</figcaption>}
-                </figure>
-              ))}
+                ))}
+              </div>
+              <div class="app__floor" aria-hidden="true" />
             </div>
+
+            <span class="app__ghost" aria-hidden="true">
+              {app.name}
+            </span>
 
             <span class="app__index" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
@@ -139,18 +178,9 @@ const board = appScoreboard(apps);
           </div>
           <div class="lab__grid">
             {lab.map((app) => (
-              <article class={`lab-card lab-card--${app.theme}`}>
+              <article class={`lab-card lab-card--${app.theme} app--${app.theme}`}>
                 <div class="lab-card__shot">
-                  <div class="phone">
-                    <img
-                      src={app.screenshots[0].src}
-                      alt={app.screenshots[0].alt}
-                      width="600"
-                      height="1300"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
+                  <StoreFrame shot={app.screenshots[0]} />
                 </div>
                 <div class="lab-card__body">
                   <p class="app__status">
@@ -175,9 +205,129 @@ const board = appScoreboard(apps);
   </div>
 </section>
 
+<script>
+  // Pointer parallax on each fan, plus pausing the wall when it is off screen.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  if (!reduce && fine) {
+    document.querySelectorAll<HTMLElement>("[data-tilt]").forEach((stage) => {
+      const card = stage.closest<HTMLElement>(".app") ?? stage;
+      let frame = 0;
+      card.addEventListener("pointermove", (e) => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(() => {
+          const r = stage.getBoundingClientRect();
+          const px = ((e.clientX - r.left) / r.width) * 2 - 1;
+          const py = ((e.clientY - r.top) / r.height) * 2 - 1;
+          stage.style.setProperty("--px", Math.max(-1, Math.min(1, px)).toFixed(3));
+          stage.style.setProperty("--py", Math.max(-1, Math.min(1, py)).toFixed(3));
+        });
+      });
+      card.addEventListener("pointerleave", () => {
+        cancelAnimationFrame(frame);
+        stage.style.setProperty("--px", "0");
+        stage.style.setProperty("--py", "0");
+      });
+    });
+  }
+
+  const wallEl = document.querySelector<HTMLElement>(".wall");
+  if (wallEl && "IntersectionObserver" in window) {
+    new IntersectionObserver(([entry]) =>
+      wallEl.classList.toggle("is-paused", !entry.isIntersecting),
+    ).observe(wallEl);
+  }
+</script>
+
 <style>
   .apps {
     padding-top: var(--section-gap);
+  }
+
+  /* ----- Screen wall -----
+     Every store frame on a tilted plane, columns drifting in opposite
+     directions. Decorative; it freezes for reduced motion. */
+  .wall {
+    position: relative;
+    height: clamp(360px, 46vw, 620px);
+    margin-block: clamp(1rem, 3vw, 2rem) clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
+    mask-image:
+      linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent),
+      linear-gradient(180deg, transparent, #000 16%, #000 84%, transparent);
+    mask-composite: intersect;
+    -webkit-mask-composite: source-in;
+  }
+
+  .wall__plane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(1500px, 118vw);
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 24px);
+    transform: translate(-50%, -50%) perspective(2400px) rotateX(38deg) rotateZ(-18deg);
+  }
+
+  .wall__col {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 1.6vw, 24px);
+    animation: wall-drift var(--wall-speed, 60s) linear infinite;
+    will-change: transform;
+  }
+
+  .wall__col:nth-child(even) {
+    animation-direction: reverse;
+  }
+
+  .wall.is-paused .wall__col {
+    animation-play-state: paused;
+  }
+
+  @keyframes wall-drift {
+    to {
+      transform: translateY(calc(-50% - clamp(7px, 0.8vw, 12px)));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wall__col {
+      animation: none;
+    }
+  }
+
+  .wall__tag {
+    position: absolute;
+    left: 50%;
+    bottom: 12%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: baseline;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid var(--rule-strong);
+    background: color-mix(in srgb, var(--paper) 72%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    width: max-content;
+    max-width: calc(100% - 2.5rem);
+    text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .wall__tag span {
+    color: var(--accent-text);
+    font-weight: 600;
   }
 
   .apps__list {
@@ -226,6 +376,20 @@ const board = appScoreboard(apps);
     --app-b: #0a0812;
     --app-glow: rgba(255, 140, 90, 0.28);
     --app-accent: #ffb38a;
+  }
+
+  .app--lumina {
+    --app-a: #4a3a12;
+    --app-b: #17120a;
+    --app-glow: rgba(255, 214, 90, 0.4);
+    --app-accent: #ffd86b;
+  }
+
+  .app--transit {
+    --app-a: #145a7e;
+    --app-b: #081a26;
+    --app-glow: rgba(110, 210, 255, 0.4);
+    --app-accent: #8fe0ff;
   }
 
   .app:nth-child(even) .app__info {
@@ -369,47 +533,114 @@ const board = appScoreboard(apps);
     border-color: var(--app-accent);
   }
 
-  /* ----- Device row ----- */
-  .app__devices {
+  /* ----- Store frame fan ----- */
+  .app__stage {
     position: relative;
     z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(var(--shots, 3), minmax(0, 1fr));
-    gap: clamp(0.6rem, 1.6vw, 1.2rem);
-    align-items: center;
-    max-width: calc(var(--shots, 3) * 13.5rem);
-    margin-inline: auto;
     width: 100%;
+    max-width: 640px;
+    aspect-ratio: 1 / 0.98;
+    margin-inline: auto;
+    perspective: 1600px;
   }
 
-  .app__shot {
+  .app__rig {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transform: rotateX(calc(var(--py, 0) * -6deg)) rotateY(calc(var(--px, 0) * 9deg));
+    transition: transform 0.7s var(--ease);
+  }
+
+  .app__frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 34%;
     transition: transform 0.9s var(--ease);
   }
 
-  .app__shot--1 {
-    transform: translateY(6%);
+  /* A specular sweep that slides with the pointer. */
+  .app__frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9% / 4.15%;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.16) 48%,
+      transparent 60%
+    );
+    background-size: 260% 100%;
+    background-position: calc(50% - var(--px, 0) * 40%) 0;
+    mix-blend-mode: soft-light;
+    transition: background-position 0.7s var(--ease);
   }
 
-  .app__shot--3 {
-    transform: translateY(-6%);
+  .app__frame--hero {
+    z-index: 3;
+    width: 41%;
+    transform: translate(-50%, -50%) translateZ(70px);
   }
 
-  .app:hover .app__shot--1 {
-    transform: translateY(3%);
+  .app__frame--left {
+    z-index: 1;
+    transform: translate(-148%, -47%) rotateY(22deg) rotateZ(-2deg);
   }
 
-  .app:hover .app__shot--3 {
-    transform: translateY(-3%);
+  .app__frame--right {
+    z-index: 2;
+    transform: translate(48%, -47%) rotateY(-22deg) rotateZ(2deg);
   }
 
-  .app__shot figcaption {
-    margin-top: 0.9rem;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(243, 239, 230, 0.6);
+  .app:hover .app__frame--left {
+    transform: translate(-156%, -49%) rotateY(15deg) rotateZ(-3deg);
+  }
+
+  .app:hover .app__frame--right {
+    transform: translate(56%, -49%) rotateY(-15deg) rotateZ(3deg);
+  }
+
+  .app:hover .app__frame--hero {
+    transform: translate(-50%, -52%) translateZ(90px);
+  }
+
+  .app__floor {
+    position: absolute;
+    left: 8%;
+    right: 8%;
+    bottom: -4%;
+    height: 16%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--app-glow), transparent);
+    filter: blur(18px);
+    z-index: -1;
+  }
+
+  /* Outline wordmark sunk behind the fan. */
+  .app__ghost {
+    position: absolute;
+    z-index: 0;
+    right: -0.04em;
+    bottom: -0.2em;
+    font-family: var(--font-sans);
+    font-size: clamp(5rem, 13vw, 12rem);
+    font-variation-settings:
+      "wght" 800,
+      "wdth" 112;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    white-space: nowrap;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07);
+    pointer-events: none;
+  }
+
+  .app:nth-child(even) .app__ghost {
+    right: auto;
+    left: -0.04em;
   }
 
   .app__index {
@@ -459,7 +690,7 @@ const board = appScoreboard(apps);
 
   .lab-card {
     display: grid;
-    grid-template-columns: minmax(110px, 0.42fr) minmax(0, 1fr);
+    grid-template-columns: minmax(130px, 0.5fr) minmax(0, 1fr);
     gap: clamp(1.2rem, 3vw, 2rem);
     align-items: center;
     padding: clamp(1.25rem, 3vw, 2rem);
@@ -477,13 +708,12 @@ const board = appScoreboard(apps);
   }
 
   .lab-card__shot {
-    padding: 0.75rem;
-    border-radius: 18px;
-    background: linear-gradient(160deg, #3a2f12, #15120a);
+    transform: rotate(-2deg);
+    transition: transform 0.6s var(--ease);
   }
 
-  .lab-card--transit .lab-card__shot {
-    background: linear-gradient(160deg, #123a52, #08151d);
+  .lab-card:hover .lab-card__shot {
+    transform: rotate(0deg) translateY(-4px);
   }
 
   .lab-card__body {
@@ -537,21 +767,38 @@ const board = appScoreboard(apps);
     }
   }
 
-  @media (max-width: 520px) {
-    .app__devices {
-      grid-template-columns: repeat(var(--shots, 3), 62%);
+  @media (max-width: 640px) {
+    /* The fan becomes a swipeable store gallery, hero first. */
+    .app__stage {
+      aspect-ratio: auto;
       max-width: none;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
+      perspective: none;
       margin-inline: calc(-1 * clamp(1.75rem, 4.5vw, 4rem));
-      padding-inline: clamp(1.75rem, 4.5vw, 4rem);
-      padding-block: 1rem;
-      scrollbar-width: none;
     }
 
-    .app__shot {
+    .app__rig {
+      position: static;
+      display: flex;
+      gap: 0.9rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding: 0.5rem clamp(1.75rem, 4.5vw, 4rem) 1.25rem;
+      scrollbar-width: none;
+      transform: none !important;
+    }
+
+    .app__frame,
+    .app__frame--hero {
+      position: static;
+      flex: 0 0 68%;
+      width: auto;
       scroll-snap-align: center;
       transform: none !important;
+    }
+
+    .app__frame::after,
+    .app__floor {
+      display: none;
     }
 
     .lab-card {

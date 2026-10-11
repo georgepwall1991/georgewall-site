@@ -1,0 +1,204 @@
+---
+/**
+ * A drawn iPhone (titanium frame, side buttons, Dynamic Island) holding a raw
+ * app capture. It always draws Apple's marketing status bar (9:41, full signal,
+ * full battery), so feed it captures from public/apps/clean/, whose own status
+ * bars have been scrubbed by scripts/clean-status-bars.mjs.
+ */
+interface Props {
+  src: string;
+  /** Empty string when a surrounding element already describes the screen. */
+  alt: string;
+  width: number;
+  height: number;
+  /** Status bar glyph colour: light on dark screens, dark on light ones. */
+  ink?: "light" | "dark";
+  loading?: "lazy" | "eager";
+  fetchpriority?: "high" | "auto";
+}
+
+const { src, alt, width, height, ink = "light", loading = "lazy", fetchpriority } = Astro.props;
+---
+
+<div class={`device device--ink-${ink}`}>
+  <div class="device__body">
+    <span class="device__btn device__btn--action" aria-hidden="true"></span>
+    <span class="device__btn device__btn--vol-up" aria-hidden="true"></span>
+    <span class="device__btn device__btn--vol-down" aria-hidden="true"></span>
+    <span class="device__btn device__btn--power" aria-hidden="true"></span>
+    <div class="device__screen">
+      <img
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        loading={loading}
+        decoding="async"
+        fetchpriority={fetchpriority}
+      />
+      <div class="device__bar" aria-hidden="true">
+        <span class="device__time">9:41</span>
+        <span class="device__island"></span>
+        <span class="device__icons">
+          <svg viewBox="0 0 18 12" class="device__signal">
+            <rect x="0" y="8" width="3" height="4" rx="0.8"></rect>
+            <rect x="5" y="5.5" width="3" height="6.5" rx="0.8"></rect>
+            <rect x="10" y="3" width="3" height="9" rx="0.8"></rect>
+            <rect x="15" y="0" width="3" height="12" rx="0.8"></rect>
+          </svg>
+          <svg viewBox="0 0 16 12" class="device__wifi">
+            <path
+              d="M8 2.2c2.4 0 4.6.9 6.3 2.5l1.2-1.3A10.8 10.8 0 0 0 8 .4 10.8 10.8 0 0 0 .5 3.4l1.2 1.3A9 9 0 0 1 8 2.2zm0 3.6c1.4 0 2.7.5 3.7 1.4l1.2-1.3A7.2 7.2 0 0 0 8 4 7.2 7.2 0 0 0 3.1 5.9l1.2 1.3c1-.9 2.3-1.4 3.7-1.4zM8 9.4c.5 0 1 .2 1.3.5L8 11.4 6.7 9.9c.3-.3.8-.5 1.3-.5z"
+            ></path>
+          </svg>
+          <svg viewBox="0 0 27 12" class="device__battery">
+            <rect x="0.5" y="0.5" width="23" height="11" rx="3.4" fill="none" stroke-opacity="0.4"
+            ></rect>
+            <rect x="2" y="2" width="20" height="8" rx="2"></rect>
+            <path d="M25 4v4c.8-.3 1.4-1.1 1.4-2s-.6-1.7-1.4-2z" fill-opacity="0.45"></path>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .device {
+    container-type: inline-size;
+    width: 100%;
+  }
+
+  .device__body {
+    position: relative;
+    aspect-ratio: 1206 / 2622;
+    padding: 3.3cqw;
+    border-radius: 15.5cqw;
+    background:
+      linear-gradient(145deg, #5a5d63 0%, #2b2d31 18%, #17181b 50%, #34363b 82%, #5f6268 100%);
+    box-shadow:
+      inset 0 0 0 0.45cqw rgba(255, 255, 255, 0.22),
+      inset 0 0 0 1.4cqw #0b0b0d,
+      0 2.5cqw 6cqw -1cqw rgba(0, 0, 0, 0.55),
+      0 12cqw 26cqw -8cqw rgba(0, 0, 0, 0.75);
+  }
+
+  .device__btn {
+    position: absolute;
+    width: 1cqw;
+    border-radius: 1cqw;
+    background: linear-gradient(90deg, #2a2c30, #6a6d73);
+  }
+
+  .device__btn--action {
+    left: -0.7cqw;
+    top: 19%;
+    height: 7%;
+  }
+
+  .device__btn--vol-up {
+    left: -0.7cqw;
+    top: 29%;
+    height: 11%;
+  }
+
+  .device__btn--vol-down {
+    left: -0.7cqw;
+    top: 42%;
+    height: 11%;
+  }
+
+  .device__btn--power {
+    right: -0.7cqw;
+    top: 31%;
+    height: 16%;
+    background: linear-gradient(270deg, #2a2c30, #6a6d73);
+  }
+
+  .device__screen {
+    container-type: inline-size;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 13cqw;
+    background: #000;
+  }
+
+  /* A faint glass sheen so the screen reads as a surface, not a flat image. */
+  .device__screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      125deg,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.03) 28%,
+      transparent 42%
+    );
+  }
+
+  .device__screen img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .device__bar {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 14cqw;
+    display: grid;
+    grid-template-columns: 1fr 34cqw 1fr;
+    align-items: center;
+    padding-inline: 6cqw 5.5cqw;
+    font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 4.5cqw;
+    letter-spacing: -0.02em;
+    color: #fff;
+    fill: #fff;
+    stroke: #fff;
+  }
+
+  .device--ink-dark .device__bar {
+    color: #0b0b0c;
+    fill: #0b0b0c;
+    stroke: #0b0b0c;
+  }
+
+  .device__time {
+    justify-self: center;
+    padding-top: 0.6cqw;
+  }
+
+  .device__island {
+    justify-self: center;
+    width: 32cqw;
+    height: 9.4cqw;
+    border-radius: 999px;
+    background: #000;
+  }
+
+  .device__icons {
+    justify-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5cqw;
+    padding-top: 0.6cqw;
+  }
+
+  .device__signal {
+    width: 4.6cqw;
+  }
+
+  .device__wifi {
+    width: 4.2cqw;
+  }
+
+  .device__battery {
+    width: 6.8cqw;
+  }
+</style>

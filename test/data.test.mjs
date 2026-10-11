@@ -212,3 +212,24 @@ test('collabWebsiteSchema marks George as a contributor, not sameAs', () => {
   assert.equal(nodes[1].url, 'https://dansu.co.uk');
   assert.equal(nodes[1]['@id'], 'https://dansu.co.uk/#website');
 });
+
+test('every app screenshot exists on disk and is ready for a store frame', async () => {
+  const { existsSync } = await import('node:fs');
+  const alts = new Set();
+  for (const app of PRIVATE_APPS) {
+    assert.ok(app.screenshots.length > 0, `${app.name} has no screenshots`);
+    for (const shot of app.screenshots) {
+      assert.ok(existsSync(new URL(`../public${shot.src}`, import.meta.url)), `missing ${shot.src}`);
+      assert.ok(shot.width > 0 && shot.height > 0, `${shot.src} needs its real size`);
+      assert.ok(shot.alt.length > 40, `${shot.src} alt text is too thin`);
+      assert.ok(!alts.has(shot.alt), `${shot.src} repeats another shot's alt text`);
+      alts.add(shot.alt);
+      if (shot.kind === 'screen') {
+        assert.ok(shot.headline, `${shot.src} is composed live and needs a headline`);
+        // Raw captures must come from the status-bar-scrubbed set, or the
+        // device frame draws 9:41 over the simulator's own clock.
+        assert.ok(shot.src.startsWith('/apps/clean/'), `${shot.src} is not a cleaned capture`);
+      }
+    }
+  }
+});

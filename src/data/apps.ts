@@ -20,12 +20,58 @@ export interface PrivateApp {
   icon?: string;
   /** Full-bleed artwork behind the device stack. */
   backdrop?: string;
-  screenshots: {
-    src: string;
-    alt: string;
-    caption?: string;
-  }[];
+  /** Store gallery in order. The first three make the showcase fan (the
+   *  first is the hero); the rest still feed the screen wall and the schema. */
+  screenshots: AppShot[];
 }
+
+export interface AppShot {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /**
+   * "poster": finished store art with its own headline, shown as is.
+   * "screen": a raw capture from public/apps/clean/, composed on the page into
+   * a marketing frame with `headline` as real, indexable text.
+   */
+  kind: "poster" | "screen";
+  /** Short label: the eyebrow on a composed frame, the caption on a poster. */
+  caption: string;
+  headline?: string;
+  /** Status bar glyph colour for screens. */
+  ink?: "light" | "dark";
+}
+
+/** Raw iPhone capture at the size the clean pipeline writes. */
+const screen = (
+  file: string,
+  size: [number, number],
+  caption: string,
+  headline: string,
+  alt: string,
+  ink: "light" | "dark" = "light",
+): AppShot => ({
+  src: `/apps/clean/${file}`,
+  width: size[0],
+  height: size[1],
+  kind: "screen",
+  caption,
+  headline,
+  alt,
+  ink,
+});
+
+const poster = (src: string, caption: string, alt: string): AppShot => ({
+  src,
+  width: 600,
+  height: 1300,
+  kind: "poster",
+  caption,
+  alt,
+});
+
+const FLEET: [number, number] = [600, 1305];
 
 /** The one status string that means "you can download this today". */
 export const LIVE_STATUS = "App Store";
@@ -94,21 +140,31 @@ export const PRIVATE_APPS: PrivateApp[] = [
     ],
     icon: "/apps/gemgame/icon.webp",
     screenshots: [
-      {
-        src: "/apps/gemgame/gameplay.webp",
-        alt: "GemGame App Store screenshot: a rainbow combo clearing the jewel board, captioned Match gems. Make magic.",
-        caption: "Match gems",
-      },
-      {
-        src: "/apps/gemgame/garden.webp",
-        alt: "GemGame App Store screenshot: restoring the magical garden with fountains and flower beds",
-        caption: "Restore the garden",
-      },
-      {
-        src: "/apps/gemgame/boss.webp",
-        alt: "GemGame App Store screenshot: a guardian boss level above the jewel board",
-        caption: "Outsmart the guardian",
-      },
+      poster(
+        "/apps/gemgame/gameplay.webp",
+        "Match gems",
+        "GemGame match-3 gameplay: a rainbow combo blasts across the jewel board under the headline Match gems. Make magic.",
+      ),
+      poster(
+        "/apps/gemgame/garden.webp",
+        "Restore the garden",
+        "GemGame garden restoration: fountains, rose beds and a bench brought back to life, headlined Bring your garden to life.",
+      ),
+      poster(
+        "/apps/gemgame/boss.webp",
+        "Outsmart the guardian",
+        "GemGame boss level: a golden guardian looms over the jewel board with its health bar, headlined Outsmart the guardian.",
+      ),
+      poster(
+        "/apps/gemgame/daily-star.webp",
+        "Daily Star",
+        "GemGame Daily Star puzzle: a fresh daily jewel board with a points goal and 18 moves, headlined Your daily moment of magic.",
+      ),
+      poster(
+        "/apps/gemgame/specials.webp",
+        "Jewel Lab",
+        "GemGame Jewel Lab practice board for striped and wrapped special gems, headlined Discover your next great move.",
+      ),
     ],
   },
   {
@@ -146,21 +202,41 @@ export const PRIVATE_APPS: PrivateApp[] = [
     icon: "/apps/fleet-commander-icon.webp",
     backdrop: "/apps/fleet/nebula.webp",
     screenshots: [
-      {
-        src: "/apps/fleet/route.webp",
-        alt: "Fleet Commander screenshot: reading the frontier route across the Orion Verge star map",
-        caption: "Read the frontier",
-      },
-      {
-        src: "/apps/fleet/tactics.webp",
-        alt: "Fleet Commander screenshot: choosing one rule-breaker before a run",
-        caption: "Choose a rule-breaker",
-      },
-      {
-        src: "/apps/fleet/showdown.webp",
-        alt: "Fleet Commander screenshot: a rival commander showdown with win odds for each tactic",
-        caption: "Rival showdown",
-      },
+      screen(
+        "fleet-route.webp",
+        FLEET,
+        "Read the frontier",
+        "Chart your run across the stars.",
+        "Fleet Commander star map of the Orion Verge sector, with the next jump's objective, danger and reward laid out before you commit",
+      ),
+      screen(
+        "fleet-build.webp",
+        FLEET,
+        "Rule-breakers",
+        "Pick one rule. Then break it.",
+        "Fleet Commander command module offering rule-breaker upgrades such as Redline Coils and Overkill Protocol for the active fleet",
+      ),
+      screen(
+        "fleet-showdown.webp",
+        FLEET,
+        "Rival showdown",
+        "Outplay rival commanders.",
+        "Fleet Commander rival showdown against Veyra, showing her intended Flank and the win odds for Blitz, Flank and Fortify",
+      ),
+      screen(
+        "fleet-tactics.webp",
+        FLEET,
+        "Read the intent",
+        "See their move. Counter it.",
+        "Fleet Commander capture operation: the enemy intends Fortify and a captain's wager raises the stakes on each tactic",
+      ),
+      screen(
+        "fleet-extraction.webp",
+        FLEET,
+        "Push or bank",
+        "Push your luck, or bank the loot.",
+        "Fleet Commander momentum choice between extracting with 111 salvage banked or pushing on for a bigger multiplier",
+      ),
     ],
   },
   {
@@ -187,15 +263,29 @@ export const PRIVATE_APPS: PrivateApp[] = [
     ],
     screenshots: [
       {
-        src: "/apps/nobooze-today.webp",
-        alt: "NoBooze showing a 128-day alcohol-free streak, savings, achievements and daily support actions",
-        caption: "Today · live product",
+        ...poster(
+          "/apps/nobooze-dashboard.webp",
+          "Count every day",
+          "NoBooze home screen on an iPhone showing a 128-day alcohol-free streak and milestones, headlined Count every day you choose.",
+        ),
+        width: 760,
+        height: 1651,
       },
-      {
-        src: "/apps/nobooze-journal.webp",
-        alt: "NoBooze journal showing a private reflection prompt, searchable entries and mood context",
-        caption: "Reflection-first journal",
-      },
+      screen(
+        "nobooze-today.webp",
+        [644, 1400],
+        "Today",
+        "Every alcohol-free day, counted.",
+        "NoBooze Today screen with a 128-day alcohol-free streak, £731 saved, 256 units skipped and a progress bar to day 180",
+        "dark",
+      ),
+      screen(
+        "nobooze-journal.webp",
+        [437, 950],
+        "Journal",
+        "Write it out. Privately.",
+        "NoBooze private journal with a reflection prompt, searchable entries and a mood-tagged daily check-in",
+      ),
     ],
   },
   {
@@ -211,11 +301,14 @@ export const PRIVATE_APPS: PrivateApp[] = [
       "A TestFlight recovery companion built around guided body scans, mood palettes and an on-device chat. Conversations stay on the phone; private progress can sync through the user’s own iCloud account.",
     stack: ["SwiftUI", "SwiftData", "Foundation Models", "CloudKit"],
     screenshots: [
-      {
-        src: "/apps/lumina-home.webp",
-        alt: "My Lumina TestFlight home screen with a friendly yellow mascot, body scan and mood palette actions",
-        caption: "Home · TestFlight build",
-      },
+      screen(
+        "lumina-home.webp",
+        [760, 1652],
+        "Body scan · Mood palette",
+        "A gentle check-in, on your phone.",
+        "My Lumina home screen with a friendly yellow mascot and actions for a guided body scan and a mood palette",
+        "dark",
+      ),
     ],
   },
   {
@@ -231,14 +324,14 @@ export const PRIVATE_APPS: PrivateApp[] = [
       "A one-screen transit puzzle with generated levels, accessible gameplay actions and a heavily tested rules engine. Load matching passengers before the station locks itself solid.",
     stack: ["SwiftUI", "SpriteKit", "SwiftData", "Fastlane"],
     screenshots: [
-      {
-        src: "/apps/tiny-transit-home.webp",
-        alt: "Tiny Transit Jam iPhone screenshot showing the level map and daily challenge card",
-      },
-      {
-        src: "/apps/tiny-transit-game.webp",
-        alt: "Tiny Transit Jam iPhone screenshot showing the onboarding puzzle board and booster tray",
-      },
+      screen(
+        "tiny-transit-home.webp",
+        [920, 1994],
+        "Daily puzzle",
+        "Untangle the rush hour.",
+        "Tiny Transit Jam level map with stops from Suburb Stop to Riverside Ferry, daily rewards and a Today's Challenge card",
+        "dark",
+      ),
     ],
   },
 ];
