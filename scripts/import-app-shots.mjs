@@ -10,8 +10,9 @@
  * Missing sources are skipped with a warning, so `npm run build` never depends
  * on the app repos.
  *
- * Posters (finished store frames with a 9:41 bar and baked headline) are
- * resized as they are. Raw captures have their status bar scrubbed so the
+ * Posters (finished store frames with a baked headline) are resized as they
+ * are, except that their en-GB "09:41" clock becomes "9:41" to match the
+ * site's drawn iPhones. Raw captures have their status bar scrubbed so the
  * site's drawn iPhone can show a clean one, then land in public/apps/clean/.
  *
  * Every /apps image is served with a one-year immutable cache, so a refresh
@@ -24,6 +25,7 @@ import { homedir } from 'node:os';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { scrubStatusBar } from './lib/scrub-status-bar.mjs';
+import { dropClockZero } from './lib/drop-clock-zero.mjs';
 
 const ROOT = process.env.APPS_ROOT ?? join(homedir(), 'dev');
 const OUT = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'apps');
@@ -37,16 +39,20 @@ const NOBOOZE = join(ROOT, 'NoBooze/fastlane/screenshots/en-GB');
 const NOBOOZE_RAW = join(ROOT, 'NoBooze/fastlane/store_screenshots/raw/en-GB');
 const NOBOOZE_ICON = join(ROOT, 'NoBooze/NoBooze/Assets.xcassets/AppIcon.appiconset/AppIcon-Paper.png');
 
+/** Where each set's clock sits once resized to 760px wide. */
+const GEM_CLOCK = { left: 100, top: 480, width: 160, height: 80 };
+const NOBOOZE_CLOCK = { left: 130, top: 295, width: 170, height: 70 };
+
 /** GemGame 2.5 "Velvet" store set. */
 const GEM_SHOTS = [
   '01-combo', '02-garden', '03-guardian', '04-worlds', '05-daily',
   '06-specials', '07-relic', '08-calm', '09-voiceover',
-].map((name) => ({ from: join(GEM, `${name}.png`), to: `gemgame/v25/${name}.webp` }));
+].map((name) => ({ from: join(GEM, `${name}.png`), to: `gemgame/v252/${name}.webp`, clock: GEM_CLOCK }));
 
 /** NoBooze 1.9 store set. */
 const NOBOOZE_SHOTS = [
   '01-dashboard', '02-sos', '03-year', '04-journal', '05-elixirs', '06-letters',
-].map((name) => ({ from: join(NOBOOZE, `${name}.png`), to: `nobooze/v19/${name}.webp` }));
+].map((name) => ({ from: join(NOBOOZE, `${name}.png`), to: `nobooze/v190/${name}.webp`, clock: NOBOOZE_CLOCK }));
 
 /** Fleet Commander 1.2.1 native captures. Its store frames carry 14:5x clocks,
  *  so the site composes these raw screens itself. */
@@ -78,7 +84,11 @@ for (const shot of SHOTS) {
     .resize({ width: shot.width ?? WIDTH, kernel: 'lanczos3' })
     .png()
     .toBuffer();
-  const image = shot.scrub ? await scrubStatusBar(resized) : sharp(resized);
+  const image = shot.scrub
+    ? await scrubStatusBar(resized)
+    : shot.clock
+      ? await dropClockZero(resized, shot.clock)
+      : sharp(resized);
   const info = await image.webp({ quality: 82, effort: 6 }).toFile(target);
   console.log(
     `write ${relative(OUT, target).padEnd(34)} ${info.width}x${info.height}  ` +
