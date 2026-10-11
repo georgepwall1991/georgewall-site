@@ -13,6 +13,7 @@
     "test": "node --test \"test/*.test.mjs\"",
     "og": "node scripts/make-og.mjs",
     "shots": "node scripts/import-app-shots.mjs",
+    "shots:clean": "node scripts/clean-status-bars.mjs",
     "snapshot": "node scripts/refresh-snapshot.mjs"
   },
   "dependencies": {

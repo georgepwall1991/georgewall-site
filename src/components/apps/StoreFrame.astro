@@ -1,0 +1,134 @@
+---
+/**
+ * One App Store-style marketing frame. Composed store art ("poster") is shown
+ * as it is, never squeezed into a phone. A raw capture ("screen") is composed
+ * live: a real-text headline over the app's brand gradient, with the screen in
+ * a drawn iPhone bleeding off the bottom edge, the way the store gallery does it.
+ * Colours come from the parent's --app-* custom properties.
+ */
+import Device from "./Device.astro";
+import type { AppShot } from "../../data/apps";
+
+interface Props {
+  shot: AppShot;
+  loading?: "lazy" | "eager";
+  /** Pure decoration (the screen wall): images get empty alt text. */
+  decorative?: boolean;
+}
+
+const { shot, loading = "lazy", decorative = false } = Astro.props;
+const alt = decorative ? "" : shot.alt;
+---
+
+{
+  shot.kind === "poster" ? (
+    <figure class="frame frame--poster">
+      <img
+        src={shot.src}
+        alt={alt}
+        width={shot.width}
+        height={shot.height}
+        loading={loading}
+        decoding="async"
+      />
+      <figcaption class="sr-only">{shot.caption}</figcaption>
+    </figure>
+  ) : (
+    <figure class="frame frame--screen">
+      <figcaption class="frame__copy">
+        <span class="frame__eyebrow">{shot.caption}</span>
+        <span class="frame__headline">{shot.headline}</span>
+      </figcaption>
+      <div class="frame__device">
+        <Device
+          src={shot.src}
+          alt={alt}
+          width={shot.width}
+          height={shot.height}
+          ink={shot.ink}
+          loading={loading}
+        />
+      </div>
+    </figure>
+  )
+}
+
+<style>
+  .frame {
+    container-type: inline-size;
+    position: relative;
+    aspect-ratio: 1290 / 2796;
+    border-radius: 9% / 4.15%;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 30px 70px -24px rgba(0, 0, 0, 0.8);
+  }
+
+  .frame--poster img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .frame--screen {
+    background:
+      radial-gradient(120% 60% at 50% 0%, var(--app-glow, rgba(140, 110, 255, 0.35)), transparent 70%),
+      linear-gradient(170deg, var(--app-a, #1c1440), var(--app-b, #0b0a1a));
+  }
+
+  /* Faint grain of light rays behind the device, like a store backdrop. */
+  .frame--screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: repeating-conic-gradient(
+      from 0deg at 50% 62%,
+      rgba(255, 255, 255, 0.035) 0deg 6deg,
+      transparent 6deg 18deg
+    );
+    mask-image: radial-gradient(circle at 50% 62%, #000, transparent 70%);
+  }
+
+  .frame__copy {
+    position: absolute;
+    inset: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.6cqw;
+    padding: 11cqw 8cqw 0;
+    text-align: center;
+  }
+
+  .frame__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 3.3cqw;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--app-accent, #b9a6ff);
+  }
+
+  .frame__headline {
+    font-family: var(--font-display);
+    font-size: 10cqw;
+    font-variation-settings:
+      "opsz" 144,
+      "wght" 560,
+      "SOFT" 50;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: #fff;
+    text-wrap: balance;
+  }
+
+  .frame__device {
+    position: absolute;
+    left: 50%;
+    top: 37%;
+    width: 80%;
+    transform: translateX(-50%);
+  }
+</style>

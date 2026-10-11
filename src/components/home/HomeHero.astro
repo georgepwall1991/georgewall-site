@@ -1,5 +1,6 @@
 ---
 import { formatCount } from "../../lib/format";
+import Device from "../apps/Device.astro";
 
 interface Props {
   totalDownloads: number;
@@ -78,25 +79,28 @@ const MARQUEE = [
 
     <div class="hero__stage intro" style="--intro-delay: 300ms" aria-hidden="true">
       <div class="hero__fan">
-        <div class="phone hero__phone hero__phone--l">
-          <img
-            src="/apps/fleet/route.webp"
+        <div class="hero__phone hero__phone--l">
+          <Device
+            src="/apps/clean/fleet-route.webp"
             alt=""
-            width="600"
-            height="1305"
+            width={600}
+            height={1305}
+            loading="eager"
             fetchpriority="high"
           />
         </div>
-        <div class="phone hero__phone hero__phone--r">
-          <img
-            src="/apps/nobooze-today.webp"
+        <div class="hero__phone hero__phone--r">
+          <Device
+            src="/apps/clean/nobooze-today.webp"
             alt=""
-            width="600"
-            height="1300"
+            width={644}
+            height={1400}
+            ink="dark"
+            loading="eager"
             fetchpriority="high"
           />
         </div>
-        <div class="phone hero__phone hero__phone--c">
+        <div class="hero__phone hero__phone--c hero__poster">
           <img
             src="/apps/gemgame/gameplay.webp"
             alt=""
@@ -247,6 +251,17 @@ const MARQUEE = [
     left: 50%;
     width: clamp(170px, 17vw, 250px);
     transition: transform 0.9s var(--ease);
+  }
+
+  /* GemGame's store art already has its own frame, so it stands as a card. */
+  .hero__poster img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 9% / 4.15%;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.12),
+      0 40px 90px -30px rgba(0, 0, 0, 0.85);
   }
 
   .hero__phone--c {

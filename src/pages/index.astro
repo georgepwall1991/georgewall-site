@@ -71,7 +71,15 @@ const appSchema = PRIVATE_APPS.map((app) => ({
   ...(app.status === "App Store" && app.url
     ? { downloadUrl: app.url, sameAs: app.url }
     : {}),
-  screenshot: app.screenshots.map((shot) => new URL(shot.src, SITE_URL).href),
+  ...(app.icon ? { image: new URL(app.icon, SITE_URL).href } : {}),
+  screenshot: app.screenshots.map((shot) => ({
+    "@type": "ImageObject",
+    contentUrl: new URL(shot.src, SITE_URL).href,
+    width: shot.width,
+    height: shot.height,
+    caption: shot.headline ?? shot.caption,
+    description: shot.alt,
+  })),
 }));
 const collabSchema = collabSchemas(`${SITE_URL}/#person`);
 ---
