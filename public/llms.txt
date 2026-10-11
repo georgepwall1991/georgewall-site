@@ -17,9 +17,9 @@ This site covers the software I have built: production systems, Roslyn analysers
 
 ## Shipped products
 
-- [NoBooze](https://apps.apple.com/gb/app/nobooze/id6755612993): Private-by-default sobriety companion with progress tracking, health milestones, journalling and support after a slip.
-- [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Cosy match-3 iOS game with five magical worlds, a garden to restore, daily star boards, power gems and no ads.
-- [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Solo tactical space roguelite for iPhone and iPad, with rule-breakers, push-or-bank runs and an upcoming Frontier Runs update.
+- [NoBooze](https://apps.apple.com/gb/app/nobooze/id6755612993): Private-by-default sobriety companion with a daily count, a free craving SOS with guided breathing, a plan for hard nights, journalling and support after a slip.
+- [GemGame](https://apps.apple.com/gb/app/gemgame-cosy-match-3-puzzle/id6761720994): Cosy match-3 iOS game with five magical worlds, a garden to restore, daily star boards, Relic Runs, power gems and no ads.
+- [Fleet Commander](https://apps.apple.com/gb/app/fleet-commander/id6760207805): Solo tactical space roguelite for iPhone and iPad, built around Frontier Runs: branching routes, rival commanders, module builds and push-or-extract decisions.
 
 ## Ventures
 

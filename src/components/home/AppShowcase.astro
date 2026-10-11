@@ -1,6 +1,7 @@
 ---
 import { appScoreboard, LIVE_STATUS, type AppShot, type PrivateApp } from "../../data/apps";
 import StoreFrame from "../apps/StoreFrame.astro";
+import { dealWall } from "../../lib/wall";
 
 interface Props {
   apps: PrivateApp[];
@@ -14,22 +15,18 @@ const board = appScoreboard(apps);
 /** Fan slots for the first three store frames; DOM order stays hero-first. */
 const SLOTS = ["hero", "left", "right"] as const;
 
-// The screen wall: every store frame, interleaved app by app so neighbouring
-// tiles never share a palette, dealt round-robin into columns. Each column is
-// rendered twice over so its scroll loop has no seam.
+// The screen wall: every store frame, dealt so neighbouring tiles never share
+// a palette. Each column is rendered twice over so its scroll loop has no seam.
 const WALL_COLS = 7;
 const WALL_ROWS = 4;
 type WallTile = { shot: AppShot; theme: PrivateApp["theme"] };
-const pool: WallTile[] = [];
-const longest = Math.max(...apps.map((a) => a.screenshots.length));
-for (let i = 0; i < longest; i++) {
-  for (const app of apps) {
-    const shot = app.screenshots[i];
-    if (shot) pool.push({ shot, theme: app.theme });
-  }
-}
-const wall = Array.from({ length: WALL_COLS }, (_, c) =>
-  Array.from({ length: WALL_ROWS }, (_, r) => pool[(c + r * WALL_COLS + r * 3) % pool.length]),
+const wall = dealWall<WallTile>(
+  apps.map((app) => ({
+    key: app.theme,
+    items: app.screenshots.map((shot) => ({ shot, theme: app.theme })),
+  })),
+  WALL_COLS,
+  WALL_ROWS,
 );
 const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
 ---
@@ -65,7 +62,9 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
       }
     </div>
     <p class="wall__tag">
-      <span>{totalShots}</span> store frames · designed and shipped by me
+      <span class="wall__count">{totalShots}</span> store frames<span class="wall__tail"
+        >&nbsp;· designed and shipped by me</span
+      >
     </p>
   </div>
 
@@ -320,14 +319,19 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
     color: var(--ink-soft);
     width: max-content;
     max-width: calc(100% - 2.5rem);
-    text-align: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    white-space: nowrap;
   }
 
-  .wall__tag span {
+  .wall__count {
     color: var(--accent-text);
     font-weight: 600;
+  }
+
+  /* On a phone the full line wraps into a ragged pill, so keep just the count. */
+  @media (max-width: 520px) {
+    .wall__tail {
+      display: none;
+    }
   }
 
   .apps__list {
@@ -371,11 +375,12 @@ const totalShots = apps.reduce((n, a) => n + a.screenshots.length, 0);
     --app-accent: #8fd8ff;
   }
 
+  /* NoBooze 1.9's warm horizon: near-black with an ember glow. */
   .app--wellness {
-    --app-a: #2a1630;
-    --app-b: #0a0812;
-    --app-glow: rgba(255, 140, 90, 0.28);
-    --app-accent: #ffb38a;
+    --app-a: #2b1509;
+    --app-b: #0a0706;
+    --app-glow: rgba(255, 138, 61, 0.3);
+    --app-accent: #ffb27a;
   }
 
   .app--lumina {

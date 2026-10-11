@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 
 import { isPortfolioRepo, sortForArchive, portfolioRepos, totalStars } from '../src/lib/repos.ts';
 import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
-import { pad2, relativeTime, languageColor, linkLabel } from '../src/lib/format.ts';
+import { pad2, relativeTime, languageColor, linkLabel, breakableName } from '../src/lib/format.ts';
 import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
 import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
+import { dealWall } from '../src/lib/wall.ts';
 import {
   COLLABS,
   collabLinkRel,
@@ -230,6 +231,42 @@ test('every app screenshot exists on disk and is ready for a store frame', async
         // device frame draws 9:41 over the simulator's own clock.
         assert.ok(shot.src.startsWith('/apps/clean/'), `${shot.src} is not a cleaned capture`);
       }
+    }
+  }
+});
+
+test('every app screenshot declares its real pixel size', async () => {
+  const { default: sharp } = await import('sharp');
+  for (const app of PRIVATE_APPS) {
+    for (const shot of app.screenshots) {
+      const meta = await sharp(new URL(`../public${shot.src}`, import.meta.url).pathname).metadata();
+      assert.deepEqual([shot.width, shot.height], [meta.width, meta.height], `${shot.src} size is stale`);
+    }
+  }
+});
+
+test('breakableName wraps repo names at dots and escapes HTML', () => {
+  assert.equal(breakableName('HttpClient.Resilience.Analyzers'), 'HttpClient.<wbr>Resilience.<wbr>Analyzers');
+  assert.equal(breakableName('georgewall-site'), 'georgewall-site');
+  assert.equal(breakableName('a<b>.'), 'a&lt;b&gt;.');
+});
+
+test('the screen wall shows every store frame without same-app neighbours', () => {
+  const cols = 7;
+  const rows = 4;
+  const groups = PRIVATE_APPS.map((app) => ({
+    key: app.theme,
+    items: app.screenshots.map((shot) => ({ src: shot.src, key: app.theme })),
+  }));
+  const grid = dealWall(groups, cols, rows);
+  const shown = new Set(grid.flat().map((t) => t.src));
+  const all = PRIVATE_APPS.flatMap((app) => app.screenshots.map((s) => s.src));
+  assert.ok(all.length <= cols * rows, 'more frames than wall slots');
+  assert.equal(shown.size, all.length, 'a frame is missing from the wall');
+  for (let c = 0; c < cols; c++) {
+    for (let r = 0; r < rows; r++) {
+      if (r > 0) assert.notEqual(grid[c][r].key, grid[c][r - 1].key, `column ${c} repeats an app`);
+      if (c > 0) assert.notEqual(grid[c][r].key, grid[c - 1][r].key, `row ${r} repeats an app`);
     }
   }
 });

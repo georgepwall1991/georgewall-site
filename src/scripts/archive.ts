@@ -10,7 +10,7 @@
 import type { Repo } from '../data/types';
 import { repoDescription } from '../data/repoCopy';
 import { categoryOf } from '../lib/categorize';
-import { languageColor, formatCount, relativeTime } from '../lib/format';
+import { languageColor, formatCount, relativeTime, breakableName } from '../lib/format';
 
 const GITHUB_USER = 'georgepwall1991';
 const CACHE_KEY = 'atlas-archive-v1';
@@ -59,7 +59,7 @@ if (section && listEl && dataEl) {
     const forkTag = r.fork ? ' <span class="arc-forktag">fork</span>' : '';
     return `<a class="arc-row" href="${r.html_url}" target="_blank" rel="noopener"
       data-cat="${categoryOf(r)}" data-fork="${r.fork}">
-      <span class="arc-name">${esc(r.name)}${forkTag}</span>
+      <span class="arc-name">${breakableName(r.name)}${forkTag}</span>
       <span class="arc-desc">${esc(repoDescription(r))}</span>
       <span class="arc-lang">${dot}${esc(r.language ?? '')}</span>
       <span class="arc-stars">${stars}</span>
