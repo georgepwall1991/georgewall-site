@@ -142,47 +142,47 @@ export const PRIVATE_APPS: PrivateApp[] = [
     icon: "/apps/gemgame/icon.webp",
     screenshots: [
       poster(
-        "/apps/gemgame/v25/01-combo.webp",
+        "/apps/gemgame/v252/01-combo.webp",
         "Match jewels",
         "GemGame cosy match-3 puzzle: a x3.5 Unreal cascade chain lights up the jewel board, headlined Match jewels. Chain cascades.",
       ),
       poster(
-        "/apps/gemgame/v25/02-garden.webp",
+        "/apps/gemgame/v252/02-garden.webp",
         "Restore a living garden",
         "GemGame garden restoration: fountains, rose beds and a bench brought back to life with stars, headlined Restore a living garden.",
       ),
       poster(
-        "/apps/gemgame/v25/03-guardian.webp",
+        "/apps/gemgame/v252/03-guardian.webp",
         "Boss battles",
         "GemGame boss battle: the Cosmic Gatekeeper rises from the jewel board with its health bar, headlined Outwit the guardians.",
       ),
       poster(
-        "/apps/gemgame/v25/04-worlds.webp",
+        "/apps/gemgame/v252/04-worlds.webp",
         "Five enchanted worlds",
         "GemGame world map at Heart of the Void, one of five enchanted worlds with chapters to clear, headlined Awaken five worlds.",
       ),
       poster(
-        "/apps/gemgame/v25/05-daily.webp",
+        "/apps/gemgame/v252/05-daily.webp",
         "Daily Star",
         "GemGame Daily Star complete, with today's best score, a three-day streak and a leaderboard, headlined A fresh puzzle every day.",
       ),
       poster(
-        "/apps/gemgame/v25/06-specials.webp",
+        "/apps/gemgame/v252/06-specials.webp",
         "Special gems",
         "GemGame striped, wrapped, rainbow and comet gems firing across the board, headlined Blast with special gems.",
       ),
       poster(
-        "/apps/gemgame/v25/07-relic.webp",
+        "/apps/gemgame/v252/07-relic.webp",
         "Relic Run",
         "GemGame Relic Run: drafting a relic such as Prism Lens or Comet Beacon before climbing five boards, headlined Draft relics. Climb five boards.",
       ),
       poster(
-        "/apps/gemgame/v25/08-calm.webp",
+        "/apps/gemgame/v252/08-calm.webp",
         "Plays offline",
         "GemGame core puzzles with no countdown clock and lives that refill over time, headlined Unwind offline. No ads.",
       ),
       poster(
-        "/apps/gemgame/v25/09-voiceover.webp",
+        "/apps/gemgame/v252/09-voiceover.webp",
         "Plays with VoiceOver",
         "GemGame with VoiceOver: a focused gem announced as Wrapped yellow gem in ice, headlined Every gem, clearly labelled.",
       ),
@@ -298,32 +298,32 @@ export const PRIVATE_APPS: PrivateApp[] = [
     ],
     screenshots: [
       poster(
-        "/apps/nobooze/v19/01-dashboard.webp",
+        "/apps/nobooze/v190/01-dashboard.webp",
         "Today",
         "NoBooze Today screen: a 128-day alcohol-free count rising over a sunset horizon and a Close the day check-in, headlined One day, then the next.",
       ),
       poster(
-        "/apps/nobooze/v19/02-sos.webp",
+        "/apps/nobooze/v190/02-sos.webp",
         "Craving SOS",
         "NoBooze craving SOS: a breathing circle over still water and a strength slider, headlined When it pulls, breathe.",
       ),
       poster(
-        "/apps/nobooze/v19/03-year.webp",
+        "/apps/nobooze/v190/03-year.webp",
         "Journey",
         "NoBooze Journey tab: month five of the year in days, one dot per alcohol-free day, headlined One dot, one day.",
       ),
       poster(
-        "/apps/nobooze/v19/04-journal.webp",
+        "/apps/nobooze/v190/04-journal.webp",
         "Journal",
         "NoBooze private journal with today's question about social situations and dated entries, headlined Notice how you feel.",
       ),
       poster(
-        "/apps/nobooze/v19/05-elixirs.webp",
+        "/apps/nobooze/v190/05-elixirs.webp",
         "Alcohol-free drinks",
         "NoBooze drinks menu with twelve alcohol-free recipes, led by a Smoked Ginger Mule, headlined Tonight, something good.",
       ),
       poster(
-        "/apps/nobooze/v19/06-letters.webp",
+        "/apps/nobooze/v190/06-letters.webp",
         "Letters",
         "NoBooze letters to your future self, sealed until the day you choose, headlined Letters to your future self.",
       ),

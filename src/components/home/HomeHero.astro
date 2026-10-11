@@ -101,7 +101,7 @@ const MARQUEE = [
         </div>
         <div class="hero__phone hero__phone--c hero__poster">
           <img
-            src="/apps/gemgame/v25/01-combo.webp"
+            src="/apps/gemgame/v252/01-combo.webp"
             alt=""
             width="760"
             height="1651"
@@ -193,9 +193,16 @@ const MARQUEE = [
     min-height: min(78vh, 760px);
   }
 
+  /* The headline never wraps, so it also scales with its own column: at wide
+     screens the column stops growing at --maxw while vw keeps going. */
+  .hero__copy {
+    container-type: inline-size;
+  }
+
   .hero__title {
     margin-top: 1.6rem;
     font-size: min(clamp(2.9rem, 6.2vw, 6.1rem), 11.2vw);
+    font-size: min(clamp(2.9rem, 6.2vw, 6.1rem), 11.2vw, 12.4cqi);
     white-space: nowrap;
   }
 
