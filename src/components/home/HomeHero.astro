@@ -1,5 +1,5 @@
 ---
-import { formatCount } from "../../lib/format";
+import { formatCount, formatThousandsPlus } from "../../lib/format";
 import Device from "../apps/Device.astro";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
 
 const { totalDownloads, shippedApps } = Astro.props;
 
-const downloadsLabel = `${Math.floor(totalDownloads / 1000)}K+`;
+const downloadsLabel = formatThousandsPlus(totalDownloads);
 
 const STATS = [
   { value: downloadsLabel, label: "NuGet downloads across my .NET tools" },

@@ -36,6 +36,16 @@ npm run dev      # http://localhost:4321
    visitor's own IP (so the 60 req/hr unauthenticated limit is per-visitor), and
    caches the result in `localStorage` for 6 hours.
 
+3. **NuGet downloads** (`getNuGetPackages()` in `src/data/nuget.ts`): every
+   download figure on the site (hero, tools section, project entries, meta
+   description and structured data) comes from the public NuGet search API at
+   build time, falling back to `NUGET_FALLBACK` per package if a request fails.
+4. **Daily refresh** (`.github/workflows/refresh-live-data.yml`): a scheduled
+   GitHub Action calls a Vercel Deploy Hook once a day, so production rebuilds
+   and picks up fresh counts with no commit. It needs the repository secret
+   `VERCEL_DEPLOY_HOOK_URL` (Vercel → Project → Settings → Git → Deploy Hooks,
+   branch `main`). Run it by hand from the Actions tab to refresh immediately.
+
 Curated copy and ordering for the featured projects lives in
 `src/data/featured.ts`. Identity/contact details live in `src/data/site.ts`.
 
