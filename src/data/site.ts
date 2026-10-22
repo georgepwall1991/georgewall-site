@@ -13,11 +13,15 @@ export const SITE = {
   github: 'https://github.com/georgepwall1991',
   githubUser: 'georgepwall1991',
   avatar: 'https://avatars.githubusercontent.com/u/84231788?v=4',
-  bio: 'Co-founder of INFLU and full-stack engineer in London. I build .NET and React systems, iOS apps on the App Store, and Roslyn analysers with 185K+ NuGet downloads.',
   /** Roman-numeral year for the masthead flourish. */
   issueYear: 'MMXXVI',
   issueNo: '01',
 } as const;
+
+/** Short bio for structured data. The download figure comes from the build's NuGet fetch. */
+export function siteBio(downloadsLabel: string): string {
+  return `Co-founder of INFLU and full-stack engineer in London. I build .NET and React systems, iOS apps on the App Store, and Roslyn analysers with ${downloadsLabel} NuGet downloads.`;
+}
 
 /**
  * Public profiles, emitted as schema.org `sameAs` to disambiguate the person

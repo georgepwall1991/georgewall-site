@@ -32,6 +32,11 @@ export function formatCount(n: number): string {
   return new Intl.NumberFormat('en-GB').format(n);
 }
 
+/** "248K+": a rounded-down headline figure that never overstates the count. */
+export function formatThousandsPlus(n: number): string {
+  return `${Math.floor(n / 1000)}K+`;
+}
+
 /** "May 2026". Month and year are enough for a portfolio cadence. */
 export function formatMonthYear(iso: string): string {
   const d = new Date(iso);
