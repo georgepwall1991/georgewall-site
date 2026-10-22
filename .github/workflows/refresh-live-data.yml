@@ -1,9 +1,6 @@
-# Rebuilds production once a day so build-time data (NuGet download counts,
-# GitHub stars) stays current without a code change.
-#
-# Setup: create a Deploy Hook in Vercel (Project → Settings → Git → Deploy
-# Hooks, branch `main`) and save its URL as the repository secret
-# VERCEL_DEPLOY_HOOK_URL.
+# Refreshes the committed NuGet snapshot once a day. When the counts change,
+# the commit to main triggers Vercel's normal production deploy, which also
+# re-fetches live NuGet and GitHub data at build time. No secrets needed.
 name: Refresh live data
 
 on:
@@ -11,19 +8,35 @@ on:
     - cron: '17 5 * * *' # 05:17 UTC daily
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-live-data
+  cancel-in-progress: false
 
 jobs:
-  rebuild:
+  refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Trigger Vercel production build
-        env:
-          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Fetch latest NuGet counts
+        run: node scripts/refresh-nuget.mjs
+      - name: Commit if anything changed
         run: |
-          if [ -z "$HOOK" ]; then
-            echo "::error::VERCEL_DEPLOY_HOOK_URL secret is not set. See the comment at the top of this workflow."
-            exit 1
+          # generatedAt always moves, so only commit when a package entry changed.
+          if git diff --quiet -I '"generatedAt"' -- src/data/nuget-snapshot.json; then
+            echo "NuGet counts unchanged."
+            exit 0
           fi
-          curl --fail-with-body --silent --show-error --retry 3 -X POST "$HOOK"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add src/data/nuget-snapshot.json
+          git commit -m "Refresh NuGet download counts"
+          git push origin HEAD:main

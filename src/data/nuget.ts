@@ -3,8 +3,11 @@
  *
  * The public search API is queried during a build, with a committed fallback so
  * an outage or rate limit can never stop the portfolio deploying. The fallback
- * values were refreshed on 9 August 2026.
+ * lives in nuget-snapshot.json, which `npm run nuget` (run daily by the
+ * refresh-live-data workflow) rewrites from the live API.
  */
+
+import snapshot from './nuget-snapshot.json' with { type: 'json' };
 
 export interface NuGetPackage {
   id: string;
@@ -27,62 +30,7 @@ export const PACKAGE_IDS = [
 
 export type PackageId = (typeof PACKAGE_IDS)[number];
 
-export const NUGET_FALLBACK: Record<PackageId, NuGetPackage> = {
-  LinqContraband: {
-    id: 'LinqContraband',
-    version: '5.7.52',
-    totalDownloads: 46772,
-    url: 'https://www.nuget.org/packages/LinqContraband',
-  },
-  'DependencyInjection.Lifetime.Analyzers': {
-    id: 'DependencyInjection.Lifetime.Analyzers',
-    version: '3.7.6',
-    totalDownloads: 32250,
-    url: 'https://www.nuget.org/packages/DependencyInjection.Lifetime.Analyzers',
-  },
-  'CancelCop.Analyzer': {
-    id: 'CancelCop.Analyzer',
-    version: '1.38.0',
-    totalDownloads: 38706,
-    url: 'https://www.nuget.org/packages/CancelCop.Analyzer',
-  },
-  'AutoMapperAnalyzer.Analyzers': {
-    id: 'AutoMapperAnalyzer.Analyzers',
-    version: '2.30.107',
-    totalDownloads: 25280,
-    url: 'https://www.nuget.org/packages/AutoMapperAnalyzer.Analyzers',
-  },
-  ConfigContraband: {
-    id: 'ConfigContraband',
-    version: '0.7.26',
-    totalDownloads: 5655,
-    url: 'https://www.nuget.org/packages/ConfigContraband',
-  },
-  'ConfigContraband.Tool': {
-    id: 'ConfigContraband.Tool',
-    version: '0.7.26',
-    totalDownloads: 4312,
-    url: 'https://www.nuget.org/packages/ConfigContraband.Tool',
-  },
-  CPMigrate: {
-    id: 'CPMigrate',
-    version: '3.57.2',
-    totalDownloads: 16850,
-    url: 'https://www.nuget.org/packages/CPMigrate',
-  },
-  'HttpClient.Resilience.Analyzers': {
-    id: 'HttpClient.Resilience.Analyzers',
-    version: '0.1.159',
-    totalDownloads: 14825,
-    url: 'https://www.nuget.org/packages/HttpClient.Resilience.Analyzers',
-  },
-  NotifyGen: {
-    id: 'NotifyGen',
-    version: '1.9.0',
-    totalDownloads: 797,
-    url: 'https://www.nuget.org/packages/NotifyGen',
-  },
-};
+export const NUGET_FALLBACK = snapshot.packages as Record<PackageId, NuGetPackage>;
 
 interface SearchPackage {
   id?: string;

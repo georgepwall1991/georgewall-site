@@ -25,6 +25,7 @@ npm run dev      # http://localhost:4321
 | `npm run preview` | Serve the production build locally |
 | `npm test` | Unit tests for the data-shaping logic (`node --test`) |
 | `npm run snapshot` | Refresh `src/data/fallback.json` from live GitHub |
+| `npm run nuget` | Refresh `src/data/nuget-snapshot.json` from live NuGet |
 | `npm run og` | Re-rasterise `public/og.svg` → `public/og.png` |
 
 ## How the data works
@@ -39,12 +40,13 @@ npm run dev      # http://localhost:4321
 3. **NuGet downloads** (`getNuGetPackages()` in `src/data/nuget.ts`): every
    download figure on the site (hero, tools section, project entries, meta
    description and structured data) comes from the public NuGet search API at
-   build time, falling back to `NUGET_FALLBACK` per package if a request fails.
+   build time, falling back per package to `src/data/nuget-snapshot.json` if a request fails.
 4. **Daily refresh** (`.github/workflows/refresh-live-data.yml`): a scheduled
-   GitHub Action calls a Vercel Deploy Hook once a day, so production rebuilds
-   and picks up fresh counts with no commit. It needs the repository secret
-   `VERCEL_DEPLOY_HOOK_URL` (Vercel → Project → Settings → Git → Deploy Hooks,
-   branch `main`). Run it by hand from the Actions tab to refresh immediately.
+   GitHub Action runs `npm run nuget`, which rewrites
+   `src/data/nuget-snapshot.json` (the committed fallback) from the live API.
+   If any count changed it commits to `main`, and that push triggers Vercel's
+   normal production deploy. No secrets needed. Run it by hand from the
+   Actions tab to refresh immediately.
 
 Curated copy and ordering for the featured projects lives in
 `src/data/featured.ts`. Identity/contact details live in `src/data/site.ts`.

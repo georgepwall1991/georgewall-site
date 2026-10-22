@@ -14,7 +14,8 @@
     "og": "node scripts/make-og.mjs",
     "shots": "node scripts/import-app-shots.mjs",
     "shots:clean": "node scripts/clean-status-bars.mjs",
-    "snapshot": "node scripts/refresh-snapshot.mjs"
+    "snapshot": "node scripts/refresh-snapshot.mjs",
+    "nuget": "node scripts/refresh-nuget.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

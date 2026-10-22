@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { isPortfolioRepo, sortForArchive, portfolioRepos, totalStars } from '../src/lib/repos.ts';
 import { categoryOf, categoriesIn } from '../src/lib/categorize.ts';
 import { pad2, relativeTime, languageColor, linkLabel, breakableName } from '../src/lib/format.ts';
-import { NUGET_FALLBACK, totalNuGetDownloads } from '../src/data/nuget.ts';
+import { NUGET_FALLBACK, PACKAGE_IDS, totalNuGetDownloads } from '../src/data/nuget.ts';
 import { PRIVATE_APPS, appScoreboard } from '../src/data/apps.ts';
 import { dealWall } from '../src/lib/wall.ts';
 import {
@@ -129,8 +129,11 @@ test('linkLabel maps known hosts to friendly labels', () => {
 
 test('NuGet fallback exposes credible adoption totals when the API is unavailable', () => {
   const packages = Object.values(NUGET_FALLBACK);
-  assert.equal(packages.length, 9);
-  assert.equal(totalNuGetDownloads(packages), 185447);
+  assert.deepEqual(
+    packages.map((pkg) => pkg.id),
+    [...PACKAGE_IDS],
+  );
+  assert.ok(totalNuGetDownloads(packages) > 100_000);
   assert.ok(
     packages.every((pkg) => pkg.version && pkg.url.startsWith('https://www.nuget.org/packages/')),
   );
